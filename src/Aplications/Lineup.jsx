@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import "./Lineup.css";
 import Loader from "../components/Loader.jsx"; // ajusta ruta
-import { supabase } from "../services/supabaseClient";
+import { supabase } from "../services/supabaseClient.js";
 import pizarrita from "../assets/Branding/pizarrita.jpg";
 
 

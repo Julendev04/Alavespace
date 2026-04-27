@@ -7,7 +7,7 @@ import {
   FaFutbol,
   FaChalkboard
 } from "react-icons/fa";
-import { supabase } from "../services/SupabaseClient";
+import { supabase } from "../services/supabaseClient";
 import "./Navbar.css";
 
 const Navbar = () => {
