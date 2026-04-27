@@ -3,6 +3,10 @@ import React from "react";
 import "./Footer.css";
 import { Link } from 'react-router-dom';
 import logo from "../assets/Branding/Logo.png"; // tu logo aquí
+import discord from "../assets/RRSS/Discord.png";
+import twitter from "../assets/RRSS/Twitter.png";
+import instagram from "../assets/RRSS/Instagram.png";
+import spotify from "../assets/RRSS/Spotify.png";
 
 const Footer = () => {
   return (
@@ -19,10 +23,10 @@ const Footer = () => {
   <div className="separator">|</div>
 
   <div className="social-row">
-    <a href="#"><img src="src/assets/RRSS/Discord.png" alt="Discord" /></a>
-    <a href="#"><img src="src/assets/RRSS/Twitter.png" alt="Twitter" /></a>
-    <a href="#"><img src="src/assets/RRSS/Instagram.png" alt="Instagram" /></a>
-    <a href="#"><img src="src/assets/RRSS/Spotify.png" alt="Spotify" /></a>
+    <a href="#"><img src={discord} alt="Discord" /></a>
+    <a href="#"><img src={twitter} alt="Twitter" /></a>
+    <a href="#"><img src={instagram} alt="Instagram" /></a>
+    <a href="#"><img src={spotify} alt="Spotify" /></a>
   </div>
 </div>
 
