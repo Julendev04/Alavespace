@@ -3,6 +3,7 @@ import html2canvas from "html2canvas";
 import "./Lineup.css";
 import Loader from "../components/Loader.jsx"; // ajusta ruta
 import { supabase } from "../services/supabaseClient";
+import pizarrita from "../assets/Branding/pizarrita.jpg";
 
 
 const formaciones = {
@@ -175,31 +176,31 @@ const Lineup = () => {
   }, []);
 
   useEffect(() => {
-  const fetchJugadores = async () => {
-    const { data, error } = await supabase
-      .from("jugadores")
-      .select("id,name,card_url,market_value")
-      .eq("team_type", "first_team");
+    const fetchJugadores = async () => {
+      const { data, error } = await supabase
+        .from("jugadores")
+        .select("id,name,card_url,market_value")
+        .eq("team_type", "first_team");
 
-    if (error) {
-      console.error("Error cargando jugadores:", error);
-      return;
-    }
+      if (error) {
+        console.error("Error cargando jugadores:", error);
+        return;
+      }
 
-    const jugadoresFormateados = data.map(j => ({
-      id: j.id,
-      nombre: j.name,
-      carta: j.card_url,
-      marketValue: j.market_value, // puedes cambiar esto si luego lo guardas en BD
-      estado: "propiedad"
-    }));
+      const jugadoresFormateados = data.map(j => ({
+        id: j.id,
+        nombre: j.name,
+        carta: j.card_url,
+        marketValue: j.market_value, // puedes cambiar esto si luego lo guardas en BD
+        estado: "propiedad"
+      }));
 
-    setJugadoresDisponibles(jugadoresFormateados);
-    setMarketData(jugadoresFormateados);
-  };
+      setJugadoresDisponibles(jugadoresFormateados);
+      setMarketData(jugadoresFormateados);
+    };
 
-  fetchJugadores();
-}, []);
+    fetchJugadores();
+  }, []);
 
   if (loading) {
     return <Loader />;
@@ -217,7 +218,11 @@ const Lineup = () => {
       <div className="alineacion-wrapper">
         <div className="alineacion-contenedor">
 
-          <div className="field2" ref={fieldRef}>
+          <div
+            className="field2"
+            ref={fieldRef}
+            style={{ "--bg-image": `url(${pizarrita})` }}
+          >
             <div className="overlay-text-container left-aligned">
               <h2 className="overlay-nombre">{nombrePlantilla || "El once del Glorioso"}</h2>
               <div className="overlay-formacion-box">{formacion}</div>
