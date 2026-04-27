@@ -1,6 +1,7 @@
 // Loader.jsx
 import React from "react";
 import "./Loader.css";
+import logo2 from "../assets/Branding/logo2.png"
 
 export default function Loader() {
   return (
@@ -9,8 +10,8 @@ export default function Loader() {
         <div className="spinner-ring"></div>
 
         <img
-          src="src/assets/Branding/logo2.png"
-          alt="Logo"
+          src={logo2}
+          alt="Logo2"
           className="loader-logo"
         />
       </div>
