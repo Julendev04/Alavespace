@@ -139,7 +139,6 @@
 .campo-bg {
   position: absolute;
   inset: 0;
-  background-image: url("src/photos/PIZARRA_PLANTILLA.jpg");
   background-size: cover;
   background-position: center;
 }

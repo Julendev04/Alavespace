@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"; 
 import "./Pizarra.css";
 import { ArrowRight, MoveRight, Minus, Circle, Type, Trash2, Palette, Square } from "lucide-react";
+import pizarraImg from "../assets/Branding/PIZARRA_PLANTILLA.jpg";
 
 const uid = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -289,7 +290,7 @@ const Pizarra = () => {
         onTouchMove={handlePointerMove}
         onTouchEnd={handlePointerUp}
       >
-        <div className="campo-bg" />
+        <div className="campo-bg" style={{ backgroundImage: `url(${pizarraImg})` }}/>
         <canvas ref={mainRef} className="canvas-main" />
         <canvas ref={overlayRef} className="canvas-overlay" />
         {textInput.visible && (
