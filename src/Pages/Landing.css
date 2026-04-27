@@ -1,0 +1,225 @@
+.landing {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+
+  background: 
+    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)),
+    url("/FONDO LANDING WEB.png");
+  opacity: 0.85;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+  background-attachment: fixed;
+}
+
+.particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.logo-wrapper {
+  width: 120px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+
+  filter: brightness(0) saturate(100%) 
+          invert(85%) 
+          sepia(40%) 
+          saturate(600%) 
+          hue-rotate(170deg)
+}
+
+.logo {
+  width: 100%;
+  opacity: 0;
+  animation: logoMaster 20s ease-in-out infinite;
+}
+
+@keyframes logoMaster {
+
+  /* 🔥 Entrada */
+  0% {
+    transform: translateY(-40px) scale(0.8) rotateX(60deg);
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  5% {
+    transform: translateY(10px) scale(1.05) rotateX(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  10% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  /* 😴 Quieto */
+  10%, 45% {
+    transform: translateY(0) scale(1) rotateY(0deg);
+  }
+
+  /* 🔥 GIRO COMPLETO */
+  50% {
+    transform: perspective(800px) rotateY(180deg) scale(1.05);
+  }
+
+  55% {
+    transform: perspective(800px) rotateY(360deg) scale(1);
+  }
+
+  /* 😴 vuelve a normal */
+  60%, 100% {
+    transform: translateY(0) scale(1) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.typing {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #ffffff;
+  letter-spacing: 2px;
+  height: 20px;
+}
+
+.content {
+  text-align: center;
+  padding: 0 20px;
+}
+
+.title {
+  font-family: "Coluna", sans-serif;
+  font-size: 90px;
+  font-weight: 700;
+  letter-spacing: 1px;
+    background: linear-gradient(180deg, #ffffff, #4fc3f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+  margin-top: 6px;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 15px rgba(79, 195, 247, 0.3);
+  }
+
+  100% {
+    text-shadow: 0 0 25px rgba(30, 136, 229, 0.7);
+  }
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  opacity: 0.7;
+}
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+  background: none !important;
+}
+
+.countdown div {
+  background: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  padding: 0;
+  margin: 0;
+  min-width: auto;
+}
+
+.countdown span {
+  font-family: "Coluna", sans-serif;
+  font-size: 80px;
+  display: block;
+  background: linear-gradient(180deg, #ffffff, #4fc3f7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.countdown p {
+  margin-top: -25px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.socials {
+  margin-top: 200px;
+  display: flex;
+  justify-content: center; /* 🔥 centrado real */
+  align-items: center;
+
+  gap: 50px; /* controla separación */
+
+  width: 100%;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+
+  opacity: 0.85;
+}
+
+.social-item {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+   text-decoration: none; /* 🔥 quita subrayado */
+  color: inherit; /* mantiene tu blanco */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #ffffff;
+  font-size: 0.95rem;
+
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.social-item:hover {
+  opacity: 0.75;
+}
+
+.social-item svg {
+  font-size: 1.2rem;
+  color: #4fc3f7;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.8rem;
+  }
+
+  .countdown span {
+    font-size: 2rem;
+  }
+
+  .countdown {
+    gap: 15px;
+  }
+}

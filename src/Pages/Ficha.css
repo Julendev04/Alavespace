@@ -1,0 +1,162 @@
+.ficha-container {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #222;
+  font-family: "Inter", sans-serif;
+  padding: 20px;
+}
+
+/* CABECERA */
+.ficha-header {
+  background-color: #003d9e;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 892px;
+  padding: 25px 35px;
+  border-radius: 15px 15px 0 0;
+}
+
+.ficha-header-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ficha-foto {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ficha-header h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.equipo {
+  opacity: 0.9;
+}
+
+/* BLOQUE DE DATOS */
+.ficha-datos {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-top: none;
+  width: 900px;
+  padding: 30px;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.columna p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.columna strong {
+  font-size: 1.05rem;
+  color: #111;
+}
+
+.posicion {
+  align-items: center;
+}
+
+.posicion-texto {
+  font-weight: 600;
+  color: #003d9e;
+}
+
+.campo-posicion {
+  background: #003d9e;
+  color: white;
+  font-weight: bold;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+/* BLOQUE DE ESTADÍSTICAS */
+.ficha-stats {
+  width: 900px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-top: none;
+  border-radius: 0 0 15px 15px;
+  padding: 30px;
+  margin-bottom: 40px;
+}
+
+.ficha-stats h3 {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  color: #222;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  text-align: center;
+}
+
+.stats-grid div strong {
+  font-size: 1.3rem;
+  display: block;
+  color: #111;
+}
+
+.stats-grid div p {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.puntuacion strong {
+  background: #ffebcc;
+  color: #d97706;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* BOTÓN VOLVER */
+.volver-btn {
+  text-decoration: none;
+  color: #003d9e;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.volver-btn:hover {
+  color: #1a5dff;
+}
+
+/* ERROR */
+.ficha-error {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #003d9e;
+  background: #f0f4ff;
+}

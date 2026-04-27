@@ -1,0 +1,170 @@
+/* ================= PIZARRA WRAP ================= */
+.pizarra-wrap {
+  margin-top: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 18px;
+  font-family: Arial, sans-serif;
+}
+
+.pizarra-title {
+  font-size: 1.8rem;
+  color: #002f87;
+}
+
+/* ================= BARRA DE ICONOS MODERNA ================= */
+.barra-moderna {
+  display: flex;
+  justify-content: center; /* CENTRADO */
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  position: relative;
+
+  /* Trazo sólido en vez de sombra */
+  border: 2px solid black;
+
+  /* Fondo transparente (eliminado azul) */
+  background: transparent;
+}
+
+.barra-moderna button {
+  background: transparent; /* SIN FONDO AZUL */
+  color: black; /* ICONOS NEGROS */
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.barra-moderna button:hover {
+  transform: scale(1.1);
+  opacity: 0.7;
+}
+
+/* Dropdown futurista dentro barra moderna */
+.barra-moderna .shapes-dropdown {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 0;
+
+  background: #000; /* Fondo negro elegante */
+  border: 1px solid #444;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: all 0.18s ease;
+  z-index: 30;
+}
+
+.barra-moderna .shapes-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.barra-moderna .shapes-dropdown button {
+  background: transparent;
+  color: white;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.barra-moderna .shapes-dropdown button:hover,
+.barra-moderna .shapes-dropdown button.sactive {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ================= COLOR PICKER ================= */
+.color-picker-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+
+  background: transparent; /* SIN FONDO */
+  border: none;
+  cursor: pointer;
+}
+
+.color-picker-wrap svg {
+  color: black; /* ICONO NEGRO */
+}
+
+.color-picker {
+  position: absolute;
+  opacity: 0;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ================= BOTÓN LIMPIAR ================= */
+.delete-btn {
+  background: transparent !important; /* Eliminado fondo */
+  color: red !important; /* Rojo más claro */
+  font-weight: 700;
+}
+
+/* ================= CANVAS WRAPPER ================= */
+.campo-wrapper {
+  width: 100%;
+  max-width: 1280px;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+
+  border: 2px solid #000000; /* Trazo negro sólido */
+}
+
+.campo-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("src/photos/PIZARRA_PLANTILLA.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.canvas-main,
+.canvas-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas-overlay {
+  pointer-events: none;
+}
+
+/* ================= INPUT DE TEXTO FLOTANTE ================= */
+.text-floating {
+  position: absolute;
+  z-index: 60;
+  background: transparent !important;
+  border: none !important;
+  outline: none;
+  min-width: 80px;
+  color: #0d61af;
+  transform: translate(-50%, -50%);
+  font-weight: 600;
+}

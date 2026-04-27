@@ -1,0 +1,233 @@
+.noticiero-modern {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 6rem 1rem;
+  font-family: "Montserrat", sans-serif;
+  overflow: hidden;
+}
+
+.noticiero-titulo {
+  font-family: "Coluna", serif;
+  font-size: 90px;
+  text-align: center;
+  color: #002f87;
+  margin-bottom: 2rem;
+}
+
+/* ✅ Wrapper con el mismo ancho que el contenido */
+.filtros-wrapper {
+  width: 100%;
+  max-width: 1800px; /* igual que el ancho visual del carrusel */
+  margin: 0 auto 2rem auto;
+}
+
+.filtros-modern {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 0.1rem;
+  flex-wrap: wrap;
+}
+
+.filtro-modern {
+  padding: 0.45rem 1rem;
+  border-radius: 25px;
+  border: 2px solid #002f87;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #002f87;
+  transition: all 0.25s ease;
+  font-size: 0.9rem;
+}
+
+.filtro-modern:hover {
+  background: rgba(0, 47, 135, 0.1);
+}
+
+.filtro-modern.activo {
+  background: #002f87;
+  color: white;
+}
+
+.filtro-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Carrusel continuo */
+.carrusel-continuo {
+  overflow: hidden;
+  width: 100%;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.carrusel-inner {
+  display: flex;
+  gap: 1.5rem;
+  animation: scrollContinuo 10s linear infinite;
+}
+
+@keyframes scrollContinuo {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Tarjetas */
+.noticia-tarjeta {
+  flex: 0 0 320px;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.noticia-tarjeta:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 47, 135, 0.25);
+}
+
+.noticia-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.noticia-overlay {
+  padding: 1rem;
+  text-align: left;
+}
+
+.noticia-categoria {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.noticia-overlay h3 {
+  color: #002f87;
+  font-weight: 800;
+  font-size: 1rem;
+  margin: 0.3rem 0;
+}
+
+.noticia-overlay p {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0;
+}
+
+.noticia-fecha {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.4rem;
+  display: block;
+}
+
+.noticia-etiqueta {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+}
+
+/* Grid */
+.noticias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 3rem 0;
+}
+
+/* Overlay */
+.overlay-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.overlay-central {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 450px;
+  max-height: 65vh;
+  overflow-y: auto;
+  text-align: left;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  position: relative;
+  animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.overlay-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.overlay-central h3 {
+  color: #002f87;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.overlay-central p {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.overlay-cerrar {
+  background: #002f87;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.overlay-cerrar:hover {
+  background: #0040c1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filtros-wrapper {
+    max-width: 100%;
+  }
+
+  .noticia-tarjeta {
+    flex: 0 0 80%;
+  }
+
+  .noticiero-titulo {
+    font-size: 2.3rem;
+  }
+}

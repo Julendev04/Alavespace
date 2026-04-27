@@ -1,0 +1,41 @@
+.banner-discord {
+  width: 100vw;
+  margin-left: calc(50% - 50vw); /* TRUCO para romper el contenedor #root */
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-content {
+  max-width: 900px;
+}
+
+.banner-discord h2 {
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.banner-discord p {
+  margin: 0 0 20px 0;
+  opacity: 0.9;
+}
+
+.banner-discord a {
+  display: inline-block;
+  padding: 12px 25px;
+  background: white;
+  color: #5865F2;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.banner-discord a:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}

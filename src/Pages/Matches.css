@@ -1,0 +1,388 @@
+.matchcenter-page{
+  max-width:1200px;
+  margin:auto;
+  padding:40px;
+}
+
+
+/* BANNER */
+
+.mc-banner{
+  margin-top: 100px;
+  background:#2c79dd;
+  color:white;
+  border-radius:16px;
+  padding:30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.mc-team{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+}
+
+.mc-team img{
+  width:70px;
+}
+
+.mc-match{
+  text-align:center;
+}
+
+.mc-vs{
+  font-size:2rem;
+  font-weight:700;
+}
+
+
+/* TABS */
+
+.mc-tabs{
+  margin-top:30px;
+  display:flex;
+  gap:10px;
+  border-bottom:2px solid #eee;
+}
+
+.mc-tabs button{
+  padding:10px 18px;
+  border:none;
+  background:none;
+  font-weight:600;
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+}
+
+.mc-tabs button.active{
+  border-bottom:3px solid #2c79dd;
+  color:#2c79dd;
+}
+
+
+/* CONTENT */
+
+.mc-content{
+  margin-top:30px;
+}
+
+.lineups{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+ul{
+  list-style:none;
+  padding:0;
+}
+
+/* HEADER */
+
+.lineups-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+  color:rgb(0, 0, 0);
+}
+
+.lineups-title{
+  font-size:1.2rem;
+  font-weight:600;
+}
+
+.formation{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.formation-num{
+  opacity:0.7;
+}
+
+
+/* CAMPO */
+
+.pitch{
+  position:relative;
+  background:#66727e;
+  border-radius:10px;
+  padding:60px 40px;
+  display:flex;
+  justify-content:space-between;
+  overflow:hidden;
+  min-height:400px;   /* 👈 esto hace el campo alto */
+}
+
+/* LINEA CENTRAL */
+
+.pitch::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  height:100%;
+  width:4px;
+  background:rgba(255,255,255,0.25);
+}
+
+
+/* AREAS */
+
+.box{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:120px;
+  height:240px;
+  border:2px solid rgba(255,255,255,0.25);
+  border-radius:6px;
+}
+
+.box.left{
+  left:0;
+  border-left:none;
+}
+
+.box.right{
+  right:0;
+  border-right:none;
+}
+
+
+.team {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-left{
+  flex-direction:row;
+}
+
+.team-right{
+  flex-direction:row-reverse;
+}
+
+
+/* COLUMNAS (formación) */
+
+.col{
+  display:flex;
+  flex-direction:column;
+  gap:90px;
+  align-items:center;
+}
+
+
+/* JUGADORES */
+
+.col span{
+  color:white;
+  font-size:0.95rem;
+  white-space:nowrap;
+}
+
+.col b{
+  color:#bfc7cf;
+  margin-right:4px;
+}
+
+
+/* STATS */
+
+.stats-wrapper{
+  max-width:800px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+}
+
+.stats-title{
+  text-align:center;
+  font-size:1.6rem;
+  margin-bottom:10px;
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:18px;
+}
+
+.stats-grid .statbar{
+  padding:14px;
+  text-align:center;
+}
+
+.stats-grid .statbar-header{
+  flex-direction:column;
+  gap:6px;
+}
+
+.stats-grid .statbar-header span{
+  font-size:0.9rem;
+}
+
+.stats-grid .statbar-track{
+  margin-top:6px;
+}
+
+/* STAT BAR GRANDE */
+
+.statbar{
+  background:#f5f6f8;
+  border-radius:12px;
+  padding:16px 18px;
+}
+
+.statbar-header{
+  display:flex;
+  justify-content:space-between;
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+.statbar-header .label{
+  opacity:0.8;
+}
+
+.statbar-track{
+  position:relative;
+  height:14px;
+  background:#e3e5e8;
+  border-radius:10px;
+  overflow:hidden;
+  display:flex;
+}
+
+.statbar-left{
+  background:#c6003d;
+  height:100%;
+}
+
+.statbar-right{
+  background:#1e3a8a;
+  height:100%;
+}
+
+.statbar-detail{
+  display:flex;
+  justify-content:space-between;
+  font-size:0.85rem;
+  margin-top:6px;
+  opacity:0.7;
+}
+
+
+/* STAT ROW PEQUEÑA */
+
+.statrow{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.statrow-bar{
+  height:10px;
+  background:#e5e7eb;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.statrow-fill{
+  height:100%;
+  background:#c6003d;
+}
+
+.statrow-info{
+  display:flex;
+  justify-content:space-between;
+  font-size:0.95rem;
+  font-weight:500;
+}
+
+.statrow-info .label{
+  opacity:0.8;
+}
+
+.statbar-label{
+  text-align:center;
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+.statbar-values{
+  display:flex;
+  justify-content:space-between;
+  font-weight:700;
+  font-size:1rem;
+  margin-bottom:6px;
+}
+
+.statbar-values .left{
+  color:#c6003d;
+}
+
+.statbar-values .right{
+  color:#1e3a8a;
+}
+
+/* LAYOUT GENERAL STATS */
+
+.stats-layout{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  gap:30px;
+  align-items:start;
+}
+
+
+/* PLAYER RATINGS */
+
+.player-ratings{
+  background:#f5f6f8;
+  border-radius:12px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.ratings-title{
+  font-size:1rem;
+  font-weight:700;
+  margin-bottom:10px;
+  text-align:center;
+}
+
+.player-rating{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 10px;
+  background:white;
+  border-radius:8px;
+  font-size:0.9rem;
+}
+
+.player-name{
+  font-weight:500;
+}
+
+.player-score{
+  background:#2c79dd;
+  color:white;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:0.85rem;
+}

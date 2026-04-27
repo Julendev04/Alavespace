@@ -1,0 +1,614 @@
+/* === RESET BÁSICO === */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* === TITULOS === */
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.titulo-coluna {
+  font-family: "Coluna", serif;
+  font-size: 80px;
+  color: #002f87;
+  text-transform: uppercase;
+  margin-top: 130px;
+}
+
+.subtitulo-montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  color: #444;
+  font-weight: 500;
+  margin-top: -65px;
+}
+
+.subtitulo-montserrat strong {
+  color: #002f87;
+}
+
+/* ============================= */
+/* === CONTENEDOR GENERAL === */
+/* ============================= */
+
+.alineacion-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.alineacion-contenedor {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 1700px;
+}
+
+/* ============================= */
+/* === PIZARRA === */
+/* ============================= */
+
+.field2 {
+  margin-left: -40px;
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 1080 / 1350;
+  background-image: url('src/assets/Branding/pizarrita.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* TEXTO PIZARRA */
+.overlay-text-container.left-aligned {
+  position: absolute;
+  top: 4%;
+  left: 5%;
+  text-align: left;
+  z-index: 10;
+  max-width: 80%;
+}
+
+.overlay-nombre {
+  font-size: 35px;
+  font-weight: 900;
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  color: black;
+  text-transform: uppercase;
+}
+
+.overlay-formacion-box {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: rgba(0, 47, 135, 0.85);
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 6px;
+  font-weight: 600;
+  color: white;
+}
+
+/* ============================= */
+/* === POSICIONES === */
+/* ============================= */
+
+.position-wrapper {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.position {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255,255,255,0.9);
+  border: 2px solid rgba(0, 47, 135, 0.85);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.position:hover {
+  background-color: rgba(220,220,220,0.9);
+}
+
+.jugador-card {
+  width: 150px;
+  border-radius: 8px;
+  object-fit: contain;
+  cursor: pointer;
+  opacity: 1;
+  transition: transform 0.2s ease;
+}
+
+
+/* === SUPLENTE FIJO DEBAJO === */
+.suplente-text {
+  position: absolute;
+  top: 100%;
+  left: 51%;
+  transform: translateX(-50%);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  color: white;
+  background-color: #002f87;
+  padding: 3px 0;
+  border-radius: 0 0 8px 8px;
+  width: 97px; /* ancho igual que la carta */
+  text-align: center;
+  margin-top: -22px;
+  white-space: nowrap;
+}
+
+/* === AUTOCOMPLETE SUPLENTE === */
+.suplente-opcion {
+  background-color: #002f87;
+  color: white;
+  padding: 4px 0;
+  margin-bottom: 3px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  width: 120px; /* mismo ancho que la carta */
+}
+
+.suplente-opcion:hover {
+  background-color: #0040c1;
+}
+
+/* ============================= */
+/* === PANEL DERECHO === */
+/* ============================= */
+
+.panel-derecho {
+  width: 100%;
+  max-width: 750px;
+  background: #f2f3f5;
+  border: 1px solid #d0d3d8;
+  border-radius: 16px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* INPUTS EN FILA */
+.inputs-row {
+  display: flex;
+  gap: 20px;
+}
+
+/* CAMPOS */
+.campo-control {
+  display: flex;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #002f87;
+  flex: 1;
+}
+
+.campo-control label {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.campo-control select,
+.campo-control input {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: 0.2s;
+  background: white;
+}
+
+.campo-control input:focus,
+.campo-control select:focus {
+  border-color: #002f87;
+  outline: none;
+}
+
+.panel-y-botones {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 750px;
+}
+
+/* ============================= */
+/* === BOTONES ABAJO DEL TODO === */
+/* ============================= */
+
+.buttons-container.outside {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* alineado a la izquierda del panel */
+  gap: 1rem;
+  margin-top: 20px; /* un poco de separación del panel */
+}
+
+/* BOTONES */
+.btn-action {
+  background: #002f87;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.btn-action:hover {
+  background: #0040c1;
+  transform: scale(1.05);
+}
+
+.btn-action.descargar {
+  background-color: #007bff;
+}
+
+.btn-action.descargar:hover {
+  background-color: #0056b3;
+}
+
+/* ============================= */
+/* === MODAL === */
+/* ============================= */
+
+.modal-overlay-lineup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-lineup {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  width: 320px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.modal-lineup input {
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.modal-lineup input:focus {
+  border-color: #002f87;
+  box-shadow: 0 0 0 2px rgba(0,47,135,0.15);
+  outline: none;
+}
+
+.jugadores-lista-lineup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 270px;
+  overflow-y: auto;
+}
+
+.jugadores-lista-lineup::-webkit-scrollbar {
+  width: 6px;
+}
+
+.jugadores-lista-lineup::-webkit-scrollbar-thumb {
+  background: rgba(0,47,135,0.4);
+  border-radius: 10px;
+}
+
+.jugador-opcion-lineup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.jugador-opcion-lineup img {
+  border-radius: 6px;
+}
+
+.jugador-opcion-lineup span {
+  font-size: 0.85rem;
+}
+
+.jugador-opcion-lineup:hover {
+  background: rgba(0,47,135,0.1);
+  transform: translateX(4px);
+}
+
+.btn-cerrar {
+  padding: 0.5rem;
+  border-radius: 10px;
+  background: #002f87;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-cerrar:hover {
+  background: #0040c1;
+}
+
+/* ============================= */
+/* === MERCADO === */
+/* ============================= */
+
+.mercado-box {
+  margin-top: 10px;
+}
+
+.mercado-title {
+  font-family: "Montserrat", sans-serif;
+  color: #002f87;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+
+.table-lineup {
+  width: 48%;
+  max-height: 320px;
+  overflow-y: auto;
+  position: relative;
+  background: rgb(245, 245, 245);
+  border: 1px solid #cfcfcf;
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.plantilla-table2 {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  display: block; /* ⚡ clave */
+}
+
+.plantilla-table2 thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.plantilla-table2 thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.plantilla-table2 tbody {
+  display: block;
+  max-height: 260px; /* altura del scroll */
+  overflow-y: auto;
+}
+
+.plantilla-table2 tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.plantilla-table2 th {
+  position: sticky;
+  top: 0;
+  background: rgb(245, 245, 245);
+  z-index: 1000;
+}
+
+.player-row td {
+  padding: 6px 8px; /* menos padding arriba/abajo y lados */
+  height: auto;     /* deja que se ajuste automáticamente */
+  font-size: 0.85rem; /* opcional: texto más pequeño si quieres */
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.plantilla-table2 th:nth-child(1),
+.plantilla-table2 td:nth-child(1) {
+  width: 120px; /* ancho fijo para la columna de Precio */
+}
+
+.plantilla-table2 th:nth-child(2),
+.plantilla-table2 td:nth-child(2) {
+  width: 45px; /* ancho fijo para la columna de Precio */
+}
+
+.plantilla-table2 th:nth-child(3),
+.plantilla-table2 td:nth-child(3) {
+  width: 50px; /* ancho fijo para la columna de Acción */
+}
+
+
+.btn-vender {
+  background: #c0392b;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.market-stats {
+  width: 50%;
+  display: flex;
+  justify-content: center; /* centra los items horizontalmente */
+  gap: 20px; /* espacio entre cada stat */
+  margin: 15px auto 0; /* centrado del contenedor dentro de la página */
+  text-align: center;
+}
+
+.stat-value {
+  font-family: "Coluna", sans-serif;
+  font-size: 45px;
+  display: block;
+  font-weight: 800;
+  color: #002f87;
+  margin-bottom: -15px;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #777;
+}
+
+/* === PAGINACIÓN === */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pagination button {
+  border: none;
+  background: #002f87;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagination button:hover {
+  background: #0040c1;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* CONTENEDOR DE LAS DOS TABLAS */
+.tables-wrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start; /* alineadas por la izquierda */
+  align-items: flex-start;     /* alineadas por arriba */
+  width: 100%;
+}
+
+/* SCROLL EN CADA TABLA */
+.table-lineup {
+  width: 48%;
+  height: 320px;        /* altura fija para scroll */
+  display: flex;
+  flex-direction: column; /* importante para separar header y body */
+  background: rgb(245, 245, 245);
+  border: 1px solid #cfcfcf;
+  border-radius: 14px;
+  overflow: hidden; /* ⚡ importante */
+}
+
+
+.plantilla-table2 th, .plantilla-table2 td {
+  text-align: left;
+}
+
+.plantilla-table2 th {
+  background: rgb(245, 245, 245);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* SCROLL BONITO */
+.table-lineup::-webkit-scrollbar {
+  width: 6px;
+}
+
+.table-lineup::-webkit-scrollbar-thumb {
+  background: rgba(0,47,135,0.4);
+  border-radius: 10px;
+}
+
+.add-fichaje-row td {
+  text-align: center;
+}
+
+.add-fichaje-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #002f87;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-fichaje-btn:hover {
+  background: #0040c1;
+  transform: scale(1.1);
+}
+
+.positivo { color: #27ae60; }
+.negativo { color: #c0392b; }
+
+.vendidos-container {
+  width: 100%;
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vendido-tag {
+  background: #002f87;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vendido-tag span {
+  cursor: pointer;
+  font-weight: bold;
+}

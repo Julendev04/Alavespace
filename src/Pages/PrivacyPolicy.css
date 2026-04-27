@@ -1,0 +1,55 @@
+.pp-container {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+  background-color: #f5f5f5;
+  font-family: "Montserrat", san-serif;
+}
+
+.pp-card {
+  background-color: #ffffff;
+  max-width: 900px;
+  padding: 40px;
+  border: 1px solid #eaeaea;
+  margin-bottom: -50px;
+}
+
+.pp-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.pp-last-updated {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.pp-section {
+  margin-bottom: 25px;
+}
+
+.pp-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.pp-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .pp-card {
+    padding: 25px;
+  }
+
+  .pp-title {
+    font-size: 2rem;
+  }
+}

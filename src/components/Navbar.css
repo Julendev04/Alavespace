@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+.navbar {
+  width: 100%;
+  max-width: 96vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(13, 97, 175, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 0.6rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  color: white;
+}
+
+/* IZQUIERDA */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navbar-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-right:-6px;
+}
+
+.fecha-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  background: rgba(255,255,255,0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  margin-left: 30px;
+  white-space: nowrap;
+}
+
+/* TICKER */
+.ticker-container {
+  margin-left: 46px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  max-width: 600px;
+}
+
+.ticker {
+  display: flex;
+  animation: scrollTicker 20s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.ticker-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+
+.red-dot {
+  width: 6px;
+  height: 6px;
+  background-color: red;
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes scrollTicker {
+  100% { transform: translateX(-50%); }
+}
+
+/* DERECHA */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+/* MENU */
+.dropdown {
+  position: relative;
+  z-index: 2000;
+}
+
+.dropdown-button {
+  font-size: 1.4rem;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.dropdown-button:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* 🔥 MENÚ HORIZONTAL */
+.dropdown-menu {
+  position: absolute;
+  top: 10%;
+  right: calc(100% + 20px);
+  transform: translateY(-50%);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 34px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  z-index: 3000;
+}
+.dropdown-menu.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.dropdown-menu li a:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* LOGIN */
+.account-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* USUARIO */
+.user-box {
+  position: relative;
+  margin-right: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.user-info:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background: white;
+  color: #333;
+  border-radius: 8px;
+  padding: 0.4rem;
+  min-width: 140px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: 0.25s;
+
+  z-index: 3000;
+}
+
+.user-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.user-dropdown button {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 6px;
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.user-dropdown button:hover {
+  background: #f0f0f0;
+}

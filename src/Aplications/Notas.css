@@ -1,0 +1,478 @@
+.voting-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  color: #333;
+}
+
+.top-bar {
+    margin-top: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.general-button {
+  padding: 10px 25px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  background-color: #e74c3c; /* rojo fuerte */
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.general-button:hover {
+  background-color: #c0392b;
+}
+
+.match-info {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.match-info-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.match-info-box label {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.match-info-box input,
+.match-info-box select {
+  width: 160px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #f1f3f5;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  outline: none;
+  cursor: default;
+}
+
+.players-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 6px;
+  justify-items: center;
+  margin-bottom: 30px;
+}
+
+.voting-player-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative; /* 🔥 CLAVE */
+}
+
+.voting-player-card {
+  width: 180px;
+  height: auto;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+
+.player-score-input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  text-align: center;
+  margin-top: 6px;
+}
+
+.submit-votes {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.submit-votes button {
+  padding: 10px 30px;
+  border-radius: 10px;
+  border: none;
+  background-color: #3498db;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-votes button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+/* TABLA */
+.results-section {
+  margin-top: 40px;
+}
+
+.table-container2 {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow-x: auto;
+}
+
+.results-table2 {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results-table2 th,
+.results-table2 td {
+  padding: 12px;
+  font-size: 0.95rem;
+  color: #333;
+  text-align: left;
+}
+
+.results-table2 thead {
+  background-color: #f1f3f5;
+}
+
+.results-table2 td:first-child {
+  font-weight: 600;
+  color: #3498db;
+}
+
+.results-table2 td:nth-child(3) {
+  font-weight: 600;
+}
+
+.results-table2 tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.overlay-content {
+  width: 90%;
+  max-width: 1200px;
+  height: 90%;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e74c3c;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .overlay-content {
+    width: 95%;
+    height: 95%;
+    padding: 15px;
+  }
+  .voting-player-card {
+    width: 100px;
+  }
+  .player-score-input {
+    width: 40px;
+  }
+}
+
+/* SOLO el select tiene flecha */
+.select-box {
+  position: relative;
+}
+
+.select-box::after {
+  content: "⌄";
+  position: absolute;
+  right: 12px;
+  top: 32px;
+  pointer-events: none;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* CONTENEDOR RELATIVO */
+.players-container {
+  position: relative;
+}
+
+/* OVERLAY LOCAL */
+.section-overlay {
+  margin-left: -300px;
+  margin-top: -40px;
+  width: 1900px;
+  height: 430px;
+  position: absolute;
+  inset: 0;
+
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(10px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 10;
+
+  mask-image:
+    linear-gradient(to bottom,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    ),
+    linear-gradient(to right,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    linear-gradient(to bottom,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    ),
+    linear-gradient(to right,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+
+  mask-composite: intersect;
+  -webkit-mask-composite: destination-in;
+}
+
+/* CONTENIDO DEL OVERLAY */
+.section-overlay-content {
+  background: rgba(255,255,255,0.9);
+  padding: 25px 35px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.section-overlay-content h3 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  color: #2c3e50;
+}
+
+.section-overlay-content p {
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.auth-btn {
+  display: inline-block;
+  padding: 10px 25px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.auth-btn:hover {
+  transform: translateY(-2px);
+}
+
+.empty-state {
+  height: 320px;
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-state h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.loading-screen {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, #ffffff 0%, #f4f6f8 100%);
+}
+
+/* CONTENEDOR */
+.loader-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ANILLO GIRATORIO */
+.spinner-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+
+  border: 3px solid transparent;
+  border-top: 3px solid #3498db;
+  border-right: 3px solid #3498db;
+
+  animation: spin 1s linear infinite;
+
+  filter: drop-shadow(0 0 8px rgba(52,152,219,0.4));
+}
+
+/* LOGO */
+.loader-logo {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  z-index: 2;
+
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* GIRO */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* LATIDO SUAVE */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+.user-vote {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #27ae60;
+  font-weight: 600;
+  background: rgba(39, 174, 96, 0.1);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.results-table2 td:last-child {
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.voters-count {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.admin-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-btn:hover {
+  transform: translateY(-2px);
+}
+
+.admin-add-player {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.admin-add-player select {
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #f1f3f5;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-add-player select:hover {
+  background-color: #e9ecef;
+}
+
+/* BOTÓN OCULTO */
+.remove-player-btn {
+  position: absolute;
+  top: -10px;
+  right: 9px;
+  background: transparent;
+  border: none;
+  color: rgba(0,0,0,0.5);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 10;
+}
+
+.remove-player-btn:hover {
+  color: #e74c3c;
+  transform: scale(1.2);
+}

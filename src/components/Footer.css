@@ -1,0 +1,125 @@
+.footer {
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  overflow-x: hidden;
+}
+
+/* Bloque azul oscuro inferior */
+.footer-main {
+  background-color: #002f87;
+  color: white;
+  text-align: center;
+  padding: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+/* Bloque superior más claro */
+.footer-extra {
+  background-color: #1a3d9a;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 0; /* cambia 2rem 1rem a 2rem 0 */
+  width: 1910px;
+}
+
+/* Fila 1: logo + nombre */
+.footer-row.logo-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.footer-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.footer-name {
+  font-size: 2.1rem;
+  font-weight: bold;
+}
+
+/* Fila 2: iconos de redes sociales */
+.footer-row.social-row a img {
+  width: 30px;
+  height: 30px;
+  margin: 0 0.5rem;
+  transition: transform 0.2s;
+   filter: brightness(0) invert(1); /* fuerza que sean blancos */
+}
+
+.footer-row.links-row {
+  display: flex;
+  justify-content: center;
+  gap: 10rem;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 140px;
+}
+
+.footer-column h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #ffcc00; /* detalle dorado */
+}
+
+.footer-column a {
+  color: white;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-column a:hover {
+  color: #ffcc00;
+}
+
+.footer-row.top-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* bloque logo + nombre */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* separador | */
+.separator {
+  font-size: 1.5rem;
+  opacity: 0.6;
+}
+
+/* redes */
+.social-row {
+  display: flex;
+  align-items: center;
+}
+
+.social-row a img {
+  width: 30px;
+  height: 30px;
+  margin: 0 0.5rem;
+  transition: transform 0.2s;
+  filter: brightness(0) invert(1);
+}
+
+.social-row a img:hover {
+  transform: scale(1.15);
+}

@@ -1,0 +1,60 @@
+.loading-screen {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, #ffffff 0%, #f4f6f8 100%);
+}
+
+/* CONTENEDOR */
+.loader-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ANILLO */
+.spinner-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+
+  border: 3px solid transparent;
+  border-top: 3px solid #3498db;
+  border-right: 3px solid #3498db;
+
+  animation: spin 1s linear infinite;
+
+  filter: drop-shadow(0 0 8px rgba(52,152,219,0.4));
+}
+
+/* LOGO */
+.loader-logo {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  z-index: 2;
+
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
