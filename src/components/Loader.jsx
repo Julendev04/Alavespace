@@ -1,7 +1,7 @@
 // Loader.jsx
 import React from "react";
 import "./Loader.css";
-import logo2 from "../assets/Branding/logo2.png"
+import logo2 from "../assets/Branding/Logo2.png"
 
 export default function Loader() {
   return (

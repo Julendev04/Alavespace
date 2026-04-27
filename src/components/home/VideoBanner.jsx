@@ -1,3 +1,4 @@
+import miniatura from "../assets/mendizorroza.jpg";
 export default function VideoBanner() {
 
   return (
@@ -21,7 +22,7 @@ export default function VideoBanner() {
           className="youtube-video-thumbnail"
         >
           <img
-            src="src/assets/mendizorroza.jpg"
+            src={miniatura}
             alt="Latest video"
           />
 
