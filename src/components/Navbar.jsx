@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import logo from "../assets/Branding/Logo.png"
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaUserCircle,
@@ -118,7 +119,7 @@ const Navbar = () => {
       {/* IZQUIERDA */}
       <div className="navbar-left">
         <Link to="/home" className="navbar-brand">
-          <img src="src/assets/Branding/Logo.png" alt="logo" className="navbar-logo" />
+          <img src={logo} alt="logo" className="navbar-logo" />
           <span>Alavesfera</span>
         </Link>
 

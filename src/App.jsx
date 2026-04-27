@@ -31,6 +31,7 @@ function Layout() {
       {!hideLayout && <Navbar />}
       <main className={isAuth ? "main-auth" : isLanding ? "main-landing" : ""}>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} /> {/* 👈 Ruta Auth */}
           <Route path="/landing" element={<Landing />} />
           <Route path="/home" element={<Home />} />
