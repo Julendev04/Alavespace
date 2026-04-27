@@ -1,11 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import iconoLiga from "../../assets/Competiciones/IconoLiga.png";
 
 export default function Competitions() {
   const navigate = useNavigate();
 
   const competitions = [
-    { name: "Nuestros equipos", img: "src/assets/Competiciones/IconoLiga.png", route: "/plantilla" },
+    { name: "Nuestros equipos", img: iconoLiga, route: "/plantilla" },
   ];
 
   return (

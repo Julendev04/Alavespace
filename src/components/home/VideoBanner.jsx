@@ -1,4 +1,4 @@
-import miniatura from "../assets/mendizorroza.jpg";
+import miniatura from "../../assets/mendizorroza.jpg";
 export default function VideoBanner() {
 
   return (
