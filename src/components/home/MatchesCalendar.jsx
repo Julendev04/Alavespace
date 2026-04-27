@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { FaMouse } from "react-icons/fa";
 
-export default function MatchesCalendar({ matches }) {
+export default function MatchesCalendar({ matches = [] }) {
 
     const ref = useRef(null);
 
@@ -14,13 +14,15 @@ export default function MatchesCalendar({ matches }) {
             el.scrollLeft += e.deltaY;
         };
 
-        el.addEventListener("wheel", handler);
+        el.addEventListener("wheel", handler, { passive: false });
+
         return () => el.removeEventListener("wheel", handler);
     }, []);
 
     return (
         <div className="matches-calendar full-width">
 
+            {/* HEADER */}
             <div className="matches-header">
                 <h2>Próximos partidos</h2>
 
@@ -30,17 +32,19 @@ export default function MatchesCalendar({ matches }) {
                 </div>
             </div>
 
+            {/* GRID HORIZONTAL */}
             <div className="matches-grid" ref={ref}>
 
                 {matches.map((match) => (
                     <div key={match.id} className="match-card-mini">
 
                         {/* COMPETICIÓN */}
-                        {match.competitions && (
+                        {match.competitions?.logo_url && (
                             <div className="match-competition">
                                 <img
                                     src={match.competitions.logo_url}
-                                    alt={match.competitions.name}
+                                    alt={match.competitions?.name || "Competición"}
+                                    loading="lazy"
                                 />
                             </div>
                         )}

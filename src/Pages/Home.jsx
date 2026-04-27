@@ -134,7 +134,13 @@ export default function Home() {
 
     let query = supabase
       .from("matches")
-      .select("*, competitions(name)")
+      .select(`
+      *,
+      competitions (
+        name,
+        logo_url
+      )
+    `)
       .order("match_date", { ascending: true })
       .limit(20);
 
@@ -142,7 +148,12 @@ export default function Home() {
       query = query.neq("id", mainMatchId);
     }
 
-    const { data } = await query;
+    const { data, error } = await query;
+
+    if (error) {
+      console.error(error);
+      return;
+    }
 
     setMatches(data || []);
   }
@@ -160,27 +171,27 @@ export default function Home() {
     loadData();
   }, []);
 
-useEffect(() => {
-  const init = async () => {
-    setLoading(true);
+  useEffect(() => {
+    const init = async () => {
+      setLoading(true);
 
-    const { data: newsData } = await supabase
-      .from("news")
-      .select("*, news_categories(*)")
-      .order("published_at", { ascending: false });
+      const { data: newsData } = await supabase
+        .from("news")
+        .select("*, news_categories(*)")
+        .order("published_at", { ascending: false });
 
-    setNews(newsData || []);
+      setNews(newsData || []);
 
-    await fetchStandings();
-    await fetchTopStats();
-    await fetchMatches(null);
-    await fetchCategories();
+      await fetchStandings();
+      await fetchTopStats();
+      await fetchMatches(null);
+      await fetchCategories();
 
-    setLoading(false);
-  };
+      setLoading(false);
+    };
 
-  init();
-}, []);
+    init();
+  }, []);
 
   useEffect(() => {
     fetchJugadores();
