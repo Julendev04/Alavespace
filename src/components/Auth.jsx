@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../services/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { FaInstagram, FaTwitter, FaDiscord, FaHome } from "react-icons/fa";
+import slide1 from "../assets/SLIDE1.jpg";
+import slide2 from "../assets/SLIDE2.jpg";
+import slide3 from "../assets/SLIDE3.jpg";
+
 import "./Auth.css";
 
 export default function Auth() {
@@ -13,11 +17,7 @@ export default function Auth() {
   const navigate = useNavigate();
 
   // SLIDESHOW
-  const images = [
-    "src/assets/SLIDE1.jpg",
-    "src/assets/SLIDE2.jpg",
-    "src/assets/SLIDE3.jpg",
-  ];
+  const images = [slide1, slide2, slide3];
   const [currentImage, setCurrentImage] = useState(0);
 
   useEffect(() => {

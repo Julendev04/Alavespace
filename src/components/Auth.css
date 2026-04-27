@@ -186,6 +186,7 @@
 
 /* 🔥 BOTÓN DE CASA REDONDO */
 .back-btn {
+  margin-left: 50px;
   padding: 14px;
   border-radius: 50%;
   background: #3b63d1;
