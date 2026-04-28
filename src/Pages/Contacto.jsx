@@ -1,55 +1,58 @@
 import React from "react";
 import "./Contacto.css";
+import anuncioFlyer from "../assets/anuncioFlyer.jpg";
 
 export default function ContactDashboard() {
   return (
-    <div className="page-center">
-      <div className="layout">
-        <div className="contact-wrapper">
+    <div className="contact-page">
+      {/* LEFT IMAGE */}
+      <div className="contact-left">
+        <img src={anuncioFlyer} alt="contact" />
+      </div>
+
+      {/* RIGHT FORM */}
+      <div className="contact-right">
+        <div className="contact-content">
           <div className="contact-header">
-            <h1>Envíanos un mensaje</h1>
-            <p>Te respondremos lo más pronto posible</p>
+            <h2>Envíanos un mensaje</h2>
+            <p>Te responderemos lo antes posible</p>
           </div>
 
           <form className="contact-form">
-            <div className="campo">
+            <div className="form-row">
               <input type="text" placeholder="Name" />
-            </div>
-
-            <div className="campo">
               <input type="email" placeholder="Email" />
             </div>
 
-            <div className="campo">
-              <input type="text" placeholder="Subject" />
-            </div>
+            <input type="text" placeholder="Subject" />
 
-            <div className="campo">
-              <textarea placeholder="Message" rows="4"></textarea>
-            </div>
+            {/* SELECT */}
+            <select className="contact-select" defaultValue="">
+              <option value="" disabled>
+                Tipo de consulta
+              </option>
+              <option value="colaboracion">Propuesta de colaboración</option>
+              <option value="publicidad">Publicidad y patrocinio</option>
+              <option value="prensa">Prensa y medios</option>
+              <option value="contenido">Solicitud de contenido</option>
+              <option value="otro">Otro</option>
+            </select>
+
+            <textarea placeholder="Message" rows="6"></textarea>
 
             <button className="send-btn">Send Message</button>
           </form>
-        </div>
 
-        <div className="image-side"></div>
-      </div>
+          <div className="contact-info">
+            <div>
+              <h4>General</h4>
+              <p>comunicacion@atleticostats.es</p>
+            </div>
 
-      <div className="info-section">
-        <div className="info-box">
-          <div className="info-item">
-            <h3>Comunicación general</h3>
-            <p>comunicacion@atleticostats.es</p>
-          </div>
-
-          <div className="info-item">
-            <h3>Publicidad y patrocinio</h3>
-            <p>marketing@atleticostats.es</p>
-          </div>
-
-          <div className="info-item">
-            <h3>Ubicación</h3>
-            <p>Madrid, España</p>
+            <div>
+              <h4>Marketing</h4>
+              <p>marketing@atleticostats.es</p>
+            </div>
           </div>
         </div>
       </div>

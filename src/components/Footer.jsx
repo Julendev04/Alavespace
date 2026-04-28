@@ -24,9 +24,9 @@ const Footer = () => {
 
   <div className="social-row">
     <a href="#"><img src={discord} alt="Discord" /></a>
-    <a href="#"><img src={twitter} alt="Twitter" /></a>
-    <a href="#"><img src={instagram} alt="Instagram" /></a>
-    <a href="#"><img src={spotify} alt="Spotify" /></a>
+    <a href="https://x.com/Alavesfera"><img src={twitter} alt="Twitter" /></a>
+    <a href="https://www.instagram.com/alavesfera_oficial/?next=%2F"><img src={instagram} alt="Instagram" /></a>
+    <a href="https://www.youtube.com/@AlavesferaTV"><img src={spotify} alt="Youtube" /></a>
   </div>
 </div>
 
@@ -42,7 +42,7 @@ const Footer = () => {
             <h4>Legal</h4>
             <a href="#">Aviso legal</a>
             <Link to="/politica-privacidad">Política de privacidad</Link>
-            <a href="#">Política de cookies</a>
+            <a href="/coockies">Política de cookies</a>
           </div>
 
           <div className="footer-column">

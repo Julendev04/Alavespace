@@ -18,6 +18,7 @@ import Filial from "./Pages/Filial";
 import Perfil from "./Pages/Perfil";
 import Contacto from "./Pages/Contacto";
 import Privacidad from "./Pages/PrivacyPolicy";
+import Coockies from "./Pages/CoockiePolicy";
 
 function Layout() {
   const location = useLocation();
@@ -47,6 +48,7 @@ function Layout() {
           <Route path="/Perfil" element={<Perfil />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/politica-privacidad" element={<Privacidad />} />
+          <Route path="/coockies" element={<Coockies />} />
         </Routes>
       </main>
       {!hideLayout && <Footer />}

@@ -1,55 +1,161 @@
 .pp-container {
   display: flex;
   justify-content: center;
-  padding: 50px;
-  background-color: #f5f5f5;
-  font-family: "Montserrat", san-serif;
+  padding: 50px 20px;
+  background: #e6e6e6;
+  font-family: "Montserrat", sans-serif;
 }
 
 .pp-card {
-  background-color: #ffffff;
-  max-width: 900px;
-  padding: 40px;
-  border: 1px solid #eaeaea;
-  margin-bottom: -50px;
+  background: #ffffff;
+  width: 100%;
+  max-width: 950px;
+  padding: 60px 70px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* HEADER IZQUIERDA */
+.pp-header {
+  text-align: left;
+  margin-bottom: 28px;
 }
 
 .pp-title {
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: #222;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 4px;
 }
 
 .pp-last-updated {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #777;
-  margin-bottom: 30px;
+  font-size: 0.8rem;
+  color: #666;
 }
 
+.pp-info-block {
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: #f7f7f7;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+}
+
+.pp-info-block p {
+  font-size: 0.88rem;
+  margin: 3px 0;
+  color: #444;
+  line-height: 1.4;
+}
+
+.pp-info-block span {
+  font-weight: 600;
+  color: #222;
+  display: inline-block;
+  min-width: 120px;
+}
+
+/* SECCIONES COMPACTAS */
 .pp-section {
-  margin-bottom: 25px;
+  margin-bottom: 16px;
 }
 
 .pp-subtitle {
-  font-size: 1.3rem;
-  margin-bottom: 8px;
-  color: #333;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 3px;
 }
 
 .pp-text {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #444;
+  text-align: justify;
 }
 
+/* 📊 MINI GRÁFICO */
+.pp-mini-chart {
+  margin-top: 10px;
+}
+
+.pp-bar {
+  margin-bottom: 8px;
+}
+
+.pp-bar span {
+  font-size: 0.75rem;
+  color: #555;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.bar-fill {
+  height: 6px;
+  background: #ddd;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-1::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 85%;
+  background: #111;
+}
+
+.bar-2::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 60%;
+  background: #555;
+}
+
+.bar-3::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 75%;
+  background: #333;
+}
+
+/* 📋 TABLA */
+.pp-table-wrapper {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.pp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.pp-table th {
+  text-align: left;
+  padding: 8px;
+  background: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+}
+
+.pp-table td {
+  padding: 8px;
+  border-top: 1px solid #eee;
+  color: #444;
+}
+
+/* responsive */
 @media (max-width: 768px) {
   .pp-card {
-    padding: 25px;
+    padding: 35px 20px;
   }
 
   .pp-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 }

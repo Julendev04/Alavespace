@@ -1,0 +1,113 @@
+.cp-container {
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+  background: #e6e6e6;
+  font-family: "Montserrat", sans-serif;
+}
+
+.cp-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 950px;
+  padding: 60px 70px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* HEADER */
+.cp-header {
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.cp-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.cp-last-updated {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* SECCIONES */
+.cp-section {
+  margin-bottom: 16px;
+}
+
+.cp-subtitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.cp-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #444;
+  text-align: justify;
+}
+
+/* BLOQUE INFO RESPONSABLE */
+.cp-info-block {
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: #f7f7f7;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+}
+
+.cp-info-block p {
+  font-size: 0.88rem;
+  margin: 3px 0;
+  color: #444;
+}
+
+.cp-info-block span {
+  font-weight: 600;
+  color: #222;
+  min-width: 120px;
+  display: inline-block;
+}
+
+/* TABLA */
+.cp-table-wrapper {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.cp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.cp-table th {
+  text-align: left;
+  padding: 8px;
+  background: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+}
+
+.cp-table td {
+  padding: 8px;
+  border-top: 1px solid #eee;
+  color: #444;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .cp-card {
+    padding: 35px 20px;
+  }
+
+  .cp-title {
+    font-size: 1.5rem;
+  }
+}
