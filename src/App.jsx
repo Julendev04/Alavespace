@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import Home from "./Pages/Home";
 import Matches from "./Pages/Matches";
 import Nosotros from "./Pages/Nosotros";
-import Calendario from "./Pages/Calendario";
 import Footer from "./components/Footer";
 import Lineup from "./Aplications/Lineup";
 import Pizarra from "./Pages/Pizarra";
@@ -38,7 +37,6 @@ function Layout() {
           <Route path="/Matches" element={<Matches />} />
           <Route path="/jugador/:id" element={<Ficha />} />
           <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/calendario" element={<Calendario />} />
           <Route path="/lineup" element={<Lineup />} />
           <Route path="/pizarra" element={<Pizarra />} />
           <Route path="/notas" element={<Notas />} />

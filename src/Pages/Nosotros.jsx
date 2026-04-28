@@ -1,14 +1,9 @@
 import React from "react";
 import "./Nosotros.css";
 import { FaTwitter, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import julenLogo from "../assets/Branding/julen_logo.jpg";
 
 const SobreNosotros = () => {
-  const equipo = [
-    { nombre: "Julen Ruiz", rol: "Fundador & Diseñador", foto: "src/assets/Branding/julen_logo.jpg" },
-    { nombre: "María López", rol: "Desarrolladora Frontend", foto: "src/assets/Branding/julen_logo.jpg" },
-    { nombre: "Carlos Pérez", rol: "Editor de Contenido", foto: "src/assets/Branding/julen_logo.jpg" },
-    { nombre: "Lucía Gómez", rol: "Community Manager", foto: "src/assets/Branding/julen_logo.jpg" },
-  ];
 
   const redes = [
     { nombre: "Twitter", icon: <FaTwitter />, seguidores: 12000, descripcion: "Tweets diarios sobre noticias y estadísticas." },
@@ -27,23 +22,23 @@ const SobreNosotros = () => {
       </section>
 
       {/* SECCIÓN SOBRE EL PROYECTO */}
-      <section className="section">
+      <section className="main-section">
         <h2>Alavesfera es Analisis, opinión e informaón</h2>
         <p>
-          "Alavesfera es un proyecto digital innovador que integra noticias actualizadas, datos en tiempo real, estadísticas detalladas de jugadores y contenido
+          Alavesfera es un proyecto digital innovador que integra noticias actualizadas, datos en tiempo real, estadísticas detalladas de jugadores y contenido
           multimedia de alta calidad, ofreciendo a nuestra audiencia una experiencia informativa, dinámica y completamente accesible. Nuestro objetivo es
           proporcionar un espacio digital donde la información deportiva se presenta de manera clara, confiable y visualmente atractiva, fomentando la interacción
-          y el conocimiento profundo de cada evento y desempeño dentro del mundo del fútbol."
+          y el conocimiento profundo de cada evento y desempeño dentro del mundo del fútbol.
         </p>
       </section>
 
       {/* SECCIÓN EL EQUIPO */}
       <section className="section">
-        <h2>El equipo de Alavesfera</h2>
+        <h2>Hola! Déjame presentarme...</h2>
         <div className="team-profile">
 
           <div className="team-logo">
-            <img src="src/assets/Branding/julen_logo.jpg" alt="Oscar Hernández" />
+            <img src={julenLogo} alt="Julen Ruiz De Viñaspre" />
           </div>
 
           <div className="team-info">
