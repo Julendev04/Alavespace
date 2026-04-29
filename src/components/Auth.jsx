@@ -171,55 +171,57 @@ export default function Auth() {
       {/* LADO DERECHO - FORMULARIO */}
       <div className="auth-right">
         <div className="auth-content">
-          <div className="auth-box">
-            <img src="src/assets/Branding/Logo.png" alt="Logo" className="auth-logo" />
-            <h2>{isRegister ? "Crear Cuenta" : "Iniciar Sesión"}</h2>
+          <div className="auth-center">
+            <div className="auth-box">
+              <img src="src/assets/Branding/Logo.png" alt="Logo" className="auth-logo" />
+              <h2>{isRegister ? "Crear Cuenta" : "Iniciar Sesión"}</h2>
 
-            <form onSubmit={handleAuth}>
-              {isRegister && (
+              <form onSubmit={handleAuth}>
+                {isRegister && (
+                  <input
+                    type="text"
+                    placeholder="Nombre de usuario"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                )}
+
                 <input
-                  type="text"
-                  placeholder="Nombre de usuario"
+                  type="email"
+                  placeholder="Correo electrónico"
                   required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-              )}
 
-              <input
-                type="email"
-                placeholder="Correo electrónico"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                <input
+                  type="password"
+                  placeholder="Contraseña"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
 
-              <input
-                type="password"
-                placeholder="Contraseña"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+                <button type="submit">
+                  {isRegister ? "Registrarse" : "Ingresar"}
+                </button>
+              </form>
 
-              <button type="submit">
-                {isRegister ? "Registrarse" : "Ingresar"}
-              </button>
-            </form>
+              {message && <p className="message">{message}</p>}
 
-            {message && <p className="message">{message}</p>}
+              <p className="switch">
+                {isRegister ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
+                <span onClick={() => setIsRegister(!isRegister)}>
+                  {isRegister ? " Inicia sesión" : " Regístrate"}
+                </span>
+              </p>
+            </div>
 
-            <p className="switch">
-              {isRegister ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
-              <span onClick={() => setIsRegister(!isRegister)}>
-                {isRegister ? " Inicia sesión" : " Regístrate"}
-              </span>
-            </p>
+            <button className="back-btn" onClick={() => navigate("/home")}>
+              <FaHome size={24} />
+            </button>
           </div>
-
-          <button className="back-btn" onClick={() => navigate("/home")}>
-            <FaHome size={24} />
-          </button>
         </div>
       </div>
     </div>
