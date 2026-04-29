@@ -369,7 +369,6 @@ export default function Home() {
   // ================= RENDER =================
   return (
     <div className="home-page">
-
       <Competitions />
       {mainMatch ? (
         <HeroMatch

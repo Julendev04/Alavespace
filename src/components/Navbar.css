@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+/* ========================= */
+/* NAVBAR BASE */
+/* ========================= */
+
 .navbar {
   width: 100%;
   max-width: 96vw;
@@ -20,7 +24,10 @@
   color: white;
 }
 
+/* ========================= */
 /* IZQUIERDA */
+/* ========================= */
+
 .navbar-left {
   display: flex;
   align-items: center;
@@ -44,7 +51,7 @@
   width: 50px;
   height: 50px;
   object-fit: contain;
-  margin-right:-6px;
+  margin-right: -6px;
 }
 
 .fecha-pill {
@@ -57,7 +64,10 @@
   white-space: nowrap;
 }
 
+/* ========================= */
 /* TICKER */
+/* ========================= */
+
 .ticker-container {
   margin-left: 46px;
   flex: 1;
@@ -100,16 +110,22 @@
   100% { transform: translateX(-50%); }
 }
 
+/* ========================= */
 /* DERECHA */
+/* ========================= */
+
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
-  margin-right: 10px;
+  margin-right: 70px;
 }
 
-/* MENU */
+/* ========================= */
+/* DROPDOWN (MENÚ HORIZONTAL) */
+/* ========================= */
+
 .dropdown {
   position: relative;
   z-index: 2000;
@@ -129,7 +145,7 @@
   background: rgba(255,255,255,0.15);
 }
 
-/* 🔥 MENÚ HORIZONTAL */
+/* MENÚ HORIZONTAL (DESKTOP) */
 .dropdown-menu {
   position: absolute;
   top: 10%;
@@ -140,15 +156,18 @@
   flex-direction: row;
   align-items: center;
   gap: 34px;
+
   background: transparent;
   padding: 0;
   box-shadow: none;
   backdrop-filter: none;
+
   opacity: 0;
   pointer-events: none;
   transition: all 0.2s ease;
   z-index: 3000;
 }
+
 .dropdown-menu.show {
   opacity: 1;
   pointer-events: auto;
@@ -171,7 +190,10 @@
   background: rgba(255,255,255,0.15);
 }
 
-/* LOGIN */
+/* ========================= */
+/* USER */
+/* ========================= */
+
 .account-button {
   display: flex;
   align-items: center;
@@ -183,7 +205,6 @@
   white-space: nowrap;
 }
 
-/* USUARIO */
 .user-box {
   position: relative;
   margin-right: 10px;
@@ -220,7 +241,6 @@
   transform: translateY(-10px);
   pointer-events: none;
   transition: 0.25s;
-
   z-index: 3000;
 }
 
@@ -244,4 +264,238 @@
 
 .user-dropdown button:hover {
   background: #f0f0f0;
+}
+
+/* ========================= */
+/* TICKER RESPONSIVE HIDE */
+/* ========================= */
+
+@media (max-width: 1200px) {
+  .ticker-container {
+    display: none;
+  }
+}
+
+/* ========================= */
+/* MOBILE ADJUSTMENTS */
+/* ========================= */
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0.6rem 1.2rem;
+  }
+
+  .navbar-right {
+    margin-right: 20px;
+  }
+
+  .fecha-pill {
+    margin-left: 15px;
+    font-size: 11px;
+  }
+
+  .navbar-logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .navbar-brand {
+    font-size: 1.3rem;
+  }
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .ticker-container {
+    display: none;
+  }
+
+  .fecha-pill {
+    font-size: 10px;
+    margin-left: 10px;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .navbar-logo {
+    width: 38px;
+    height: 38px;
+  }
+
+  .navbar-brand span {
+    display: none;
+  }
+
+  .navbar-right {
+    gap: 8px;
+    margin-right: 10px;
+  }
+
+  /* FORZAMOS MENÚ VERTICAL EN MOBILE SI SE ACTIVA */
+  .dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    background: rgba(13, 97, 175, 0.98);
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .dropdown-menu li a {
+    width: 100%;
+    font-size: 13px;
+  }
+}
+
+/* ========================= */
+/* SMALL MOBILE */
+/* ========================= */
+
+@media (max-width: 480px) {
+
+  .navbar {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .fecha-pill {
+    display: none;
+  }
+
+  .navbar-left {
+    gap: 6px;
+  }
+
+  .navbar-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .dropdown-button {
+    font-size: 1.2rem;
+  }
+
+  .account-button span,
+  .user-info span {
+    display: none;
+  }
+
+  .user-info {
+    padding: 4px;
+  }
+}
+
+/* ========================= */
+/* OVERLAY (MENÚ LATERAL) */
+/* ========================= */
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 260px;
+  height: 100vh;
+
+  background: rgba(13, 97, 175, 0.98);
+  backdrop-filter: blur(12px);
+
+  display: flex;
+  flex-direction: column;
+  padding: 80px 20px;
+
+  transition: right 0.35s ease;
+  z-index: 4000;
+  pointer-events: none; /* 🔥 clave */
+}
+
+/* cuando está abierto */
+.menu-overlay.show {
+  right: 0;
+  pointer-events: auto;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  z-index: 3500;
+}
+
+.menu-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-overlay a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: white;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+
+  padding: 10px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.menu-overlay a:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ========================= */
+/* MODO COMPACTO (JS LOGIC) */
+/* ========================= */
+
+.navbar.compact .ticker-container {
+  display: none;
+}
+
+.navbar.compact .dropdown-menu {
+  display: none !important;
+}
+
+.navbar.compact .menu-overlay,
+.navbar.compact .menu-backdrop {
+  display: flex;
+}
+
+.navbar.compact .navbar-brand span,
+.navbar.compact .fecha-pill {
+  display: none;
+}
+
+/* ========================= */
+/* BREAKPOINT PRINCIPAL 1643px */
+/* ========================= */
+
+@media (max-width: 1643px) {
+
+  /* ocultamos menú horizontal */
+  .dropdown-menu {
+    display: none !important;
+  }
+
+  /* el overlay sí puede aparecer */
+  .menu-overlay {
+    display: flex;
+  }
 }
