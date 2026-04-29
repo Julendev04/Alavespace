@@ -1980,3 +1980,244 @@ html, body {
   overflow-y: auto;
   padding-right: 8px;
 }
+
+/* =========================
+   MOBILE PRO LAYOUT
+========================= */
+@media (max-width: 768px) {
+
+  /* HERO */
+  .home-hero {
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+
+  .match-card1 {
+    padding: 1.2rem;
+    border-radius: 16px;
+  }
+
+  .teams {
+    gap: 1rem;
+    font-size: 0.95rem;
+    flex-wrap: nowrap; /* 🔥 evita salto vertical */
+  }
+
+  .team-block img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .team-block span {
+    font-size: 10px;
+  }
+
+  .details {
+    gap: 1.2rem;
+    font-size: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  /* ---------------- NEWS (KEEP HORIZONTAL AUTO SCROLL) ---------------- */
+  .news-scroll-wrapper {
+    width: 420px;
+    padding: 0 0.9rem;
+    margin-bottom: 35px;
+  }
+
+  .news-scroll {
+    gap: 0.8rem;
+  }
+
+  .news-card {
+    width: 240px;
+    height: 105px;
+    flex-shrink: 0;
+  }
+
+  .news-content {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .news-content h4 {
+    width: 85%;
+    font-size: 15px;
+  }
+
+  .news-content span {
+    margin-top: -15px;
+    font-size: 13px;
+  }
+
+  /* IMPORTANTE: mantener scroll smooth visible y limpio */
+  .news-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .news-scroll-wrapper {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  
+
+/* =========================
+   MEDIA SECTION STACK FIX
+========================= */
+
+.media-wrapper {
+  flex-direction: column; /* 🔥 clave */
+  overflow-x: hidden;
+}
+
+.youtube-video-banner {
+  margin-left: -30px;
+  margin-bottom: -12px;
+  position: relative;
+  width: 424px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 14px 14px 0 0; /* solo arriba */
+}
+
+.right-column {
+  margin-left: 50px;
+  min-width: 85%;
+  width: 60%;
+  flex-shrink: 1 ;
+}
+
+/* enciclopedia jugadores */
+.player-search-box {
+  margin-top: 0px;
+  width: 93% !important;
+  height: auto;
+}
+
+/* video */
+.youtube-video-thumbnail img {
+  width: 100% !important;
+  height: auto !important;
+}
+
+  .stats-box {
+    margin-left: 17px;
+  height: 325px;
+  width: 93%;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e5e5;
+}
+
+.stats-box h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e629c;
+  margin-top: -5px;
+}
+
+/* bloque */
+.stats-block {
+  margin-bottom: 1.5rem;
+}
+
+  /* ---------------- MATCHES MINI CARDS ---------------- */
+  .matches-grid {
+    margin-left: -25px;
+    width: 415px;
+    overflow-x: auto;
+  }
+
+  .match-card-mini {
+    min-width: 160px;
+    height: 240px;
+  }
+
+  .matches-calendar h2 {
+    margin-left: -24px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e629c;
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   EXTRA PANELS MOBILE PRO
+========================= */
+
+.extra-info-section {
+  width: 100% !important;
+  padding: 0 1rem;
+}
+
+.extra-panels {
+  display:grid;
+  grid-template-columns: repeat(1, 1fr); /* 🔥 dos columnas en móvil */
+  gap: 0.8rem;
+  padding-bottom: 10px;
+  overflow-x: hidden; /* quitamos scroll horizontal */
+}
+
+/* ocultar scrollbar */
+.extra-panels::-webkit-scrollbar {
+  display: none;
+}
+
+.extra-panel {
+  min-width: 260px;
+  flex-shrink: 0;
+  scroll-snap-align: start; /* 🔥 snap por tarjeta */
+}
+
+/* mejora visual en móvil */
+.extra-panel h3 {
+  font-size: 14px;
+}
+
+.extra-panel p {
+  font-size: 13px;
+}
+}
+@media (max-width: 768px) {
+
+  .competitions-section {
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 0.6rem;
+    padding: 1rem;
+    margin-bottom: -105px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ocultar scrollbar */
+  .competitions-section::-webkit-scrollbar {
+    display: none;
+  }
+
+  .competitions-section {
+    scrollbar-width: none;
+  }
+
+  /* cada botón */
+  .competition-circle {
+    flex-shrink: 0;
+  }
+
+  .circle-bg {
+    width: 425px;   /* 🔥 más compacto */
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .circle-bg img {
+    margin-left: 85px;
+    width: 50%;
+    height: 50%;
+  }
+
+  .competition-circle span {
+    font-size: 13px;
+    margin-left: -55px;
+  }
+}

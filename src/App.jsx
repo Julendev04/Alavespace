@@ -28,6 +28,7 @@ function Layout() {
 
   return (
     <>
+      <div className="app-container">
       {!hideLayout && <Navbar />}
       <main className={isAuth ? "main-auth" : isLanding ? "main-landing" : ""}>
         <Routes>
@@ -51,7 +52,8 @@ function Layout() {
           <Route path="/coockies" element={<Coockies />} />
         </Routes>
       </main>
-      {!hideLayout && <Footer />}
+    </div>
+    {!hideLayout && <Footer />}
     </>
   );
 }
