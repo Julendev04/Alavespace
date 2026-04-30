@@ -194,7 +194,10 @@ const Navbar = () => {
           />
 
           <div className={`menu-overlay ${menuOpen ? "show" : ""}`}>
-            <Link to="/notas" onClick={() => setMenuOpen(false)}>
+            <Link
+              to="/notas"
+              onMouseDown={() => setMenuOpen(false)}
+            >
               <FaGamepad /> Notas
             </Link>
             <Link to="/lineup" onClick={() => setMenuOpen(false)}>

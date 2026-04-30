@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ExtraPanels({ setShowSimulator }) {
+export default function ExtraPanels({ setShowSimulator, setShowTransfers }) {
   return (
     <section className="extra-info-section">
       <div className="extra-panels">
@@ -32,7 +32,10 @@ export default function ExtraPanels({ setShowSimulator }) {
           </p>
         </div>
 
-        <div className="extra-panel">
+        <div
+          className="extra-panel"
+          onClick={() => setShowTransfers(true)}
+        >
           <h3>Transfers</h3>
           <span className="panel-icon">🔄</span>
           <p>

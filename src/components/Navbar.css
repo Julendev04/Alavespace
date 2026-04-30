@@ -424,6 +424,7 @@
 .menu-overlay.show {
   right: 0;
   pointer-events: auto;
+  z-index: 99999;
 }
 
 .menu-backdrop {
@@ -493,10 +494,5 @@
   /* ocultamos menú horizontal */
   .dropdown-menu {
     display: none !important;
-  }
-
-  /* el overlay sí puede aparecer */
-  .menu-overlay {
-    display: flex;
   }
 }

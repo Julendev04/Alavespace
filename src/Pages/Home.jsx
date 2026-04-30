@@ -11,6 +11,8 @@ import StatsBox from "../components/home/StatsBox";
 import MatchesCalendar from "../components/home/MatchesCalendar";
 import ExtraPanels from "../components/home/ExtraPanels";
 import SeasonSimulator from "../components/home/SeasonSimulator";
+import TransfersPanel from "../components/home/TransfersPanel";
+import TransfersAdminPanel from "../components/home/TransfersAdminPanel";
 import UpdatesSection from "../components/home/UpdatesSection";
 import VideoBanner from "../components/home/VideoBanner";
 import "./Home.css";
@@ -47,6 +49,8 @@ export default function Home() {
   const [fixtures, setFixtures] = useState([]);
   const [simulatedFixtures, setSimulatedFixtures] = useState([]);
   const [simulatedStandings, setSimulatedStandings] = useState([]);
+  const [showTransfers, setShowTransfers] = useState(false);
+  const [showAdminTransfers, setShowAdminTransfers] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -434,7 +438,10 @@ export default function Home() {
         </div>
       </div>
 
-      <ExtraPanels setShowSimulator={setShowSimulator} />
+      <ExtraPanels
+        setShowSimulator={setShowSimulator}
+        setShowTransfers={setShowTransfers}
+      />
 
       <SeasonSimulator
         showSimulator={showSimulator}
@@ -444,6 +451,27 @@ export default function Home() {
         updateScore={updateScore}
         getTeamName={getTeamName}
       />
+      <TransfersPanel
+        showTransfers={showTransfers}
+        setShowTransfers={setShowTransfers}
+        isAdmin={isAdmin}
+      />
+      {showAdminTransfers && (
+        <div className="simulator-overlay">
+          <div className="simulator-modal">
+
+            <button
+              className="close-btn"
+              onClick={() => setShowAdminTransfers(false)}
+            >
+              ✕
+            </button>
+
+            <TransfersAdminPanel />
+
+          </div>
+        </div>
+      )}
 
       <UpdatesSection />
 
