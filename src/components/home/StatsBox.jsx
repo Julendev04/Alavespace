@@ -1,49 +1,69 @@
 import React from "react";
 
+const statLabels = {
+  goals: "Goles",
+  assists: "Asistencias",
+  matches: "Partidos"
+};
+
 export default function StatsBox({ topStats, activeStat, setActiveStat }) {
+  const metricKey = activeStat === "goals"
+    ? "goals"
+    : activeStat === "assists"
+      ? "assists"
+      : "matches_played";
 
-  const topScorers = [...topStats].sort((a,b)=>b.goals-a.goals).slice(0,4);
-  const topAssists = [...topStats].sort((a,b)=>b.assists-a.assists).slice(0,4);
-  const topMatches = [...topStats].sort((a,b)=>b.matches_played-a.matches_played).slice(0,4);
+  const data = [...topStats]
+    .sort((a, b) => (b[metricKey] || 0) - (a[metricKey] || 0))
+    .slice(0, 5);
 
-  const data =
-    activeStat === "goals"
-      ? topScorers
-      : activeStat === "assists"
-      ? topAssists
-      : topMatches;
+  const leaderValue = data[0]?.[metricKey] || 1;
 
   return (
-    <div className="stats-box">
+    <section className="stats-box">
+      <div className="stats-box-header">
+        <div>
+          <span className="stats-kicker">Primer equipo</span>
+          <h2>Estadísticas destacadas</h2>
+        </div>
 
-      <h2>Estadísticas destacadas</h2>
-
-      <div className="stats-toggle">
-        <button onClick={()=>setActiveStat("goals")} className={activeStat==="goals"?"active":""}>Goles</button>
-        <button onClick={()=>setActiveStat("assists")} className={activeStat==="assists"?"active":""}>Asistencias</button>
-        <button onClick={()=>setActiveStat("matches")} className={activeStat==="matches"?"active":""}>Partidos</button>
+        <div className="stats-toggle" aria-label="Seleccionar estadística">
+          {Object.entries(statLabels).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setActiveStat(key)}
+              className={activeStat === key ? "active" : ""}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="stats-block">
+        {data.map((player, index) => {
+          const value = player[metricKey] || 0;
+          const width = `${Math.max((value / leaderValue) * 100, 6)}%`;
 
-        {data.map((p,i)=>(
-          <div key={p.id} className="stat-row">
-            <span className="rank">{i+1}</span>
-            <img src={p.photo_url} />
-            <span className="name">{p.name}</span>
+          return (
+            <article key={player.id} className="stat-row">
+              <span className="rank">{index + 1}</span>
+              <img src={player.photo_url} alt={player.name} loading="lazy" />
 
-            <div className="bar">
-              <div className="fill"></div>
-            </div>
-
-            <span className="value">
-              {activeStat==="goals"?p.goals:activeStat==="assists"?p.assists:p.matches_played}
-            </span>
-          </div>
-        ))}
-
+              <div className="stat-player-info">
+                <div className="stat-player-line">
+                  <span className="name">{player.name}</span>
+                  <span className="value">{value}</span>
+                </div>
+                <div className="bar" aria-hidden="true">
+                  <div className="fill" style={{ width }} />
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
-
-    </div>
+    </section>
   );
 }

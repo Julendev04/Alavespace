@@ -3,7 +3,6 @@ import { supabase } from "../services/supabaseClient";
 import Loader from "../components/Loader";
 
 // COMPONENTES
-import Competitions from "../components/home/Competitions";
 import HeroMatch from "../components/home/HeroMatch";
 import NewsSection from "../components/home/NewsSection";
 import PlayerSearch from "../components/home/PlayerSearch";
@@ -74,7 +73,7 @@ export default function Home() {
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("role")
+          .select("username, role")
           .eq("id", data.user.id)
           .single();
 
@@ -145,7 +144,7 @@ export default function Home() {
         logo_url
       )
     `)
-      .order("match_date", { ascending: true })
+      .order("match_date", { ascending: false })
       .limit(20);
 
     if (mainMatchId) {
@@ -373,7 +372,6 @@ export default function Home() {
   // ================= RENDER =================
   return (
     <div className="home-page">
-      <Competitions />
       {mainMatch ? (
         <HeroMatch
           mainMatch={mainMatch}
@@ -399,6 +397,7 @@ export default function Home() {
         setFormData={setFormData}
         handleSaveNews={handleSaveNews}
         onCreateNews={createNews}
+        userId={userId}
       />
 
 
@@ -431,7 +430,7 @@ export default function Home() {
 
             <VideoBanner />
 
-            <MatchesCalendar matches={matches} />
+            <MatchesCalendar matches={matches} standings={standings} />
 
           </div>
 

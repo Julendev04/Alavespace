@@ -19,6 +19,8 @@ import Perfil from "./Pages/Perfil";
 import Contacto from "./Pages/Contacto";
 import Privacidad from "./Pages/PrivacyPolicy";
 import Coockies from "./Pages/CoockiePolicy";
+import Trayectoria from "./Pages/Trayectoria";
+import MatchPreview from "./Pages/MatchPreview";
 
 function Layout() {
   const location = useLocation();
@@ -50,6 +52,8 @@ function Layout() {
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/politica-privacidad" element={<Privacidad />} />
           <Route path="/coockies" element={<Coockies />} />
+          <Route path="/trayectoria" element={<Trayectoria />} />
+          <Route path="/partido/:id" element={<MatchPreview />} />
         </Routes>
       </main>
     </div>

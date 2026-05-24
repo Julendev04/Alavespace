@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
-import { FaMapMarkerAlt, FaTrophy, FaCalendarAlt } from "react-icons/fa";
 import { useRef } from "react";
 import "./Porra.css";
-import { FaEye } from "react-icons/fa";
+import { FaCheckCircle, FaChessKnight, FaEye, FaInfo, FaMagic, FaUser } from "react-icons/fa";
 
 const jugadoresDisponibles = [
   { nombre: "Antonio Sivera" },
@@ -45,6 +44,7 @@ export default function PorraAlaves() {
   const [timeLeft, setTimeLeft] = useState("");
   const [misPredicciones, setMisPredicciones] = useState([]);
   const [prediccionHecha, setPrediccionHecha] = useState(false);
+  const [saveNotice, setSaveNotice] = useState(null);
   const [userId, setUserId] = useState(null);
   const OUR_TEAM = "Deportivo Alavés";
   const myRowRef = useRef(null);
@@ -62,6 +62,14 @@ export default function PorraAlaves() {
       name: isHome ? match.away_team : match.home_team,
       logo: isHome ? match.away_logo : match.home_logo,
     };
+  }
+
+  function getMatchPickStatus(match) {
+    if (!match) return "Partido";
+    if (match.status === "finished") return "Porra cerrada";
+
+    const now = new Date();
+    return new Date(match.match_date) > now ? "Prediccion abierta" : "En juego";
   }
 
   async function fetchMisPredicciones() {
@@ -90,10 +98,6 @@ export default function PorraAlaves() {
     setMisPredicciones(enriched);
   }
 
-
-  const [showInfo, setShowInfo] = useState(false);
-
-
   // Obtener usuario
   useEffect(() => {
     async function getUser() {
@@ -120,6 +124,13 @@ export default function PorraAlaves() {
   useEffect(() => {
     if (userId) fetchMisPredicciones();
   }, [userId]);
+
+  useEffect(() => {
+    if (!saveNotice) return undefined;
+
+    const timeout = setTimeout(() => setSaveNotice(null), 4200);
+    return () => clearTimeout(timeout);
+  }, [saveNotice]);
 
   // Filtrar goleadores
   useEffect(() => {
@@ -218,13 +229,26 @@ export default function PorraAlaves() {
   async function fetchMatches() {
     const { data } = await supabase
       .from("matches")
-      .select("*")
-      .order("match_date");
+      .select("*, competitions(name, logo_url)")
+      .order("match_date", { ascending: true })
+      .limit(10);
+
     setMatches(data || []);
-    const activo =
-      data?.find(m => m.status === "live") ||
-      data?.find(m => m.status === "upcoming");
-    if (activo) setActiveMatch(activo);
+
+    if (!data || data.length === 0) return;
+
+    const now = new Date();
+    const liveMatch = data.find(match => {
+      const start = new Date(match.match_date);
+      const end = new Date(start.getTime() + 30 * 1000);
+      return now >= start && now < end && match.status !== "finished";
+    });
+
+    const nextMatch = data.find(match =>
+      new Date(match.match_date) > now && match.status === "upcoming"
+    );
+
+    setActiveMatch(liveMatch || nextMatch || data[0]);
   }
 
   async function fetchRanking() {
@@ -238,7 +262,31 @@ export default function PorraAlaves() {
       return;
     }
 
-    setRanking(data || []);
+    const rows = data || [];
+    const ids = rows.map((item) => item.id).filter(Boolean);
+
+    if (!ids.length) {
+      setRanking(rows);
+      return;
+    }
+
+    const { data: users } = await supabase
+      .from("porra_users")
+      .select("id, avatar, nombre")
+      .in("id", ids);
+
+    const usersById = new Map((users || []).map((user) => [user.id, user]));
+
+    setRanking(
+      rows.map((row) => {
+        const user = usersById.get(row.id);
+        return {
+          ...row,
+          avatar: row.avatar || user?.avatar || null,
+          nombre: row.nombre || user?.nombre || "Usuario"
+        };
+      })
+    );
   }
   // Goleadores
   function agregarGoleador(jugador) {
@@ -251,20 +299,16 @@ export default function PorraAlaves() {
     );
   }
 
-  // Puntos preview
-  function calcularPuntosPreview() {
-    if (golesA === "" || golesR === "") return 0;
-    let puntos = 0;
-    if (parseInt(golesA) > parseInt(golesR)) puntos += 1;
-    if (parseInt(golesA) === parseInt(golesR)) puntos += 1;
-    puntos += goleadoresSeleccionados.length;
-    return puntos;
-  }
-
   // Guardar pronóstico
   async function guardarPronostico() {
-    if (!activeMatch) return alert("No hay partido activo");
-    if (!userId) return alert("Usuario no cargado");
+    if (!activeMatch) {
+      setSaveNotice({ type: "error", title: "Partido no disponible", text: "No hay partido activo para guardar el pronostico." });
+      return;
+    }
+    if (!userId) {
+      setSaveNotice({ type: "error", title: "Sesion no cargada", text: "Espera unos segundos y vuelve a intentarlo." });
+      return;
+    }
 
     // Validar que userId exista en porra_users
     const { data: userCheck } = await supabase
@@ -273,7 +317,8 @@ export default function PorraAlaves() {
       .eq("id", userId)
       .maybeSingle();
     if (!userCheck) {
-      return alert("Usuario no registrado en porra_users. Por favor regístrate de nuevo.");
+      setSaveNotice({ type: "error", title: "Registro incompleto", text: "Tu usuario no aparece en la porra. Vuelve a registrarte para participar." });
+      return;
     }
 
     // Buscar predicción existente
@@ -283,7 +328,10 @@ export default function PorraAlaves() {
       .eq("user_id", userId)
       .eq("match_id", activeMatch.id)
       .maybeSingle();
-    if (fetchError) return alert("Error al comprobar predicción");
+    if (fetchError) {
+      setSaveNotice({ type: "error", title: "No se pudo comprobar", text: "Ha habido un problema revisando tu prediccion previa." });
+      return;
+    }
 
     let error;
     if (existing) {
@@ -311,9 +359,13 @@ export default function PorraAlaves() {
 
     if (error) {
       console.error(error);
-      alert("Error al guardar");
+      setSaveNotice({ type: "error", title: "No se pudo guardar", text: "Revisa tu conexion y vuelve a intentarlo." });
     } else {
-      alert(existing ? "Pronóstico actualizado 🔁" : "Pronóstico guardado 🔥");
+      setSaveNotice({
+        type: "success",
+        title: existing ? "Pronostico actualizado" : "Pronostico registrado",
+        text: `${activeMatch.home_team} ${golesA || 0} - ${golesR || 0} ${activeMatch.away_team}. Tu prediccion queda sellada en la Porra Alavesfera.`
+      });
 
       await fetchMisPredicciones();
       setPrediccionHecha(true);
@@ -324,49 +376,40 @@ export default function PorraAlaves() {
 
   return (
     <div className="porra-page">
-      <button onClick={() => generateFakeUsers(150)}>
-        Generar usuarios de prueba
-      </button>
       {/* HERO */}
       {activeMatch && (
         <div className="hero-match">
+          <div className="magic-particles" aria-hidden="true">
+            {Array.from({ length: 16 }).map((_, index) => (
+              <span key={index}></span>
+            ))}
+          </div>
+          <div className="porra-hero-orb left"></div>
+          <div className="porra-hero-orb right"></div>
 
           {/* HOME */}
-          <div className="escudo">
+          <div className="escudo home-crest">
             <img src={activeMatch.home_logo} alt={activeMatch.home_team} />
           </div>
 
           <div className="match-banner">
+            <div className="porra-spell">
+              <FaMagic />
+              <span>{getMatchPickStatus(activeMatch)}</span>
+              <FaChessKnight />
+            </div>
+
             <h2>
               {activeMatch.home_team} vs {activeMatch.away_team}
             </h2>
 
-            <div className="match-extra">
-              <div className="info-item">
-                <FaCalendarAlt />
-                <span>
-                  {new Date(activeMatch.match_date).toLocaleDateString()}
-                </span>
-              </div>
-
-              <div className="info-item">
-                <FaMapMarkerAlt />
-                <span>{activeMatch.stadium || "Mendizorroza"}</span>
-              </div>
-
-              <div className="info-item">
-                <FaTrophy />
-                <span>Jornada {activeMatch.week || "?"}</span>
-              </div>
-            </div>
-
             <div className="countdown">
-              Votos abiertos durante {timeLeft}
+              El oraculo se cierra en <strong>{timeLeft}</strong>
             </div>
           </div>
 
           {/* AWAY */}
-          <div className="escudo">
+          <div className="escudo away-crest">
             <img src={activeMatch.away_logo} alt={activeMatch.away_team} />
           </div>
 
@@ -376,19 +419,41 @@ export default function PorraAlaves() {
       <div className="prediction-ranking-wrapper">
 
         {/* PREDICCIÓN */}
-        <div className={`prediction-card ${timeLeft === "Cerrado" || prediccionHecha ? "disabled" : ""}`}>
+        <div className={`prediction-card ${timeLeft === "Cerrado" ? "disabled" : ""} ${prediccionHecha ? "prediction-locked" : ""}`}>
           <h2 className="titulo1">PRONOSTICA YA</h2>
           <h2 className="titulo2">ESTE PARTIDO</h2>
 
+          {saveNotice && (
+            <div className={`save-notice ${saveNotice.type}`} role="status">
+              <FaCheckCircle />
+              <div>
+                <strong>{saveNotice.title}</strong>
+                <span>{saveNotice.text}</span>
+              </div>
+            </div>
+          )}
+
+          {prediccionHecha && !saveNotice && (
+            <div className="prediction-state-message" role="status">
+              <FaCheckCircle />
+              <span>Ya has hecho tu prediccion. Espera a los resultados finales para ver tus puntos.</span>
+            </div>
+          )}
+
           <div className="score-inputs">
-            <input type="number" value={golesA} onChange={e => setGolesA(e.target.value)} disabled={timeLeft === "Cerrado" || prediccionHecha} />
-            <span>VS</span>
-            <input type="number" value={golesR} onChange={e => setGolesR(e.target.value)} disabled={timeLeft === "Cerrado" || prediccionHecha} />
+            <label className="score-field">
+              <span>{activeMatch?.home_team || "Alaves"}</span>
+              <input type="number" value={golesA} onChange={e => setGolesA(e.target.value)} disabled={timeLeft === "Cerrado" || prediccionHecha} />
+            </label>
+            <span className="score-versus">VS</span>
+            <label className="score-field">
+              <span>{activeMatch?.away_team || "Rival"}</span>
+              <input type="number" value={golesR} onChange={e => setGolesR(e.target.value)} disabled={timeLeft === "Cerrado" || prediccionHecha} />
+            </label>
           </div>
 
-          <div className="points-preview">🔥 Puntos posibles: {calcularPuntosPreview()}</div>
-
           <div className="goleadores-autocomplete">
+            <span className="field-label">Goleadores del Glorioso</span>
             <div className="tags">
               {goleadoresSeleccionados.map(j => (
                 <span className="tag" key={j.nombre}>
@@ -399,7 +464,7 @@ export default function PorraAlaves() {
                 value={goleadoresInput}
                 onChange={e => setGoleadoresInput(e.target.value)}
                 placeholder="Busca goleadores"
-                disabled={timeLeft === "Cerrado"}
+                disabled={timeLeft === "Cerrado" || prediccionHecha}
               />
             </div>
 
@@ -414,24 +479,18 @@ export default function PorraAlaves() {
             )}
           </div>
 
-          <button onClick={guardarPronostico} disabled={timeLeft === "Cerrado" || !userId || prediccionHecha}>
+          <button className="btn-save" onClick={guardarPronostico} disabled={timeLeft === "Cerrado" || !userId || prediccionHecha}>
             {timeLeft === "Cerrado" || prediccionHecha ? "Pronóstico cerrado" : "Guardar pronóstico"}
           </button>
 
-          <div className="info-btn" onClick={() => setShowInfo(true)}>i</div>
-
-          {showInfo && (
-            <div className="info-modal-overlay" onClick={() => setShowInfo(false)}>
-              <div className="info-modal" onClick={(e) => e.stopPropagation()}>
-                <h3>¿Cómo se puntúa?</h3>
-                <ul>
-                  <li>✅ Acertar resultado (ganar/empatar): +1 punto</li>
-                  <li>⚽ Cada goleador acertado: +1 punto</li>
-                </ul>
-                <button onClick={() => setShowInfo(false)}>Cerrar</button>
-              </div>
+          <div className="info-btn" tabIndex="0" aria-label="Informacion de puntuacion">
+            <FaInfo />
+            <div className="info-tooltip" role="tooltip">
+              <strong>Como se puntua</strong>
+              <span>Acertar resultado, ganar o empatar, suma +1 punto.</span>
+              <span>Cada goleador acertado suma +1 punto adicional.</span>
             </div>
-          )}
+          </div>
         </div>
 
         {/* TABLA */}
@@ -458,7 +517,13 @@ export default function PorraAlaves() {
                   >
                     <td className="col-small bold">{index + 1}</td>
                     <td className="player-info col-player">
-                      {user.avatar && <img src={user.avatar} alt={user.nombre} />}
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.nombre} />
+                      ) : (
+                        <span className="ranking-avatar-fallback" aria-hidden="true">
+                          <FaUser />
+                        </span>
+                      )}
                       <span>{user.nombre}</span>
                     </td>
                     <td className="col-small bold">{user.puntos}</td>
@@ -476,19 +541,24 @@ export default function PorraAlaves() {
 
         <div className="matches-scroll">
           {matches
-            .filter(m => m.id !== activeMatch?.id)
+            .filter(m => m.id !== activeMatch?.id && new Date(m.match_date) > new Date())
             .map(m => {
-              const opponent = getOpponent(m);
-
               return (
                 <div key={m.id} className="match-card">
 
-                  <img src={opponent?.logo} alt={opponent?.name} />
+                  <div className="next-teams">
+                    <img src={m.home_logo} alt={m.home_team} />
+                    <span>vs</span>
+                    <img src={m.away_logo} alt={m.away_team} />
+                  </div>
 
-                  <span>{opponent?.name}</span>
+                  <span>{m.home_team} - {m.away_team}</span>
 
                   <small>
-                    {new Date(m.match_date).toLocaleDateString()}
+                    {new Date(m.match_date).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "short"
+                    })}
                   </small>
 
                 </div>

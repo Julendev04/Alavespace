@@ -14,7 +14,8 @@ export default function NewsSection({
   setFormData,
   categories,
   handleSaveNews,
-  onCreateNews
+  onCreateNews,
+  userId
 }) {
   return (
     <div className="news-container">
@@ -60,12 +61,11 @@ export default function NewsSection({
 
       {/* NEWS VIEW MODAL */}
       {openNews && (
-        <div className="news-overlay">
-          <NewsModal
-            news={openNews}
-            onClose={() => setOpenNews(null)}
-          />
-        </div>
+        <NewsModal
+          news={openNews}
+          userId={userId}
+          onClose={() => setOpenNews(null)}
+        />
       )}
 
       {/* NEWS EDIT MODAL */}

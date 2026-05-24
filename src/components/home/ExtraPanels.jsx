@@ -4,45 +4,27 @@ export default function ExtraPanels({ setShowSimulator, setShowTransfers }) {
   return (
     <section className="extra-info-section">
       <div className="extra-panels">
-
         <div
-          className="extra-panel"
+          className="extra-panel extra-panel-simulator"
           onClick={() => setShowSimulator(true)}
         >
           <h3>Simula la temporada</h3>
-          <span className="panel-icon">⚽</span>
-          <p>
-            Pon tus resultados y nuestra clasificación ideal hace la mágia.
-          </p>
         </div>
 
-        <div className="extra-panel">
-          <h3>Team Form</h3>
-          <span className="panel-icon">📈</span>
-          <p>
-            Recent performance and match results analysis.
-          </p>
+        <div className="extra-panel extra-panel-form">
+          <h3>Estado de forma</h3>
         </div>
 
-        <div className="extra-panel">
-          <h3>Injuries</h3>
-          <span className="panel-icon">🩹</span>
-          <p>
-            Latest injury updates and player availability.
-          </p>
+        <div className="extra-panel extra-panel-injuries">
+          <h3>Lesiones</h3>
         </div>
 
         <div
-          className="extra-panel"
+          className="extra-panel extra-panel-transfers"
           onClick={() => setShowTransfers(true)}
         >
-          <h3>Transfers</h3>
-          <span className="panel-icon">🔄</span>
-          <p>
-            Recent transfer news and rumours.
-          </p>
+          <h3>Mercado</h3>
         </div>
-
       </div>
     </section>
   );

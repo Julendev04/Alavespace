@@ -1,35 +1,45 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../assets/Branding/Logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  FaUserCircle,
-  FaGamepad,
-  FaUsers,
+  FaBell,
+  FaChalkboard,
   FaFutbol,
-  FaChalkboard
+  FaGamepad,
+  FaPaperPlane,
+  FaUserCircle,
+  FaUsers
 } from "react-icons/fa";
 import { supabase } from "../services/supabaseClient";
 import "./Navbar.css";
 
+const fallbackNotifications = [
+  {
+    id: "welcome",
+    title: "Centro de avisos",
+    message: "Aqui apareceran los eventos importantes de la web y los anuncios del equipo.",
+    created_at: new Date().toISOString()
+  }
+];
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [fechaHora, setFechaHora] = useState(new Date());
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
-
-  // 🔥 SOLO CONTROL POR BREAKPOINT
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [notifications, setNotifications] = useState(fallbackNotifications);
+  const [announcementDraft, setAnnouncementDraft] = useState("");
   const [isMobileMenu, setIsMobileMenu] = useState(false);
 
   const navbarRef = useRef(null);
   const dropdownRef = useRef(null);
   const userRef = useRef(null);
+  const notificationsRef = useRef(null);
 
   const navigate = useNavigate();
 
-  /* ========================= */
-  /* RESPONSIVE BREAKPOINT 1643px */
-  /* ========================= */
   useEffect(() => {
     const checkSize = () => {
       setIsMobileMenu(window.innerWidth <= 1643);
@@ -37,13 +47,9 @@ const Navbar = () => {
 
     checkSize();
     window.addEventListener("resize", checkSize);
-
     return () => window.removeEventListener("resize", checkSize);
   }, []);
 
-  /* ========================= */
-  /* CLICK OUTSIDE + RELOJ */
-  /* ========================= */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,104 +59,112 @@ const Navbar = () => {
       if (userRef.current && !userRef.current.contains(event.target)) {
         setUserMenuOpen(false);
       }
-    };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    const interval = setInterval(() => setFechaHora(new Date()), 1000);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      clearInterval(interval);
-    };
-  }, []);
-
-  /* ========================= */
-  /* USER AUTH */
-  /* ========================= */
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-
-      if (data?.user) {
-        setUser(data.user);
-
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("username")
-          .eq("id", data.user.id)
-          .single();
-
-        if (profile) setUsername(profile.username);
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setNotificationsOpen(false);
       }
     };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data?.user) return;
+
+      setUser(data.user);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("username, role")
+        .eq("id", data.user.id)
+        .single();
+
+      setUsername(profile?.username || "");
+      setIsAdmin(profile?.role === "admin");
+    };
+
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const { data, error } = await supabase
+        .from("site_notifications")
+        .select("id,title,message,created_at")
+        .order("created_at", { ascending: false })
+        .limit(8);
+
+      if (!error && data?.length) {
+        setNotifications(data);
+      }
+    };
+
+    fetchNotifications();
   }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setUsername("");
+    setIsAdmin(false);
     navigate("/auth");
   };
 
-  const fechaFormateada = fechaHora.toLocaleDateString("es-ES", {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  });
+  const publishAnnouncement = async () => {
+    const cleanMessage = announcementDraft.trim();
+    if (!cleanMessage) return;
 
-  const horaFormateada = fechaHora.toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "Europe/Madrid"
-  });
+    const newNotification = {
+      title: "Aviso de Alavesfera",
+      message: cleanMessage,
+      created_at: new Date().toISOString()
+    };
 
-  const titular =
-    "Última hora: El Alavés prepara su gran remontada para la próxima jornada";
+    const { data, error } = await supabase
+      .from("site_notifications")
+      .insert({
+        ...newNotification,
+        created_by: user?.id || null
+      })
+      .select("id,title,message,created_at")
+      .single();
+
+    setNotifications((prev) => [
+      error ? { ...newNotification, id: Date.now() } : data,
+      ...prev
+    ].slice(0, 8));
+    setAnnouncementDraft("");
+  };
 
   return (
     <nav ref={navbarRef} className="navbar">
-
-      {/* LEFT */}
       <div className="navbar-left">
         <Link to="/home" className="navbar-brand">
-          <img src={logo} className="navbar-logo" />
+          <img src={logo} className="navbar-logo" alt="Alavesfera" />
           <span>Alavesfera</span>
         </Link>
 
-        <span className="fecha-pill">
-          {fechaFormateada} | {horaFormateada}h
-        </span>
-
-        <div className="ticker-container">
-          <div className="ticker">
-            <div className="ticker-item">
-              <span className="red-dot" />
-              <span className="ticker-text">{titular}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* RIGHT */}
-      <div className="navbar-right">
-
-        {/* MENU BUTTON */}
-        <div className="dropdown" ref={dropdownRef}>
+        <div className="dropdown navbar-sections-menu" ref={dropdownRef}>
           <button
+            type="button"
             className="dropdown-button"
             onClick={() => {
               setMenuOpen(!menuOpen);
               setUserMenuOpen(false);
+              setNotificationsOpen(false);
             }}
+            aria-label="Abrir menu"
           >
-            ⋮
+            <span className="menu-dots" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
           </button>
 
-          {/* DESKTOP MENU (solo >1643px) */}
           {!isMobileMenu && (
             <ul className={`dropdown-menu ${menuOpen ? "show" : ""}`}>
               <li><Link to="/notas"><FaGamepad /> Notas</Link></li>
@@ -160,8 +174,9 @@ const Navbar = () => {
             </ul>
           )}
         </div>
+      </div>
 
-        {/* USER */}
+      <div className="navbar-right">
         {!user ? (
           <Link to="/auth" className="account-button">
             <FaUserCircle />
@@ -169,23 +184,83 @@ const Navbar = () => {
           </Link>
         ) : (
           <div className="user-box" ref={userRef}>
-            <div
+            <button
+              type="button"
               className="user-info"
-              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              onClick={() => {
+                setUserMenuOpen(!userMenuOpen);
+                setNotificationsOpen(false);
+                setMenuOpen(false);
+              }}
             >
               <FaUserCircle />
               <span>{username || "Usuario"}</span>
-            </div>
+            </button>
 
             <div className={`user-dropdown ${userMenuOpen ? "show" : ""}`}>
               <button onClick={() => navigate("/perfil")}>Ver perfil</button>
-              <button onClick={handleLogout}>Cerrar sesión</button>
+              <button onClick={handleLogout}>Cerrar sesion</button>
             </div>
           </div>
         )}
+
+        <div className="notifications-box" ref={notificationsRef}>
+          <button
+            type="button"
+            className={`notification-button ${notificationsOpen ? "active" : ""}`}
+            onClick={() => {
+              setNotificationsOpen(!notificationsOpen);
+              setMenuOpen(false);
+              setUserMenuOpen(false);
+            }}
+            aria-label="Abrir notificaciones"
+          >
+            <FaBell />
+            {notifications.length > 0 && <span className="notification-dot" />}
+          </button>
+
+          <div className={`notifications-panel ${notificationsOpen ? "show" : ""}`}>
+            <div className="notifications-head">
+              <strong>Notificaciones</strong>
+              <span>Eventos y avisos</span>
+            </div>
+
+            <div className="notifications-list">
+              {notifications.map((item) => (
+                <article key={item.id} className="notification-item">
+                  <strong>{item.title}</strong>
+                  <p>{item.message}</p>
+                  <time>
+                    {new Date(item.created_at).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}
+                  </time>
+                </article>
+              ))}
+            </div>
+
+            {isAdmin && (
+              <div className="notification-admin">
+                <textarea
+                  value={announcementDraft}
+                  onChange={(event) => setAnnouncementDraft(event.target.value)}
+                  placeholder="Anunciar mensaje a los usuarios"
+                  rows="3"
+                />
+                <button type="button" onClick={publishAnnouncement}>
+                  <FaPaperPlane />
+                  Publicar aviso
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
       </div>
 
-      {/* BACKDROP + OVERLAY (SOLO <=1643px) */}
       {isMobileMenu && (
         <>
           <div
@@ -194,10 +269,7 @@ const Navbar = () => {
           />
 
           <div className={`menu-overlay ${menuOpen ? "show" : ""}`}>
-            <Link
-              to="/notas"
-              onMouseDown={() => setMenuOpen(false)}
-            >
+            <Link to="/notas" onClick={() => setMenuOpen(false)}>
               <FaGamepad /> Notas
             </Link>
             <Link to="/lineup" onClick={() => setMenuOpen(false)}>
