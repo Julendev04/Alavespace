@@ -11,6 +11,7 @@
 .perfil-grid,
 .perfil-message,
 .perfil-loading {
+  box-sizing: border-box;
   width: min(1120px, 100%);
   margin-inline: auto;
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "../services/supabaseClient";
 import "./Trayectoria.css";
@@ -31,13 +32,6 @@ function formatShortDate(date) {
   });
 }
 
-function formatTime(date) {
-  return new Date(date).toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
 function hasScore(match) {
   return match.home_score != null && match.away_score != null;
 }
@@ -63,6 +57,38 @@ function getResultType(match) {
   return "played";
 }
 
+function getCompetitionMeta(name = "") {
+  const normalized = name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  if (normalized.includes("copa")) {
+    return { label: "Copa del Rey", className: "copa" };
+  }
+
+  if (normalized.includes("segunda")) {
+    return { label: "Segunda Federación", className: "filial" };
+  }
+
+  if (normalized.includes("femenina") || normalized.includes("moeve")) {
+    return { label: "LIGA F", className: "femenino" };
+  }
+
+  if (normalized.includes("laliga") || normalized.includes("liga ea")) {
+    return { label: "LALIGA", className: "laliga" };
+  }
+
+  return { label: name || "Competición", className: "default" };
+}
+
+function getMatchLabel(match) {
+  const competition = getCompetitionMeta(match.competitions?.name);
+  const round = match.week ? `J${match.week}` : "Partido";
+
+  return { ...competition, round };
+}
+
 function getCalendarDays(activeMonthKey) {
   const [year, month] = activeMonthKey.split("-").map(Number);
   const firstDay = new Date(year, month - 1, 1);
@@ -71,15 +97,17 @@ function getCalendarDays(activeMonthKey) {
   const days = [];
 
   for (let i = 0; i < leadingEmptyDays; i += 1) {
-    days.push(null);
+    const date = new Date(year, month - 1, i - leadingEmptyDays + 1);
+    days.push({ date, currentMonth: false });
   }
 
   for (let day = 1; day <= lastDay.getDate(); day += 1) {
-    days.push(new Date(year, month - 1, day));
+    days.push({ date: new Date(year, month - 1, day), currentMonth: true });
   }
 
   while (days.length % 7 !== 0) {
-    days.push(null);
+    const nextDay = days.length - leadingEmptyDays - lastDay.getDate() + 1;
+    days.push({ date: new Date(year, month, nextDay), currentMonth: false });
   }
 
   return days;
@@ -165,7 +193,6 @@ export default function Trayectoria() {
       .reverse();
   }, [matchesByMonth, months]);
 
-  const activeMonthMatches = matchesByMonth[activeMonth] || [];
   const calendarDays = activeMonth ? getCalendarDays(activeMonth) : [];
   const activeMonthIndex = months.indexOf(activeMonth);
 
@@ -216,7 +243,8 @@ export default function Trayectoria() {
             <section className="trajectory-card">
               <div className="calendar-toolbar">
                 <button type="button" onClick={() => changeMonth(-1)} disabled={activeMonthIndex <= 0}>
-                  Anterior
+                  <ChevronLeft size={26} />
+                  <span>Anterior</span>
                 </button>
                 <h2>{activeMonth ? monthLabel(activeMonth) : ""}</h2>
                 <button
@@ -224,7 +252,8 @@ export default function Trayectoria() {
                   onClick={() => changeMonth(1)}
                   disabled={activeMonthIndex === months.length - 1}
                 >
-                  Siguiente
+                  <span>Siguiente</span>
+                  <ChevronRight size={26} />
                 </button>
               </div>
 
@@ -235,31 +264,51 @@ export default function Trayectoria() {
                   </div>
                 ))}
 
-                {calendarDays.map((day, index) => {
-                  const dayMatches = day
-                    ? activeMonthMatches.filter(
-                        (match) => new Date(match.match_date).toDateString() === day.toDateString()
-                      )
-                    : [];
+                {calendarDays.map((calendarDay, index) => {
+                  const dayMatches = matches.filter(
+                    (match) => new Date(match.match_date).toDateString() === calendarDay.date.toDateString()
+                  );
 
                   return (
-                    <div key={`${activeMonth}-${index}`} className={`calendar-day ${day ? "" : "empty"}`}>
-                      {day && <span className="calendar-day-number">{day.getDate()}</span>}
+                    <div
+                      key={`${activeMonth}-${index}`}
+                      className={`calendar-day ${calendarDay.currentMonth ? "" : "muted"}`}
+                    >
+                      <span className="calendar-day-number">{calendarDay.date.getDate()}</span>
 
-                      {dayMatches.map((match) => (
-                        <div key={match.id} className={`calendar-match ${getResultType(match)}`}>
-                          <span>{match.home_team}</span>
-                          <strong>
-                            {hasScore(match)
-                              ? `${match.home_score} - ${match.away_score}`
-                              : formatTime(match.match_date)}
-                          </strong>
-                          <span>{match.away_team}</span>
-                        </div>
-                      ))}
+                      <div className="calendar-match-list">
+                        {dayMatches.map((match) => {
+                          const matchLabel = getMatchLabel(match);
+
+                          return (
+                            <div
+                              key={match.id}
+                              className={`calendar-match competition-${matchLabel.className}`}
+                              title={matchLabel.label}
+                            >
+                              <span className="calendar-match-round">{matchLabel.round}</span>
+                              {match.competitions?.logo_url && (
+                                <img src={match.competitions.logo_url} alt="" loading="lazy" />
+                              )}
+                              <strong>{matchLabel.label}</strong>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   );
                 })}
+              </div>
+
+              <div className="calendar-legend" aria-label="Leyenda de competiciones y eventos">
+                <h3>Leyenda de las competiciones y eventos</h3>
+                <div className="calendar-legend-items">
+                  <span><i className="competition-laliga"></i>LaLiga EA Sports</span>
+                  <span><i className="competition-copa"></i>Copa del Rey</span>
+                  <span><i className="competition-filial"></i>Segunda Federación</span>
+                  <span><i className="competition-femenino"></i>Liga Femenina Moeve</span>
+                  <span><i className="competition-default"></i>Otros eventos</span>
+                </div>
               </div>
             </section>
           )}

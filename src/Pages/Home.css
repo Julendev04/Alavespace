@@ -426,8 +426,8 @@ input[type="reset"],
   border: 1px solid rgba(255, 255, 255, 0.18);
   /* 🔥 CAMBIO 1: degradado en vez de color plano */
   background:
-    radial-gradient(circle at 16% 24%, rgba(255, 255, 255, 0.18), transparent 26%),
-    linear-gradient(116deg, #06172e 0%, #0e3462 46%, #1769b8 100%);
+    linear-gradient(125deg, rgba(6, 23, 46, 0.98), rgba(13, 61, 115, 0.94)),
+    #06172e;
 
   border-radius: 8px;
   padding: 2rem clamp(1.4rem, 4vw, 4.5rem);
@@ -449,11 +449,8 @@ input[type="reset"],
 .match-bg {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 72px 72px;
-  opacity: 0.22;
+  background: transparent;
+  opacity: 0;
   z-index: 0;
 }
 
@@ -467,18 +464,17 @@ input[type="reset"],
 
 .match-card1::before {
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 36%, rgba(0, 0, 0, 0.18)),
-    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.22) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
 }
 
 .match-card1::after {
-  width: 520px;
-  height: 520px;
-  right: -180px;
-  top: -160px;
-  border: 76px solid rgba(255, 255, 255, 0.08);
+  width: 320px;
+  height: 320px;
+  right: -8%;
+  bottom: -40%;
+  border: 0;
   border-radius: 50%;
+  background: radial-gradient(circle, rgba(44, 121, 221, 0.5), transparent 64%);
 }
 
 .hover-field,

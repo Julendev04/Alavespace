@@ -1,19 +1,22 @@
 .porra-page {
+  width: 100%;
   margin-top: 60px;
   font-family: "Montserrat", sans-serif;
-  padding: 40px 20px;
+  padding: 0 0 70px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 30px;
+  align-items: stretch;
+  gap: 46px;
+  background:
+    linear-gradient(180deg, #f7f9fc 0%, #ffffff 34%, #f3f6fa 100%);
 }
 
 /* HERO DEL PARTIDO */
 .hero-match {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
-  min-height: 280px;
+  max-width: none;
+  min-height: 360px;
   position: relative;
   display: flex;
   align-items: center;
@@ -23,9 +26,9 @@
     radial-gradient(circle at 50% 52%, rgba(44, 121, 221, 0.22), transparent 34%),
     radial-gradient(circle at 25% 45%, rgba(215, 25, 32, 0.22), transparent 28%),
     linear-gradient(128deg, #06172e 0%, #0c2341 58%, #090f1d 100%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
-  padding: clamp(1.4rem, 4vw, 3rem);
+  border: 0;
+  border-radius: 0;
+  padding: clamp(2rem, 5vw, 5rem) max(24px, calc((100vw - 1200px) / 2));
   color: white;
   overflow: hidden;
 }
@@ -123,14 +126,15 @@
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.92);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.28));
 }
 
 .hero-match .escudo img {
-  width: 74%;
-  height: 74%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -224,32 +228,42 @@
 }
 
 /* PREDICCIÓN */
+.porra-prediction-section {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
 .prediction-card {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
+  max-width: none;
   position: relative;
-  background: #f8fafc;
-  border-radius: 8px;
-  padding: 28px;
-  border: 1px solid #d9e0e8;
+  background: transparent;
+  border-radius: 0;
+  padding: 6px 0 0;
+  border: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   align-items: center;
 }
 
 .prediction-card .titulo1 {
-  color: #2c79dd;
-  margin-bottom: -60px;
+  color: #06172e;
+  margin: 0 0 -26px;
   font-family: "Coluna", sans-serif;
-  font-size: 45px;
+  font-size: clamp(58px, 8vw, 118px);
+  line-height: 0.85;
+  text-transform: uppercase;
 }
 
 .prediction-card .titulo2 {
   color: #2c79dd;
-  margin-bottom: 10px;
-    font-size: 25px;
+  margin: 0 0 6px;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .score-inputs {
@@ -258,10 +272,12 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 16px;
-  padding: 16px;
-  border: 1px solid #ccd5df;
-  border-radius: 8px;
-  background: #f6f8fb;
+  padding: 6px 0 12px;
+  border: 0;
+  border-top: 1px solid rgba(12, 46, 84, 0.14);
+  border-bottom: 1px solid rgba(12, 46, 84, 0.14);
+  border-radius: 0;
+  background: transparent;
 }
 
 .score-field {
@@ -289,9 +305,10 @@
   height: clamp(68px, 9vw, 92px);
   font-size: clamp(38px, 5vw, 54px);
   text-align: center;
-  border-radius: 6px;
-  border: 1px solid #c4ced9;
-  background: #ffffff;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 3px solid #2c79dd;
+  background: transparent;
   color: #1c2d3f;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
   display: flex;
@@ -313,8 +330,8 @@
   place-items: center;
   width: 46px;
   height: 46px;
-  border: 1px solid #c4ced9;
-  border-radius: 6px;
+  border: 1px solid rgba(12, 46, 84, 0.16);
+  border-radius: 999px;
   background: #ffffff;
   color: #526579;
   font-size: 0.74rem;
@@ -349,10 +366,11 @@
   flex-wrap: wrap;
   gap: 8px;
   min-height: 52px;
-  padding: 3px;
-  border: 1px solid rgba(12, 46, 84, 0.14);
-  border-radius: 8px;
-  background: #ffffff;
+  padding: 3px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(12, 46, 84, 0.18);
+  border-radius: 0;
+  background: transparent;
 }
 
 .goleadores-autocomplete .tag {
@@ -415,57 +433,70 @@
 
 /* BOTÓN */
 .btn-save {
-  background: #2c79dd;
+  background: #06172e;
   color: white;
   border: none;
   padding: 12px 25px;
-  border-radius: 8px;
-  font-weight: 700;
+  border-radius: 9px 0px 9px 0;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .btn-save:hover {
-  background: #e10600;
+  background: #1e629c;
 }
 
 /* PRÓXIMOS PARTIDOS */
 .next-matches {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
+  max-width: none;
+  overflow: hidden;
 }
 
 .next-matches h2 {
-  margin-bottom: 15px;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto 12px;
   color: #2c79dd;
+  text-transform: uppercase;
 }
 
 .matches-scroll {
   display: flex;
-  gap: 12px;
+  width: max-content;
+  gap: 18px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding: 8px 20px 12px;
+  animation: porra-ticker 34s linear infinite;
+}
+
+.matches-scroll:hover {
+  animation-play-state: paused;
 }
 
 .match-card {
-  width: 220px;
-  min-width: 220px;
-  background: white;
-  border-radius: 6px;
-  padding: 12px;
+  width: 60px;
+  min-width: 250px;
+  background: transparent;
+  border-radius: 0;
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: -8px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-  border: 1px solid #e4e4e4;
+  transition: color 0.2s ease, transform 0.2s ease;
+  border: 0;
+  border-top: 1px solid rgba(6, 23, 46, 0.16);
+  border-bottom: 1px solid rgba(6, 23, 46, 0.16);
 }
 
 .match-card:hover {
-  border-color: #2c79dd;
+  transform: translateY(-2px);
 }
 
 .next-teams {
@@ -473,7 +504,7 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 8px;
-  width: 100%;
+  width: 6%;
 }
 
 .next-teams img {
@@ -502,19 +533,66 @@
   color: #777;
 }
 
+@keyframes porra-ticker {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-35%);
+  }
+}
+
 
 .points-preview {
   display: none;
 }
 
 
+.porra-ranking-original {
+  display: none;
+}
+
+.porra-dashboard {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 54px);
+  align-items: start;
+}
+
+.porra-section-heading {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.porra-section-heading span {
+  color: #2c79dd;
+  font-size: 0.7rem;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.porra-section-heading h2 {
+  margin: 0;
+  color: #06172e;
+  font-family: "Coluna", sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.7rem);
+  font-weight: 900;
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
 .table-container3 {
   box-sizing: border-box;
   width: 100%;
-  background: rgb(245, 245, 245);
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-  padding: 20px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   margin: 0; /* 🔥 CLAVE */
@@ -523,13 +601,13 @@
 .plantilla-table3 thead {
   position: sticky;
   top: 0;
-  background: rgb(245, 245, 245);
+  background: #f3f6fa;
   z-index: 2;
 }
 
 .table-scroll {
   flex: 1;
-  min-height: 520px;
+  min-height: 460px;
   max-height: none;
   overflow-y: auto;
 
@@ -564,13 +642,16 @@
 }
 
 .plantilla-table3 thead {
-  border-bottom: 2px solid #0484d9;
+  border-bottom: 2px solid #06172e;
 }
 
 .plantilla-table3 th {
   text-align: left;
   padding: 14px;
-  color: #444;
+  color: #06172e;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .player-row {
@@ -775,7 +856,6 @@
   color: #0d3d73;
   font-size: 0.84rem;
   font-weight: 850;
-  text-align: center;
 }
 
 .prediction-state-message svg {
@@ -825,6 +905,16 @@
 
 /* RESPONSIVE (muy importante) */
 @media (max-width: 900px) {
+  .hero-match {
+    flex-direction: column;
+    min-height: auto;
+    padding: 96px 20px 44px;
+  }
+
+  .porra-dashboard {
+    grid-template-columns: 1fr;
+  }
+
   .prediction-ranking-wrapper {
     grid-template-columns: 1fr;
   }
@@ -867,12 +957,17 @@
 .history {
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
+  max-width: none;
 }
 
 .history h2 {
   margin-bottom: 15px;
   color: #2c79dd;
+}
+
+.history .porra-section-heading h2 {
+  margin: 0;
+  color: #06172e;
 }
 
 /* GRID estilo dashboard */
@@ -884,10 +979,11 @@
 
 /* CARD MODERNA */
 .history-card-modern {
-  background: white;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 14px 18px;
+  background: transparent;
+  border: 0;
+  border-left: 4px solid #2c79dd;
+  border-radius: 0;
+  padding: 12px 0 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -895,7 +991,7 @@
 }
 
 .history-card-modern:hover {
-  border-color: #2c79dd;
+  border-left-color: #e10600;
 }
 
 .history-row {
@@ -1023,4 +1119,974 @@
   color: #999;
   font-style: italic;
   white-space: nowrap;
+}
+
+/* Ajustes de formulario y secciones de la porra */
+.porra-prediction-section,
+.next-matches,
+.porra-how-it-works {
+  box-sizing: border-box;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.prediction-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
+  gap: clamp(24px, 4vw, 52px);
+  align-items: stretch;
+  padding: 0;
+}
+
+.prediction-form-panel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  padding: clamp(20px, 3vw, 34px);
+  border: 1px solid rgba(6, 23, 46, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(6, 23, 46, 0.08);
+}
+
+.prediction-form-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.prediction-form-copy span {
+  color: #2c79dd;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.prediction-form-copy h2 {
+  margin: 0;
+  color: #1e629c;
+  font-family: "Coluna", sans-serif;
+  font-size: clamp(3.2rem, 6vw, 5.4rem);
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
+.prediction-form-copy p {
+  max-width: 460px;
+  margin: 0;
+  color: #526579;
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.prediction-card .score-inputs,
+.prediction-card .goleadores-autocomplete,
+.prediction-card .save-notice,
+.prediction-card .prediction-state-message {
+  width: 100%;
+  max-width: none;
+}
+
+.prediction-card .score-inputs {
+  padding: 14px 0;
+}
+
+.extra-question-field {
+  display: grid;
+  gap: 8px;
+}
+
+.extra-question-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+  padding: 13px 14px;
+  border: 1px solid rgba(12, 46, 84, 0.16);
+  border-radius: 8px;
+  background: #fbfdff;
+  color: #0b1f3a;
+  font: inherit;
+  font-weight: 700;
+  outline: none;
+}
+
+.extra-question-field textarea:focus {
+  border-color: #2c79dd;
+  box-shadow: 0 0 0 3px rgba(44, 121, 221, 0.1);
+}
+
+.prediction-card .btn-save {
+  align-self: flex-start;
+}
+
+.prediction-photo-slot {
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(6, 23, 46, 0.82), rgba(13, 97, 175, 0.72)),
+    linear-gradient(180deg, #f0f5fb, #dfe8f3);
+  color: white;
+  overflow: hidden;
+}
+
+.photo-scoreline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 3vw, 34px);
+}
+
+.photo-scoreline img {
+  width: clamp(76px, 10vw, 132px);
+  height: clamp(76px, 10vw, 132px);
+  object-fit: contain;
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.28));
+}
+
+.photo-scoreline span {
+  color: rgba(255, 255, 255, 0.76);
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.prediction-photo-slot strong {
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.next-matches {
+  max-width: 1180px;
+  overflow: visible;
+}
+
+.next-matches h2 {
+  width: 100%;
+  margin: 0 0 14px;
+  text-align: center;
+}
+
+.matches-scroll {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 14px;
+  overflow: visible;
+  padding: 0;
+  animation: none;
+}
+
+.matches-scroll:hover {
+  animation-play-state: running;
+}
+
+.match-card {
+  box-sizing: border-box;
+  width: 35%;
+  gap: -40px;
+  min-width: 0;
+  min-height: 142px;
+  padding: 16px 12px;
+  border: 1px solid rgba(6, 23, 46, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(6, 23, 46, 0.06);
+  justify-content: center;
+}
+
+.match-card > img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.match-card span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-me {
+  width: fit-content;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.porra-how-it-works {
+  display: grid;
+  gap: 18px;
+}
+
+.porra-how-it-works .porra-section-heading {
+  text-align: center;
+}
+
+.how-it-works-list {
+  display: grid;
+  gap: 14px;
+}
+
+.how-card {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid rgba(6, 23, 46, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(6, 23, 46, 0.055);
+}
+
+.how-card > svg {
+  width: 22px;
+  height: 22px;
+  padding: 15px;
+  border-radius: 8px;
+  background: #edf5ff;
+  color: #0d61af;
+}
+
+.how-card h3 {
+  margin: 0 0 4px;
+  color: #06172e;
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.how-card p {
+  margin: 0;
+  color: #526579;
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .prediction-card {
+    grid-template-columns: 1fr;
+  }
+
+  .prediction-photo-slot {
+    min-height: 280px;
+  }
+
+  .matches-scroll {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .porra-prediction-section,
+  .next-matches,
+  .porra-how-it-works {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .prediction-form-panel {
+    padding: 18px;
+  }
+
+  .matches-scroll {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .how-card {
+    grid-template-columns: 42px minmax(0, 1fr);
+    padding: 16px;
+  }
+
+  .how-card > svg {
+    width: 18px;
+    height: 18px;
+    padding: 12px;
+  }
+}
+
+/* Refinamiento de formulario, ranking y criterios */
+.porra-prediction-section {
+  display: grid;
+  gap: 22px;
+}
+
+.prediction-entry-row {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.82fr) minmax(260px, 1fr);
+  gap: 16px;
+  align-items: end;
+}
+
+.prediction-card .score-inputs {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: end;
+  padding: 0;
+  border: 0;
+}
+
+.score-field {
+  justify-items: stretch;
+  gap: 7px;
+}
+
+.score-field > span,
+.field-label {
+  color: #394b61;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+}
+
+.score-inputs input,
+.goleadores-autocomplete .tags,
+.extra-question-field textarea {
+  border: 1px solid rgba(12, 46, 84, 0.34);
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.score-inputs input {
+  width: 100%;
+  height: 56px;
+  padding: 0 10px;
+  color: #17223a;
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.score-inputs input:focus,
+.goleadores-autocomplete .tags:focus-within,
+.extra-question-field textarea:focus {
+  border-color: #e10600;
+  box-shadow: 0 0 0 2px rgba(225, 6, 0, 0.1);
+  outline: none;
+}
+
+.score-versus {
+  width: 34px;
+  height: 56px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #526579;
+}
+
+.goleadores-autocomplete {
+  align-self: stretch;
+}
+
+.goleadores-autocomplete .tags {
+  min-height: 56px;
+  padding: 6px 10px;
+  align-items: center;
+}
+
+.goleadores-autocomplete .tag {
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #17223a;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.goleadores-autocomplete .tag button {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 50%;
+  background: #eef2f6;
+  color: #526579;
+  line-height: 1;
+}
+
+.goleadores-autocomplete input {
+  padding: 8px 0;
+  border-radius: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.btn-save {
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+}
+
+.prediction-photo-slot {
+  min-height: 100%;
+  padding: 0;
+  border-radius: 8px;
+  background: #06172e;
+}
+
+.prediction-photo-slot > img {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  display: block;
+  object-fit: cover;
+}
+
+.photo-scoreline,
+.prediction-photo-slot strong {
+  display: none;
+}
+
+.porra-ranking-original {
+  display: flex;
+}
+
+.porra-ranking-table3 > .btn-me {
+  display: none;
+}
+
+.porra-ranking-table3 .table-scroll {
+  min-height: 420px;
+  border: 1px solid rgba(6, 23, 46, 0.1);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.btn-me-table {
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(44, 121, 221, 0.22);
+  border-radius: 6px;
+  background: #f3f7fc;
+  color: #0d61af;
+}
+
+.btn-me-table svg {
+  width: 14px;
+  height: 14px;
+}
+
+.metric-heading,
+.metric-cell {
+  width: 54px;
+  text-align: center;
+}
+
+.metric-heading svg {
+  width: 16px;
+  height: 16px;
+}
+
+.metric-cell {
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.metric-cell svg {
+  display: none;
+}
+
+.metric-exacto {
+  color: #e10600;
+}
+
+.metric-goleadores {
+  color: #0d61af;
+}
+
+.metric-preguntas {
+  color: #8a3ffc;
+}
+
+.metric-racha {
+  color: #d28a00;
+}
+
+.porra-section-heading,
+.porra-how-it-works .porra-section-heading {
+  text-align: left;
+  justify-items: start;
+}
+
+.porra-section-heading h2,
+.history .porra-section-heading h2 {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 20px;
+  color: #2c79dd;
+  font-weight: 700;
+}
+
+.porra-section-heading span {
+  display: none;
+}
+
+.points-criteria-card .criteria-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.criterion {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.criterion svg {
+  width: 14px;
+  height: 14px;
+}
+
+.criterion-exacto {
+  background: #fff0ef;
+  color: #b90702;
+}
+
+.criterion-goleador {
+  background: #edf5ff;
+  color: #0d61af;
+}
+
+.criterion-pregunta {
+  background: #f2ecff;
+  color: #6f32d6;
+}
+
+.criterion-racha {
+  background: #fff6df;
+  color: #9b6600;
+}
+
+@media (max-width: 900px) {
+  .prediction-entry-row {
+    grid-template-columns: 1fr;
+  }
+
+  .prediction-photo-slot > img {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .plantilla-table3 {
+    min-width: 720px;
+  }
+}
+
+/* Ajustes segunda pasada porra */
+.prediction-entry-row {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.prediction-card .score-inputs {
+  max-width: 420px;
+}
+
+.goleadores-autocomplete {
+  width: 100%;
+  max-width: 420px;
+}
+
+.goleadores-autocomplete .tags {
+  width: 100%;
+  max-width: 420px;
+  min-height: 54px;
+  flex-wrap: nowrap;
+  overflow: visible;
+}
+
+.goleadores-autocomplete .tags .tag {
+  display: none;
+}
+
+.goleadores-autocomplete input {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.selected-scorers {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 9px;
+  color: #17223a;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.selected-scorers svg {
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+  color: #0d61af;
+  flex: 0 0 auto;
+}
+
+.prediction-photo-slot {
+  min-height: 660px;
+}
+
+.prediction-photo-slot > img {
+  min-height: 660px;
+}
+
+.porra-ranking-table3 .table-scroll {
+  min-height: 360px;
+}
+
+.plantilla-table3 {
+  table-layout: auto;
+}
+
+.plantilla-table3 th,
+.player-row td {
+  padding: 8px 10px;
+}
+
+.plantilla-table3 th:first-child,
+.player-row td:first-child,
+.rank-position-heading,
+.rank-position-cell {
+  width: 42px;
+  min-width: 42px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+}
+
+.btn-me-table {
+  margin: 0 auto;
+}
+
+.player-info {
+  gap: 8px;
+}
+
+.player-info img,
+.ranking-avatar-fallback {
+  width: 32px;
+  height: 32px;
+}
+
+.ranking-avatar-fallback svg {
+  width: 14px;
+  height: 14px;
+}
+
+.plantilla-table3 th:nth-child(2),
+.plantilla-table3 td:nth-child(2) {
+  padding-left: 2px;
+}
+
+.plantilla-table3 th:nth-child(3),
+.plantilla-table3 td:nth-child(3),
+.participation-heading,
+.participation-cell,
+.metric-heading,
+.metric-cell {
+  width: 48px;
+  min-width: 48px;
+  padding-left: 6px;
+  padding-right: 6px;
+  text-align: center;
+}
+
+.participation-heading svg,
+.metric-heading svg {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+}
+
+.participation-heading svg {
+  color: #06172e;
+}
+
+.participation-cell,
+.metric-cell {
+  color: #17223a;
+  font-weight: 400;
+}
+
+.metric-cell span {
+  color: #17223a;
+  font-weight: 400;
+}
+
+.player-row {
+  line-height: 1.2;
+}
+
+.next-matches h2 {
+  color: #2c79dd;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .prediction-photo-slot,
+  .prediction-photo-slot > img {
+    min-height: 380px;
+  }
+}
+
+/* Ajustes finos de alineacion y tabla */
+.prediction-form-copy span {
+  display: none;
+}
+
+.prediction-card .score-inputs,
+.goleadores-autocomplete,
+.goleadores-autocomplete .tags {
+  max-width: none;
+}
+
+.prediction-card .score-inputs,
+.goleadores-autocomplete,
+.extra-question-field {
+  width: 100%;
+}
+
+.score-inputs input,
+.goleadores-autocomplete .tags {
+  height: 56px;
+}
+
+.porra-ranking-table3 .table-scroll {
+  min-height: 460px;
+}
+
+.plantilla-table3 th,
+.player-row td {
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.ranking-user-heading,
+.ranking-user-cell {
+  width: 34%;
+  max-width: 270px;
+}
+
+.ranking-user-cell > span:last-child {
+  display: block;
+  max-width: 175px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.points-heading,
+.points-cell,
+.participation-heading,
+.participation-cell,
+.metric-heading,
+.metric-cell {
+  width: 72px;
+  min-width: 72px;
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: center;
+}
+
+.participation-heading {
+  color: #06172e;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+}
+
+.metric-heading.metric-exacto svg {
+  color: #e10600;
+}
+
+.metric-heading.metric-goleadores svg {
+  color: #0d61af;
+}
+
+.metric-heading.metric-preguntas svg {
+  color: #8a3ffc;
+}
+
+.metric-heading.metric-racha svg {
+  color: #d28a00;
+}
+
+.metric-cell {
+  color: #17223a;
+  font-weight: 400;
+}
+
+.metric-cell svg {
+  display: none;
+}
+
+.empty-predictions {
+  min-height: 174px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 9px;
+  padding: 28px 24px;
+  border-radius: 8px;
+  background: #f6f7f9;
+  text-align: center;
+}
+
+.empty-predictions > svg {
+  width: 42px;
+  height: 42px;
+  color: #e89aa2;
+}
+
+.empty-predictions strong {
+  color: #262b33;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.empty-predictions p {
+  max-width: 430px;
+  margin: 0;
+  color: #69707a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* Cierre de ajustes: ranking y proximos partidos */
+.rank-position-heading,
+.rank-position-cell,
+.points-heading,
+.points-cell,
+.participation-heading,
+.participation-cell,
+.metric-heading,
+.metric-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.rank-position-heading,
+.rank-position-cell,
+.points-heading,
+.points-cell,
+.participation-heading,
+.participation-cell,
+.metric-heading,
+.metric-cell {
+  display: table-cell;
+}
+
+.rank-position-heading > *,
+.rank-position-cell,
+.points-heading,
+.points-cell,
+.participation-heading,
+.participation-cell,
+.metric-heading > svg,
+.metric-cell > span {
+  margin-inline: auto;
+}
+
+.metric-heading,
+.participation-heading {
+  line-height: 1;
+}
+
+.metric-heading svg {
+  display: block;
+  margin-inline: auto;
+}
+
+.ranking-user-heading,
+.ranking-user-cell {
+  width: 30%;
+  max-width: 300px;
+}
+
+.ranking-user-cell {
+  gap: 7px;
+}
+
+.ranking-user-cell > span:last-child {
+  max-width: 220px;
+}
+
+.points-heading,
+.points-cell,
+.participation-heading,
+.participation-cell,
+.metric-heading,
+.metric-cell {
+  width: 68px;
+  min-width: 68px;
+}
+
+.matches-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.match-card {
+  width: 132px;
+  min-width: 132px;
+  max-width: 132px;
+  min-height: 132px;
+  gap: 8px;
+  padding: 14px 10px;
+  box-shadow: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.match-card:hover {
+  transform: none;
+  border-color: #2c79dd;
+  background: #2c79dd;
+  color: #ffffff;
+}
+
+.match-card:hover span,
+.match-card:hover small {
+  color: #ffffff;
+}
+
+.match-card:hover > img {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18));
+}
+
+.match-card > img {
+  width: 50px;
+  height: 50px;
 }
