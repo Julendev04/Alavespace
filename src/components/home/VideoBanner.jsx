@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronRight, Headphones, LayoutList, PanelTop, Play } from "lucide-react";
+import { ChevronRight, Headphones, LayoutList, PanelTop } from "lucide-react";
 import podcastCover from "../../assets/Branding/PORTADA-PROGRAMAS.jpg";
 import fallbackCover from "../../assets/mendizorroza.jpg";
 
@@ -45,7 +45,7 @@ const podcastEpisodes = [
 ];
 
 export default function VideoBanner() {
-  const [view, setView] = useState("list");
+  const [view, setView] = useState("cover");
   const latestEpisode = podcastEpisodes[0];
 
   return (
@@ -56,7 +56,6 @@ export default function VideoBanner() {
             <Headphones size={18} />
           </span>
           <div>
-            <span className="podcast-kicker">Audio podcast</span>
             <h2>Alavesfera Podcast</h2>
           </div>
         </div>
@@ -111,26 +110,6 @@ export default function VideoBanner() {
         <div className="podcast-cover-view" aria-hidden={view !== "cover"}>
           <img src={latestEpisode.cover} alt="" />
           <div className="podcast-cover-shade" />
-
-          <div className="podcast-latest-pill">Ultimo episodio</div>
-
-          <a
-            className="podcast-play-main"
-            href={latestEpisode.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Escuchar ${latestEpisode.title} en iVoox`}
-          >
-            <Play size={24} fill="currentColor" />
-          </a>
-
-          <div className="podcast-cover-copy">
-            <span>{latestEpisode.published}</span>
-            <h3>{latestEpisode.title} - {latestEpisode.episode}</h3>
-            <a href={latestEpisode.url} target="_blank" rel="noopener noreferrer">
-              Escuchar en iVoox <ChevronRight size={16} />
-            </a>
-          </div>
         </div>
       </div>
     </section>
