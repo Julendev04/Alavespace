@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import logo from "../assets/Branding/Logo.png";
+import logoParaWeb from "../assets/LogoParaWeb.png";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaBell,
   FaChalkboard,
   FaFutbol,
   FaGamepad,
+  FaGraduationCap,
+  FaGlobeEurope,
+  FaMicrophone,
   FaPaperPlane,
+  FaShieldAlt,
+  FaThList,
   FaUserCircle,
   FaUsers
 } from "react-icons/fa";
@@ -22,12 +27,44 @@ const fallbackNotifications = [
   }
 ];
 
+const navGroups = [
+  {
+    key: "juegos",
+    label: "Juegos",
+    icon: FaGamepad,
+    items: [
+      { label: "Notas", to: "/notas", icon: FaGraduationCap },
+      { label: "Lineup", to: "/lineup", icon: FaUsers },
+      { label: "Porra", to: "/porra", icon: FaFutbol },
+      { label: "Pizarra", to: "/pizarra", icon: FaChalkboard },
+      { label: "Tierlist", to: "/tierlist", icon: FaThList }
+    ]
+  }
+];
+
+const worldSections = [
+  { label: "Mundo Glorioso", to: "/Plantilla?team=first_team", tone: "first" },
+  { label: "Mundo Gloriosas", to: "/Plantilla?team=women_team", tone: "women" },
+  { label: "Mundo Miniglorias", to: "/Plantilla?team=b_team", tone: "reserve" }
+];
+
+const avatarColors = ["#0d61af", "#e10600", "#18a999", "#8b5cf6", "#d97706", "#0f766e"];
+
+const getAvatarColor = (value = "") => {
+  const key = value || "alavesfera-user";
+  const hash = [...key].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return avatarColors[hash % avatarColors.length];
+};
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [worldOpen, setWorldOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [notifications, setNotifications] = useState(fallbackNotifications);
   const [announcementDraft, setAnnouncementDraft] = useState("");
@@ -54,6 +91,7 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setMenuOpen(false);
+        setActiveMenu(null);
       }
 
       if (userRef.current && !userRef.current.contains(event.target)) {
@@ -62,6 +100,10 @@ const Navbar = () => {
 
       if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
         setNotificationsOpen(false);
+      }
+
+      if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+        setWorldOpen(false);
       }
     };
 
@@ -76,13 +118,21 @@ const Navbar = () => {
 
       setUser(data.user);
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("username, role")
-        .eq("id", data.user.id)
-        .single();
+      const [{ data: profile }, { data: porraUser }] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("username, role")
+          .eq("id", data.user.id)
+          .maybeSingle(),
+        supabase
+          .from("porra_users")
+          .select("nombre, avatar")
+          .eq("id", data.user.id)
+          .maybeSingle()
+      ]);
 
-      setUsername(profile?.username || "");
+      setUsername(profile?.username || porraUser?.nombre || "");
+      setAvatarUrl(porraUser?.avatar || "");
       setIsAdmin(profile?.role === "admin");
     };
 
@@ -109,6 +159,7 @@ const Navbar = () => {
     await supabase.auth.signOut();
     setUser(null);
     setUsername("");
+    setAvatarUrl("");
     setIsAdmin(false);
     navigate("/auth");
   };
@@ -143,66 +194,147 @@ const Navbar = () => {
     <nav ref={navbarRef} className="navbar">
       <div className="navbar-left">
         <Link to="/home" className="navbar-brand">
-          <img src={logo} className="navbar-logo" alt="Alavesfera" />
-          <span>Alavesfera</span>
+          <img src={logoParaWeb} className="navbar-logo navbar-logo-full" alt="Alavesfera" />
         </Link>
+        <span className="navbar-brand-separator" aria-hidden="true" />
 
         <div className="dropdown navbar-sections-menu" ref={dropdownRef}>
-          <button
-            type="button"
-            className="dropdown-button"
-            onClick={() => {
-              setMenuOpen(!menuOpen);
-              setUserMenuOpen(false);
-              setNotificationsOpen(false);
-            }}
-            aria-label="Abrir menu"
-          >
-            <span className="menu-dots" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
-          </button>
+          {isMobileMenu && (
+            <button
+              type="button"
+              className="dropdown-button"
+              onClick={() => {
+                setMenuOpen(!menuOpen);
+                setActiveMenu(null);
+                setUserMenuOpen(false);
+                setNotificationsOpen(false);
+                setWorldOpen(false);
+              }}
+              aria-label="Abrir menu"
+            >
+              <span className="menu-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+            </button>
+          )}
 
           {!isMobileMenu && (
-            <ul className={`dropdown-menu ${menuOpen ? "show" : ""}`}>
-              <li><Link to="/notas"><FaGamepad /> Notas</Link></li>
-              <li><Link to="/lineup"><FaUsers /> Lineup</Link></li>
-              <li><Link to="/porra"><FaFutbol /> Porra</Link></li>
-              <li><Link to="/pizarra"><FaChalkboard /> Pizarra</Link></li>
-            </ul>
+            <div className="navbar-primary-menus">
+              {navGroups.map((group) => {
+                const GroupIcon = group.icon;
+                const isOpen = activeMenu === group.key;
+
+                if (group.to) {
+                  return (
+                    <Link
+                      key={group.key}
+                      to={group.to}
+                      className={`nav-group-button ${group.variant ? `nav-group-button-${group.variant}` : ""}`}
+                      onClick={() => {
+                        setActiveMenu(null);
+                        setMenuOpen(false);
+                        setUserMenuOpen(false);
+                        setNotificationsOpen(false);
+                        setWorldOpen(false);
+                      }}
+                    >
+                      <GroupIcon />
+                      <span className="nav-group-divider" aria-hidden="true" />
+                      {group.label}
+                    </Link>
+                  );
+                }
+
+                return (
+                  <div key={group.key} className="nav-group-dropdown">
+                    <button
+                      type="button"
+                      className={`nav-group-button ${isOpen ? "active" : ""}`}
+                      onClick={() => {
+                        setActiveMenu(isOpen ? null : group.key);
+                        setMenuOpen(false);
+                        setUserMenuOpen(false);
+                        setNotificationsOpen(false);
+                        setWorldOpen(false);
+                      }}
+                    >
+                      <GroupIcon />
+                      <span className="nav-group-divider" aria-hidden="true" />
+                      {group.label}
+                    </button>
+
+                    <ul className={`dropdown-menu nav-submenu ${isOpen ? "show" : ""}`}>
+                      {group.items.map((item) => {
+                        const ItemIcon = item.icon;
+                        return (
+                          <li key={item.to}>
+                            <Link to={item.to} onClick={() => setActiveMenu(null)}>
+                              <ItemIcon />
+                              {item.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>
 
       <div className="navbar-right">
-        {!user ? (
-          <Link to="/auth" className="account-button">
-            <FaUserCircle />
-            <span>TU CUENTA</span>
-          </Link>
-        ) : (
-          <div className="user-box" ref={userRef}>
-            <button
-              type="button"
-              className="user-info"
-              onClick={() => {
-                setUserMenuOpen(!userMenuOpen);
-                setNotificationsOpen(false);
-                setMenuOpen(false);
-              }}
-            >
-              <FaUserCircle />
-              <span>{username || "Usuario"}</span>
-            </button>
+        <a
+          href="https://www.ivoox.com/"
+          className="podcast-right-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => {
+            setActiveMenu(null);
+            setMenuOpen(false);
+            setUserMenuOpen(false);
+            setNotificationsOpen(false);
+            setWorldOpen(false);
+          }}
+        >
+          <FaMicrophone />
+          <span>Podcast</span>
+        </a>
 
-            <div className={`user-dropdown ${userMenuOpen ? "show" : ""}`}>
-              <button onClick={() => navigate("/perfil")}>Ver perfil</button>
-              <button onClick={handleLogout}>Cerrar sesion</button>
-            </div>
-          </div>
-        )}
+        <Link
+          to="/laliga-guia"
+          className="laliga-right-link"
+          onClick={() => {
+            setActiveMenu(null);
+            setMenuOpen(false);
+            setUserMenuOpen(false);
+            setNotificationsOpen(false);
+            setWorldOpen(false);
+          }}
+        >
+          <FaShieldAlt />
+          <span>LaLiga Guia</span>
+        </Link>
+
+        <button
+          type="button"
+          className={`world-button ${worldOpen ? "active" : ""}`}
+          onClick={() => {
+            setWorldOpen(!worldOpen);
+            setNotificationsOpen(false);
+            setUserMenuOpen(false);
+            setMenuOpen(false);
+            setActiveMenu(null);
+          }}
+          aria-expanded={worldOpen}
+          aria-controls="navbar-world-strip"
+        >
+          <FaGlobeEurope />
+          <span>Mundo</span>
+        </button>
 
         <div className="notifications-box" ref={notificationsRef}>
           <button
@@ -212,6 +344,8 @@ const Navbar = () => {
               setNotificationsOpen(!notificationsOpen);
               setMenuOpen(false);
               setUserMenuOpen(false);
+              setActiveMenu(null);
+              setWorldOpen(false);
             }}
             aria-label="Abrir notificaciones"
           >
@@ -259,6 +393,57 @@ const Navbar = () => {
           </div>
         </div>
 
+        {!user ? (
+          <Link to="/auth" className="account-button navbar-avatar-button" aria-label="Iniciar sesion">
+            <FaUserCircle />
+          </Link>
+        ) : (
+          <div className="user-box" ref={userRef}>
+            <button
+              type="button"
+              className="user-info navbar-avatar-button"
+              onClick={() => {
+                setUserMenuOpen(!userMenuOpen);
+                setNotificationsOpen(false);
+                setMenuOpen(false);
+                setActiveMenu(null);
+                setWorldOpen(false);
+              }}
+              aria-label="Abrir perfil"
+              style={{ "--avatar-color": getAvatarColor(user.id || username) }}
+            >
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={username || "Perfil"} />
+              ) : (
+                <FaUserCircle />
+              )}
+            </button>
+
+            <div className={`user-dropdown ${userMenuOpen ? "show" : ""}`}>
+              <button onClick={() => navigate("/perfil")}>Ver perfil</button>
+              <button onClick={handleLogout}>Cerrar sesion</button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div
+        id="navbar-world-strip"
+        className={`navbar-world-strip ${worldOpen ? "show" : ""}`}
+        aria-hidden={!worldOpen}
+      >
+        <div className="navbar-world-inner">
+          {worldSections.map((section) => (
+            <Link
+              key={section.label}
+              to={section.to}
+              className={`world-section-button world-section-button-${section.tone}`}
+              onClick={() => setWorldOpen(false)}
+            >
+              {section.label}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {isMobileMenu && (
@@ -269,18 +454,39 @@ const Navbar = () => {
           />
 
           <div className={`menu-overlay ${menuOpen ? "show" : ""}`}>
-            <Link to="/notas" onClick={() => setMenuOpen(false)}>
-              <FaGamepad /> Notas
-            </Link>
-            <Link to="/lineup" onClick={() => setMenuOpen(false)}>
-              <FaUsers /> Lineup
-            </Link>
-            <Link to="/porra" onClick={() => setMenuOpen(false)}>
-              <FaFutbol /> Porra
-            </Link>
-            <Link to="/pizarra" onClick={() => setMenuOpen(false)}>
-              <FaChalkboard /> Pizarra
-            </Link>
+            {navGroups.map((group) => {
+              const GroupIcon = group.icon;
+
+              if (group.to) {
+                return (
+                  <section key={group.key} className="mobile-nav-group mobile-nav-direct-group">
+                    <Link
+                      to={group.to}
+                      className={group.variant ? `mobile-nav-link-${group.variant}` : ""}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <GroupIcon />
+                      {group.label}
+                    </Link>
+                  </section>
+                );
+              }
+
+              return (
+                <section key={group.key} className="mobile-nav-group">
+                  <h3>{group.label}</h3>
+                  {group.items.map((item) => {
+                    const ItemIcon = item.icon;
+                    return (
+                      <Link key={item.to} to={item.to} onClick={() => setMenuOpen(false)}>
+                        <ItemIcon />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </section>
+              );
+            })}
           </div>
         </>
       )}

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 import { useRef } from "react";
 import "./Porra.css";
-import mendizorrozaPhoto from "../assets/mendizorroza.jpg";
-import { FaBullseye, FaCheckCircle, FaClipboardList, FaEye, FaFutbol, FaQuestionCircle, FaRegCalendarAlt, FaTrophy, FaUser } from "react-icons/fa";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { FaBullseye, FaCheckCircle, FaClipboardList, FaEye, FaFutbol, FaHome, FaHourglassHalf, FaPlane, FaTable, FaTrophy, FaUser, FaUsers } from "react-icons/fa";
+import porraPrizeImage from "../assets/PubliPremio.jpg";
 
 const jugadoresDisponibles = [
   { nombre: "Antonio Sivera" },
@@ -44,12 +45,6 @@ const rankingMetrics = [
     fields: ["goleadores_acertados", "aciertos_goleadores", "goleadores_ok"]
   },
   {
-    key: "preguntas",
-    label: "Preguntas acertadas",
-    icon: FaQuestionCircle,
-    fields: ["preguntas_acertadas", "aciertos_preguntas", "preguntas_ok"]
-  },
-  {
     key: "racha",
     label: "Jornadas puntuando",
     icon: FaTrophy,
@@ -59,10 +54,173 @@ const rankingMetrics = [
 
 const participationFields = ["participaciones", "predicciones", "jornadas_jugadas", "total_participaciones"];
 
+const porraTabs = [
+  { id: "pronostico", label: "Pronostico" },
+  { id: "clasificacion", label: "Clasificacion" },
+  { id: "partidos", label: "Partidos" },
+  { id: "historial", label: "Mis predicciones" }
+];
+
+const porraPlaySteps = [
+  {
+    title: "Escoge tu partido",
+    text: "Accede a la jornada disponible y prepara tu prediccion para el Glorioso.",
+    icon: FaClipboardList
+  },
+  {
+    title: "Haz tu pronostico",
+    text: "Elige marcador y goleadores antes de que arranque el encuentro.",
+    icon: FaUser
+  },
+  {
+    title: "Suma puntos",
+    text: "Resultado, exacto, goleadores y bonus cuentan para la clasificacion.",
+    icon: FaBullseye
+  },
+  {
+    title: "Escala en el ranking",
+    text: "Compite jornada a jornada para terminar en lo mas alto de la tabla.",
+    icon: FaTrophy
+  }
+];
+
 function getMetricCount(user, fields) {
   const value = fields.map((field) => user?.[field]).find((item) => item !== undefined && item !== null);
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : 0;
+}
+
+function getMatchdayLabel(match, fallbackIndex) {
+  const value =
+    match?.jornada ??
+    match?.matchday ??
+    match?.round ??
+    match?.week ??
+    match?.fixture_round ??
+    match?.match_week;
+
+  if (value === undefined || value === null || value === "") {
+    return `Jornada ${fallbackIndex + 1}`;
+  }
+
+  const label = String(value).trim();
+  return label.toLowerCase().includes("jornada") ? label : `Jornada ${label}`;
+}
+
+function getMatchScore(match) {
+  const homeScore = Number(match?.home_score);
+  const awayScore = Number(match?.away_score);
+
+  if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) {
+    return null;
+  }
+
+  return { homeScore, awayScore };
+}
+
+function getAlavesOutcome(match) {
+  const score = getMatchScore(match);
+  if (!score) return null;
+
+  const isAlavesHome = match?.home_team?.toLowerCase().includes("alav");
+  const alavesGoals = isAlavesHome ? score.homeScore : score.awayScore;
+  const rivalGoals = isAlavesHome ? score.awayScore : score.homeScore;
+
+  if (alavesGoals > rivalGoals) return "win";
+  if (alavesGoals < rivalGoals) return "loss";
+  return "draw";
+}
+
+function getOutcomeLabel(outcome) {
+  if (outcome === "win") return "Victoria";
+  if (outcome === "loss") return "Derrota";
+  return "Empate";
+}
+
+function normalizeScorerName(name) {
+  return String(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+function splitScorers(value) {
+  return String(value || "")
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
+function calculatePredictionDetail(prediction) {
+  const match = prediction?.match;
+  const score = getMatchScore(match);
+  const isFinished = match?.status === "finished" && !!score;
+
+  if (!isFinished) {
+    return {
+      exacto: 0,
+      goleadores: 0,
+      bonus: 0,
+      total: 0
+    };
+  }
+
+  const isAlavesHome = match?.home_team?.toLowerCase().includes("alav");
+  const realGolesAlaves = isAlavesHome ? score.homeScore : score.awayScore;
+  const realGolesRival = isAlavesHome ? score.awayScore : score.homeScore;
+  const exactos =
+    Number(prediction?.goles_alaves) === realGolesAlaves &&
+    Number(prediction?.goles_rival) === realGolesRival
+      ? 1
+      : 0;
+
+  const realScorers = new Set(splitScorers(match?.scorers).map(normalizeScorerName));
+  const guessedScorers = splitScorers(prediction?.goleadores);
+  const goleadoresAcertados = guessedScorers.filter((name) => realScorers.has(normalizeScorerName(name))).length;
+
+  const exactoPoints = exactos * 5;
+  const goleadoresPoints = goleadoresAcertados * 2;
+  const basePoints = exactoPoints + goleadoresPoints;
+  const bonus = basePoints > 0 ? 1 : 0;
+
+  return {
+    exacto: exactoPoints,
+    goleadores: goleadoresPoints,
+    bonus,
+    total: basePoints + bonus
+  };
+}
+
+function PorraSectionTitle({ children }) {
+  const titleRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = titleRef.current;
+    if (!element) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={titleRef} className={`porra-section-title ${isVisible ? "is-visible" : ""}`}>
+      <span className="porra-title-rule porra-title-rule-left" aria-hidden="true" />
+      <h2>{children}</h2>
+      <span className="porra-title-rule porra-title-rule-right" aria-hidden="true" />
+    </div>
+  );
 }
 
 export default function PorraAlaves() {
@@ -82,11 +240,17 @@ export default function PorraAlaves() {
   const [prediccionHecha, setPrediccionHecha] = useState(false);
   const [saveNotice, setSaveNotice] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [activeTab, setActiveTab] = useState("pronostico");
+  const [selectedMatchResults, setSelectedMatchResults] = useState(null);
+  const [matchResultsLoading, setMatchResultsLoading] = useState(false);
   const myRowRef = useRef(null);
   const displayRanking =
     fakeRanking.length > 0
       ? [...fakeRanking, ...ranking]
       : ranking;
+  const porraTimelineMatches = matches;
+  const currentPorraMatchId = porraTimelineMatches.find(match => match.status !== "finished")?.id;
+  const porraCompetition = matches.find(match => match.competitions)?.competitions;
 
   function getOpponent(match) {
     if (!match) return null;
@@ -108,21 +272,67 @@ export default function PorraAlaves() {
     `)
       .eq("user_id", userId);
 
-    const enriched = await Promise.all(
-      (data || []).map(async (p) => {
-        const { data: detalle } = await supabase.rpc(
-          "calcular_puntos_pro_detalle",
-          { pred_id: p.id }
-        );
-
-        return {
-          ...p,
-          detalle: detalle
-        };
-      })
-    );
+    const enriched = (data || []).map((p) => ({
+      ...p,
+      detalle: calculatePredictionDetail(p)
+    }));
 
     setMisPredicciones(enriched);
+  }
+
+  async function openMatchResults(match) {
+    if (!match) return;
+
+    if (selectedMatchResults?.match?.id === match.id) {
+      setSelectedMatchResults(null);
+      setMatchResultsLoading(false);
+      return;
+    }
+
+    setSelectedMatchResults({ match, rows: [] });
+    setMatchResultsLoading(true);
+
+    const { data, error } = await supabase
+      .from("porra_predictions")
+      .select("*")
+      .eq("match_id", match.id);
+
+    if (error) {
+      console.error(error);
+      setMatchResultsLoading(false);
+      return;
+    }
+
+    const predictions = data || [];
+    const userIds = [...new Set(predictions.map((prediction) => prediction.user_id).filter(Boolean))];
+    let usersById = new Map();
+
+    if (userIds.length) {
+      const { data: users } = await supabase
+        .from("porra_users")
+        .select("id, nombre, avatar")
+        .in("id", userIds);
+
+      usersById = new Map((users || []).map((user) => [user.id, user]));
+    }
+
+    const rows = predictions
+      .map((prediction) => {
+        const user = usersById.get(prediction.user_id);
+        const detail = calculatePredictionDetail({ ...prediction, match });
+
+        return {
+          ...prediction,
+          user,
+          detail,
+          participantName: user?.nombre || "Usuario",
+          participantAvatar: user?.avatar || null
+        };
+      })
+      .sort((a, b) => (b.detail?.total || 0) - (a.detail?.total || 0));
+
+    setSelectedMatchResults({ match, rows });
+    setMatchResultsLoading(false);
   }
 
   // Obtener usuario
@@ -249,7 +459,6 @@ export default function PorraAlaves() {
       avatar: null,
       exactos: Math.floor(Math.random() * 8),
       goleadores_acertados: Math.floor(Math.random() * 14),
-      preguntas_acertadas: Math.floor(Math.random() * 6),
       jornadas_puntuando: Math.floor(Math.random() * 10),
       participaciones: Math.floor(Math.random() * 18),
     }));
@@ -261,9 +470,10 @@ export default function PorraAlaves() {
   async function fetchMatches() {
     const { data } = await supabase
       .from("matches")
-      .select("*, competitions(name, logo_url)")
+      .select("*, competitions!inner(name, logo_url)")
+      .ilike("competitions.name", "%laliga%")
       .order("match_date", { ascending: true })
-      .limit(10);
+      .limit(20);
 
     setMatches(data || []);
 
@@ -284,10 +494,20 @@ export default function PorraAlaves() {
   }
 
   async function fetchRanking() {
-    const { data, error } = await supabase
-      .from("ranking")
+    let { data, error } = await supabase
+      .from("porra_ranking_view")
       .select("*")
       .order("puntos", { ascending: false });
+
+    if (error) {
+      const fallback = await supabase
+        .from("ranking")
+        .select("*")
+        .order("puntos", { ascending: false });
+
+      data = fallback.data;
+      error = fallback.error;
+    }
 
     if (error) {
       console.error(error);
@@ -329,6 +549,14 @@ export default function PorraAlaves() {
     setGoleadoresSeleccionados(
       goleadoresSeleccionados.filter(j => j.nombre !== jugador.nombre)
     );
+  }
+
+  function adjustScore(side, amount) {
+    const setter = side === "home" ? setGolesA : setGolesR;
+    const currentValue = side === "home" ? golesA : golesR;
+    const nextValue = Math.max(0, Number(currentValue || 0) + amount);
+
+    setter(String(nextValue));
   }
 
   // Guardar pronóstico
@@ -409,7 +637,7 @@ export default function PorraAlaves() {
   return (
     <div className="porra-page">
       {/* HERO */}
-      {activeMatch && (
+      {false && activeMatch && (
         <div className="hero-match">
           <div className="magic-particles" aria-hidden="true">
             {Array.from({ length: 16 }).map((_, index) => (
@@ -442,44 +670,87 @@ export default function PorraAlaves() {
         </div>
       )}
 
+      <section className="porra-intro" aria-labelledby="porra-intro-title">
+        <h1 id="porra-intro-title">LaLiga que se juega entre aficionados como tu</h1>
+        <p>Haz tu pronostico cada jornada, compite con otros alavesistas y demuestra cuanto sabes del Glorioso.</p>
+      </section>
+
+      <div className="porra-main-grid">
+      <section className="porra-tabs-shell" aria-label="Secciones de la porra">
+        <div className="porra-tabs" role="tablist" aria-label="Secciones de la porra">
+          {porraTabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              className={activeTab === tab.id ? "active" : ""}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className={`porra-tab-panel porra-tab-panel-${activeTab}`} role="tabpanel">
+      {activeTab === "pronostico" && (
       <section className="porra-prediction-section">
+        <PorraSectionTitle>Haz tu porra</PorraSectionTitle>
 
         {/* PREDICCIÓN */}
         <div className={`prediction-card ${timeLeft === "Cerrado" ? "disabled" : ""} ${prediccionHecha ? "prediction-locked" : ""}`}>
           <div className="prediction-form-panel">
             <div className="prediction-form-copy">
               <span>Formulario de la jornada</span>
-              <h2>Haz tu porra</h2>
-              <p>Marca el resultado, elige goleadores y responde la pregunta extra antes de que arranque el partido.</p>
+              <p>Marca el resultado y elige goleadores antes de que arranque el partido.</p>
             </div>
-
-          {saveNotice && (
-            <div className={`save-notice ${saveNotice.type}`} role="status">
-              <FaCheckCircle />
-              <div>
-                <strong>{saveNotice.title}</strong>
-                <span>{saveNotice.text}</span>
-              </div>
-            </div>
-          )}
-
-          {prediccionHecha && !saveNotice && (
-            <div className="prediction-state-message" role="status">
-              <FaCheckCircle />
-              <span>Ya has hecho tu prediccion. Espera a los resultados finales para ver tus puntos.</span>
-            </div>
-          )}
 
           <div className="prediction-entry-row">
           <div className="score-inputs">
             <label className="score-field">
               <span>{activeMatch?.home_team || "Alaves"}</span>
-              <input type="number" value={golesA} onChange={e => setGolesA(e.target.value)} disabled={timeLeft === "Cerrado" || prediccionHecha} />
+              <div className={`porra-score-stepper ${golesA !== "" ? "has-score" : ""}`}>
+                <button
+                  type="button"
+                  aria-label="Bajar goles del equipo local"
+                  disabled={timeLeft === "Cerrado" || prediccionHecha || Number(golesA || 0) <= 0}
+                  onClick={() => adjustScore("home", -1)}
+                >
+                  <ChevronDown size={16} aria-hidden="true" />
+                </button>
+                <span>{golesA || "0"}</span>
+                <button
+                  type="button"
+                  aria-label="Subir goles del equipo local"
+                  disabled={timeLeft === "Cerrado" || prediccionHecha}
+                  onClick={() => adjustScore("home", 1)}
+                >
+                  <ChevronUp size={16} aria-hidden="true" />
+                </button>
+              </div>
             </label>
             <span className="score-versus">VS</span>
             <label className="score-field">
               <span>{activeMatch?.away_team || "Rival"}</span>
-              <input type="number" value={golesR} onChange={e => setGolesR(e.target.value)} disabled={timeLeft === "Cerrado" || prediccionHecha} />
+              <div className={`porra-score-stepper ${golesR !== "" ? "has-score" : ""}`}>
+                <button
+                  type="button"
+                  aria-label="Bajar goles del equipo visitante"
+                  disabled={timeLeft === "Cerrado" || prediccionHecha || Number(golesR || 0) <= 0}
+                  onClick={() => adjustScore("away", -1)}
+                >
+                  <ChevronDown size={16} aria-hidden="true" />
+                </button>
+                <span>{golesR || "0"}</span>
+                <button
+                  type="button"
+                  aria-label="Subir goles del equipo visitante"
+                  disabled={timeLeft === "Cerrado" || prediccionHecha}
+                  onClick={() => adjustScore("away", 1)}
+                >
+                  <ChevronUp size={16} aria-hidden="true" />
+                </button>
+              </div>
             </label>
           </div>
 
@@ -518,23 +789,63 @@ export default function PorraAlaves() {
           </div>
           </div>
 
-          <label className="extra-question-field">
-            <span className="field-label">Pregunta extra</span>
-            <textarea placeholder="Aqui podras responder la pregunta especial de cada jornada." disabled={timeLeft === "Cerrado" || prediccionHecha}></textarea>
-          </label>
-
           <button className="btn-save" onClick={guardarPronostico} disabled={timeLeft === "Cerrado" || !userId || prediccionHecha}>
             {timeLeft === "Cerrado" || prediccionHecha ? "Pronóstico cerrado" : "Guardar pronóstico"}
           </button>
 
+          {activeMatch && (
+            <aside className="porra-match-tag" aria-label="Partido activo">
+              <span className="porra-match-tag-shield porra-match-tag-shield-home">
+                <img src={activeMatch.home_logo} alt={activeMatch.home_team} />
+              </span>
+
+              <span className="porra-match-tag-countdown">
+                <small>Cierre en:</small>
+                <strong>{timeLeft}</strong>
+              </span>
+
+              <span className="porra-match-tag-shield porra-match-tag-shield-rival">
+                <img src={activeMatch.away_logo} alt={activeMatch.away_team} />
+              </span>
+            </aside>
+          )}
+
         </div>
 
-          <div className="prediction-photo-slot" aria-hidden="true">
-            <img src={mendizorrozaPhoto} alt="" />
-          </div>
+          <aside className="porra-prize-panel" aria-label="Premio de la porra">
+            <img src={porraPrizeImage} alt="Premio de la porra" />
+          </aside>
+
+          {prediccionHecha && (
+            <div className="prediction-locked-overlay" role="status">
+              <div className="prediction-locked-message">
+                <FaCheckCircle />
+                <strong>{saveNotice?.title || "Pronostico enviado"}</strong>
+                <span>{saveNotice?.text || "Tu prediccion queda guardada. Podras ver tus puntos cuando termine el partido."}</span>
+                <button
+                  type="button"
+                  className="prediction-edit-button"
+                  onClick={() => {
+                    setPrediccionHecha(false);
+                    setSaveNotice(null);
+                  }}
+                  disabled={timeLeft === "Cerrado"}
+                >
+                  Editar pronostico
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
+      </section>
+      )}
+
+      {activeTab === "clasificacion" && (
+      <section className="porra-ranking-section">
         {/* TABLA */}
+        <PorraSectionTitle>Clasificación</PorraSectionTitle>
+
         <div className="table-container3 porra-ranking-table3 porra-ranking-original">
           <button className="btn-me" onClick={scrollToMe}>
             <FaEye style={{ marginRight: "8px" }} />
@@ -601,179 +912,289 @@ export default function PorraAlaves() {
             </table>
           </div>
         </div>
+        <div className="porra-scoring-strip" aria-label="Criterios de puntuacion">
+          <span><strong>+5</strong> resultado exacto</span>
+          <span><strong>+1</strong> cada goleador acertado</span>
+          <span><strong>+1</strong> regularidad por puntuar una nueva jornada</span>
+        </div>
       </section>
 
-      {/* PRÓXIMOS PARTIDOS */}
+      )}
+
+      {activeTab === "partidos" && (
       <div className="next-matches">
-        <h2>Próximos partidos</h2>
+        <PorraSectionTitle>Próximos partidos</PorraSectionTitle>
 
-        <div className="matches-scroll">
-          {matches
-            .filter(m => m.id !== activeMatch?.id && new Date(m.match_date) > new Date())
-            .map(m => {
+        {porraCompetition && (
+          <div className="porra-competition-badge" aria-label="Competicion">
+            {porraCompetition.logo_url && <img src={porraCompetition.logo_url} alt="" aria-hidden="true" />}
+            <span>{porraCompetition.name}</span>
+          </div>
+        )}
+
+        <div className="matches-carousel" aria-label="Proximos partidos">
+          <div className="matches-scroll">
+            {porraTimelineMatches.map((m, index) => {
               const opponent = getOpponent(m);
+              const isPlayed = m.status === "finished" && getMatchScore(m);
+              const isCurrentMatch = !isPlayed && m.id === currentPorraMatchId;
               return (
-                <div key={m.id} className="match-card">
-                  <img src={opponent?.logo} alt={opponent?.name || "Rival"} />
+                <div key={m.id} className={`match-card ${isPlayed ? "match-card-played" : ""} ${isCurrentMatch ? "match-card-current" : ""}`}>
+                  {isPlayed && (
+                    <button
+                      type="button"
+                      className="match-results-corner"
+                      title="Ver resultados de la jornada"
+                      aria-label="Ver resultados de la jornada"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openMatchResults(m);
+                      }}
+                    >
+                      <FaTable />
+                    </button>
+                  )}
+                  <span className="match-card-crest-row">
+                    <img src={opponent?.logo} alt={opponent?.name || "Rival"} />
+                  </span>
                   <span>{opponent?.name || "Rival"}</span>
-
-                  <small>
-                    {new Date(m.match_date).toLocaleDateString("es-ES", {
-                      day: "2-digit",
-                      month: "short"
-                    })}
+                  <small className="match-card-date-row">
+                    <MatchSideIcon side={m.match_side} />
+                    <span>
+                      {new Date(m.match_date).toLocaleDateString("es-ES", {
+                        day: "2-digit",
+                        month: "short"
+                      })}
+                    </span>
                   </small>
-
                 </div>
               );
             })}
+          </div>
         </div>
+
+        {selectedMatchResults && (
+          <div className="porra-match-results-panel">
+            <div className="porra-match-results-header">
+              <div className="porra-results-title-block">
+                {!matchResultsLoading && (
+                  <div className="porra-results-participants">
+                    <FaUsers aria-hidden="true" />
+                    <span>Participantes</span>
+                    <strong>{selectedMatchResults.rows.length}</strong>
+                  </div>
+                )}
+                <h3>Puntuaciones de la {getMatchdayLabel(selectedMatchResults.match, 0).toLowerCase()}</h3>
+              </div>
+              <div className="porra-results-actions">
+                <button
+                  type="button"
+                  className="porra-results-close"
+                  onClick={() => setSelectedMatchResults(null)}
+                  aria-label="Cerrar puntuaciones de la jornada"
+                  title="Cerrar"
+                >
+                  ×
+                </button>
+                <div className="porra-results-score-card" aria-label="Resultado del partido">
+                  <span className="porra-results-team porra-results-team-home">
+                    {selectedMatchResults.match.home_logo ? (
+                      <img src={selectedMatchResults.match.home_logo} alt="" aria-hidden="true" />
+                    ) : (
+                      <span>{selectedMatchResults.match.home_team?.slice(0, 1)}</span>
+                    )}
+                  </span>
+                  <strong>
+                    {getMatchScore(selectedMatchResults.match)
+                      ? `${getMatchScore(selectedMatchResults.match).homeScore} - ${getMatchScore(selectedMatchResults.match).awayScore}`
+                      : "-"}
+                  </strong>
+                  <span className="porra-results-team porra-results-team-away">
+                    {selectedMatchResults.match.away_logo ? (
+                      <img src={selectedMatchResults.match.away_logo} alt="" aria-hidden="true" />
+                    ) : (
+                      <span>{selectedMatchResults.match.away_team?.slice(0, 1)}</span>
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {matchResultsLoading ? (
+              <div className="porra-results-empty">Cargando resultados...</div>
+            ) : selectedMatchResults.rows.length === 0 ? (
+              <div className="porra-results-empty">Aun no hay predicciones registradas para este partido.</div>
+            ) : (
+              <>
+                <div className="porra-results-table" role="table" aria-label="Resultados de participantes">
+                  <div className="porra-results-row porra-results-head" role="row">
+                    <span>Usuario</span>
+                    <span>Aciertos</span>
+                    <span>Pts</span>
+                  </div>
+                  {selectedMatchResults.rows.map((row) => (
+                    <div key={row.id} className="porra-results-row" role="row">
+                      <span className="porra-results-user">
+                        {row.participantAvatar ? (
+                          <img src={row.participantAvatar} alt="" aria-hidden="true" />
+                        ) : (
+                          <span className="porra-results-avatar-fallback" aria-hidden="true">
+                            <FaUser />
+                          </span>
+                        )}
+                        <span>{row.participantName}</span>
+                      </span>
+                      <span className="porra-results-hits">
+                        {row.detail?.exacto > 0 && <FaBullseye className="hit-exacto" title="Resultado exacto" />}
+                        {row.detail?.goleadores > 0 && <FaFutbol className="hit-goleadores" title="Goleadores acertados" />}
+                        {row.detail?.bonus > 0 && <FaTrophy className="hit-bonus" title="Regularidad" />}
+                        {(row.detail?.total || 0) === 0 && <span className="porra-results-no-hit">Sin puntos</span>}
+                      </span>
+                      <strong>{row.detail?.total || 0}</strong>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
+      )}
+
+      {activeTab === "historial" && (
       <section className="porra-dashboard">
 
       {/* HISTORIAL */}
       <div className="history">
-        <div className="porra-section-heading">
-          <h2>Mis predicciones</h2>
-        </div>
+        <PorraSectionTitle>Mis predicciones</PorraSectionTitle>
 
-        <div className="history-grid">
+        <div className="history-table-classic">
           {misPredicciones.length === 0 ? (
-            <div className="empty-predictions">
-              <FaFutbol />
-              <strong>No hay ninguna predicción activa</strong>
-              <p>Vuelve más tarde para el próximo partido o explora los resultados de porras anteriores en el calendario.</p>
+            <div className="empty-predictions empty-predictions-simple">
+              <strong>No has realizado hasta el momento ni una prediccion</strong>
             </div>
-          ) : misPredicciones.map(p => (
-            <div key={p.id} className="history-card-modern">
+          ) : (
+            <>
+              <div className="history-table-row history-table-head">
+                <span>Partido</span>
+                <span>Marcador</span>
+                <span>Goleadores</span>
+                <span>Estado</span>
+                <span>Pts</span>
+              </div>
+              {misPredicciones.map(p => {
+                const isFinished = p.match?.status === "finished";
+                const totalPoints = p.detalle?.total ?? 0;
 
-              {/* FILA PRINCIPAL */}
-              <div className="history-row">
-
-                <div className="history-left">
-                  <span className="match-title">
-                    {p.match?.home_team} vs {p.match?.away_team}
-                  </span>
-
-                  <span className="score">
-                    {p.goles_alaves} - {p.goles_rival}
-                  </span>
-
-                  <span className="goleadores">
-                    ⚽ {p.goleadores || "Sin goleadores"}
-                  </span>
-                </div>
-
-                <div className="history-right">
-
-                  {p.match?.status !== "finished" ? (
-
-                    <div className="pending">
-                      ⏳ Esperando resultados...
+                return (
+                  <React.Fragment key={p.id}>
+                    <div className="history-table-row history-table-body-row">
+                      <span className="history-table-match">
+                        {p.match?.home_team} vs {p.match?.away_team}
+                      </span>
+                      <span className="history-table-score" aria-label="Marcador pronosticado">
+                        <strong>{p.goles_alaves ?? 0}</strong>
+                        <small>-</small>
+                        <strong>{p.goles_rival ?? 0}</strong>
+                      </span>
+                      <span className="history-table-scorers">
+                        <FaFutbol aria-hidden="true" />
+                        <span>{p.goleadores || "Sin goleadores"}</span>
+                      </span>
+                      <span className="history-table-status">
+                        {!isFinished ? (
+                          <>
+                            <FaHourglassHalf aria-hidden="true" />
+                            <span>Pendiente</span>
+                          </>
+                        ) : (
+                          <button
+                            className="history-table-breakdown"
+                            onClick={() => {
+                              setMisPredicciones(prev =>
+                                prev.map(item =>
+                                  item.id === p.id
+                                    ? { ...item, open: !item.open }
+                                    : item
+                                )
+                              );
+                            }}
+                          >
+                            {p.open ? "Ocultar" : "Desglose"}
+                          </button>
+                        )}
+                      </span>
+                      <strong className="history-table-points">{isFinished ? totalPoints : "-"}</strong>
                     </div>
 
-                  ) : (
-
-                    <>
-                      <div className="points-row">
-                        <button
-                          className="toggle-breakdown"
-                          onClick={() => {
-                            setMisPredicciones(prev =>
-                              prev.map(item =>
-                                item.id === p.id
-                                  ? { ...item, open: !item.open }
-                                  : item
-                              )
-                            );
-                          }}
-                        >
-                          Ver desglose
-                        </button>
-
-                        <div className="total-points">
-                          {p.detalle?.total ?? 0}
-                        </div>
+                    {p.open && p.detalle && (
+                      <div className="history-table-breakdown-row">
+                        <span className="history-breakdown-exacto">
+                          <FaBullseye aria-hidden="true" />
+                          Marcador exacto: +{p.detalle.exacto}
+                        </span>
+                        <span className="history-breakdown-goleadores">
+                          <FaFutbol aria-hidden="true" />
+                          Goleadores: +{p.detalle.goleadores}
+                        </span>
+                        <span className="history-breakdown-bonus">
+                          <FaTrophy aria-hidden="true" />
+                          Bonus por puntuar: +{p.detalle.bonus}
+                        </span>
                       </div>
-
-                      <div className="label">puntos</div>
-                    </>
-
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* DESGLOSE */}
-              {p.open && p.detalle && (
-                <div className="breakdown">
-                  <span>✔ Resultado del partido: +{p.detalle.resultado}</span>
-                  <span>🎯 Con marcador exacto: +{p.detalle.exacto}</span>
-                  <span>⚽ Puntos por goleador: +{p.detalle.goleadores}</span>
-                  <span>⏱ Bonus por anticipación: +{p.detalle.bonus}</span>
-                </div>
-              )}
-
-            </div>
-          ))}
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </>
+          )}
         </div>
       </div>
       </section>
 
-      <section className="porra-how-it-works">
-        <div className="porra-section-heading">
-          <h2>Como funciona la porra</h2>
+      )}
+
+        </div>
+      </section>
+      </div>
+
+      <section className="porra-play-guide" aria-labelledby="porra-play-guide-title">
+        <div className="porra-play-guide-heading">
+          <h2 id="porra-play-guide-title">Juega a la Porra</h2>
+          <p>Podras participar en cada partido y competir con el resto de la comunidad.</p>
         </div>
 
-        <div className="how-it-works-list">
-          <article className="how-card">
-            <FaClipboardList />
-            <div>
-              <h3>Rellena el formulario</h3>
-              <p>Antes del partido eliges marcador, goleadores del Alaves y la pregunta especial de la jornada.</p>
-            </div>
-          </article>
+        <div className="porra-play-guide-grid">
+          {porraPlaySteps.map((step, index) => {
+            const Icon = step.icon;
 
-          <article className="how-card">
-            <FaRegCalendarAlt />
-            <div>
-              <h3>Se cierra al empezar</h3>
-              <p>Cuando llega la hora del encuentro, la prediccion queda bloqueada y ya no se puede modificar.</p>
-            </div>
-          </article>
-
-          <article className="how-card">
-            <FaBullseye />
-            <div>
-              <h3>Suma por aciertos</h3>
-              <p>El resultado, el marcador exacto, los goleadores y los bonus pueden darte puntos extra.</p>
-            </div>
-          </article>
-
-          <article className="how-card points-criteria-card">
-            <FaTrophy />
-            <div>
-              <h3>Criterios de puntos</h3>
-              <div className="criteria-list">
-                <span className="criterion criterion-exacto"><FaBullseye /> Resultado exacto</span>
-                <span className="criterion criterion-goleador"><FaFutbol /> Cada goleador</span>
-                <span className="criterion criterion-pregunta"><FaQuestionCircle /> Pregunta acertada</span>
-                <span className="criterion criterion-racha"><FaTrophy /> Regularidad</span>
-              </div>
-            </div>
-          </article>
-
-          <article className="how-card">
-            <FaTrophy />
-            <div>
-              <h3>Compite en el ranking</h3>
-              <p>Tras cada jornada se actualiza la clasificacion para que veas tu posicion en la tabla.</p>
-            </div>
-          </article>
+            return (
+              <article className="porra-play-step" key={step.title}>
+                <div className={`porra-play-illustration porra-play-illustration-${index + 1}`} aria-hidden="true">
+                  <span className="porra-play-shape porra-play-shape-back" />
+                  <span className="porra-play-shape porra-play-shape-front" />
+                  <Icon />
+                </div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
     </div>
+  );
+}
+
+function MatchSideIcon({ side }) {
+  const isAway = String(side || "").toUpperCase() === "VISITANTE";
+  const Icon = isAway ? FaPlane : FaHome;
+  const label = isAway ? "Visitante" : "Local";
+
+  return (
+    <span className="porra-match-side-icon" aria-label={label} title={label}>
+      <Icon aria-hidden="true" />
+    </span>
   );
 }

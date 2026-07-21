@@ -12,6 +12,7 @@ import {
   FaFutbol,
   FaThumbsUp,
   FaThumbsDown,
+  FaExpand,
 } from "react-icons/fa";
 import { supabase } from "../../services/supabaseClient";
 
@@ -30,10 +31,17 @@ const iconMap = {
 export default function NewsModal({ news, onClose, userId }) {
   const category = news.news_categories;
   const CategoryIcon = category?.icon ? iconMap[category.icon] || FaNewspaper : FaNewspaper;
+  const categoryStyle = category?.color
+    ? {
+        "--news-category-color": category.color,
+        "--news-category-soft": hexToRgba(category.color, 0.14),
+      }
+    : undefined;
   const [sessionUserId, setSessionUserId] = useState(userId || null);
   const [feedback, setFeedback] = useState(null);
   const [feedbackCounts, setFeedbackCounts] = useState({ up: 0, down: 0 });
   const [feedbackError, setFeedbackError] = useState("");
+  const [showFullImage, setShowFullImage] = useState(false);
   const activeUserId = sessionUserId || userId;
 
   useEffect(() => {
@@ -51,10 +59,10 @@ export default function NewsModal({ news, onClose, userId }) {
 
   const formattedDate = useMemo(() => {
     return new Date(news.published_at).toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "long",
+      day: "numeric",
+      month: "short",
       year: "numeric",
-    });
+    }).replace(/\.$/, "").toLowerCase();
   }, [news.published_at]);
 
   useEffect(() => {
@@ -166,6 +174,10 @@ export default function NewsModal({ news, onClose, userId }) {
     }
   };
 
+  const feedbackTotal = feedbackCounts.up + feedbackCounts.down;
+  const positivePercentage = feedbackTotal > 0 ? (feedbackCounts.up / feedbackTotal) * 100 : 0;
+  const negativePercentage = feedbackTotal > 0 ? 100 - positivePercentage : 0;
+
   return (
     <div className="news-overlay">
       <article className="news-modal">
@@ -173,35 +185,44 @@ export default function NewsModal({ news, onClose, userId }) {
           <span aria-hidden="true">&times;</span>
         </button>
 
-        <div className="news-modal-kicker">Alavesfera</div>
+        {news.image_url && (
+          <figure className="news-overlay-figure">
+            <img
+              src={news.image_url}
+              className="news-overlay-image"
+              alt={news.title}
+            />
+            <button
+              className="news-full-image-btn"
+              type="button"
+              onClick={() => setShowFullImage(true)}
+              aria-label="Ver imagen completa"
+              title="Ver imagen completa"
+            >
+              <FaExpand aria-hidden="true" />
+            </button>
+            <figcaption className="news-overlay-date">
+              {formattedDate}
+            </figcaption>
+          </figure>
+        )}
 
         <div className="news-modal-header">
           {category && (
             <div
               className="news-category"
-              style={{ backgroundColor: category.color }}
+              style={categoryStyle}
             >
               <CategoryIcon aria-hidden="true" />
               <span>{category.name}</span>
             </div>
           )}
 
-          <span className="news-overlay-date">
-            {formattedDate}
-          </span>
         </div>
 
         <h2 className="news-overlay-title">
           {news.title}
         </h2>
-
-        {news.image_url && (
-          <img
-            src={news.image_url}
-            className="news-overlay-image"
-            alt={news.title}
-          />
-        )}
 
         <div className="news-overlay-text">
           <ReactMarkdown>
@@ -211,7 +232,6 @@ export default function NewsModal({ news, onClose, userId }) {
 
         <div className="news-feedback" aria-label="Feedback de la noticia">
           <div className="news-feedback-copy">
-            <strong>Tu lectura cuenta</strong>
             <span>
               {activeUserId
                 ? "Valora esta noticia."
@@ -240,12 +260,67 @@ export default function NewsModal({ news, onClose, userId }) {
               <span>{feedbackCounts.down}</span>
             </button>
           </div>
+
+          <div
+            className={`news-feedback-ratio ${feedbackTotal === 0 ? "empty" : ""}`}
+            role="img"
+            aria-label={feedbackTotal > 0
+              ? `${Math.round(positivePercentage)}% valoraciones positivas y ${Math.round(negativePercentage)}% negativas`
+              : "Todavia no hay valoraciones"}
+            title={feedbackTotal > 0
+              ? `${Math.round(positivePercentage)}% positivas · ${Math.round(negativePercentage)}% negativas`
+              : "Todavia no hay valoraciones"}
+          >
+            <span className="news-feedback-ratio-positive" style={{ width: `${positivePercentage}%` }} />
+            <span className="news-feedback-ratio-negative" style={{ width: `${negativePercentage}%` }} />
+          </div>
         </div>
 
         {feedbackError && (
           <p className="news-feedback-error">{feedbackError}</p>
         )}
       </article>
+
+      {showFullImage && (
+        <div
+          className="news-full-image-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Imagen completa de la noticia"
+          onClick={() => setShowFullImage(false)}
+        >
+          <button
+            className="news-full-image-close"
+            type="button"
+            onClick={() => setShowFullImage(false)}
+            aria-label="Cerrar imagen completa"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <img
+            src={news.image_url}
+            alt={news.title}
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
+}
+
+function hexToRgba(hex, alpha) {
+  const normalized = String(hex || "").replace("#", "").trim();
+  const fullHex = normalized.length === 3
+    ? normalized.split("").map((char) => char + char).join("")
+    : normalized;
+
+  if (!/^[0-9a-f]{6}$/i.test(fullHex)) {
+    return `rgba(0, 47, 135, ${alpha})`;
+  }
+
+  const red = parseInt(fullHex.slice(0, 2), 16);
+  const green = parseInt(fullHex.slice(2, 4), 16);
+  const blue = parseInt(fullHex.slice(4, 6), 16);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }

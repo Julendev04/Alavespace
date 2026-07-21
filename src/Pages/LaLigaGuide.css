@@ -1,0 +1,676 @@
+.laliga-guide-page {
+  min-height: 100vh;
+  padding: 118px clamp(18px, 4vw, 56px) 72px;
+  background:
+    linear-gradient(135deg, rgba(215, 25, 32, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
+  color: #071b33;
+  font-family: "Montserrat", system-ui, sans-serif;
+}
+
+.laliga-team-grid {
+  width: min(1420px, 100%);
+  margin-inline: auto;
+}
+
+.laliga-guide-state {
+  width: min(820px, 100%);
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  margin-inline: auto;
+  border: 1px solid rgba(7, 27, 51, 0.1);
+  border-radius: 8px 0 8px 0;
+  background: #ffffff;
+  color: #5b6c7f;
+  font-weight: 700;
+}
+
+.laliga-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(286px, 1fr));
+  gap: 12px;
+}
+
+.laliga-team-card {
+  position: relative;
+  min-height: 118px;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  overflow: hidden;
+  border: 1px solid rgba(7, 27, 51, 0.1);
+  border-radius: 8px 0 8px 0;
+  padding: 0;
+  background: #f5f7fb;
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.18s ease;
+}
+
+.laliga-team-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 104px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--team-secondary) 18%, transparent), transparent 58%),
+    var(--team-primary);
+  box-shadow: inset -1px 0 rgba(7, 27, 51, 0.13);
+  pointer-events: none;
+}
+
+.laliga-team-card:hover {
+  border-color: var(--team-primary);
+  background: var(--team-primary);
+}
+
+.laliga-team-card:focus-visible {
+  border-color: var(--team-primary);
+  outline: 3px solid color-mix(in srgb, var(--team-primary) 24%, transparent);
+  outline-offset: 3px;
+}
+
+.laliga-team-card:hover .laliga-team-copy h2,
+.laliga-team-card:hover .laliga-team-copy span {
+  color: #ffffff;
+}
+
+.laliga-crest-wrap,
+.laliga-team-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.laliga-crest-wrap {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  align-self: center;
+}
+
+.laliga-crest-wrap img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  display: block;
+}
+
+.laliga-crest-fallback {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--team-primary);
+  font-size: 1.85rem;
+  font-weight: 950;
+  box-shadow: 0 9px 18px rgba(7, 27, 51, 0.14);
+}
+
+.laliga-team-copy {
+  display: grid;
+  gap: 4px;
+  grid-column: 2;
+  align-content: center;
+  min-width: 0;
+  padding: 16px 18px 16px 16px;
+}
+
+.laliga-team-copy h2 {
+  margin: 0;
+  color: #071b33;
+  font-family: "Coluna", "Montserrat", sans-serif;
+  font-size: 2.05rem;
+  font-weight: 950;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.laliga-team-copy p,
+.laliga-team-copy span {
+  margin: 0;
+  color: #5b6c7f;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.laliga-team-copy span {
+  color: color-mix(in srgb, var(--team-primary) 72%, #d71920);
+}
+
+.laliga-team-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.laliga-team-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(4, 16, 31, 0.58);
+  cursor: pointer;
+}
+
+.laliga-team-modal {
+  position: relative;
+  z-index: 1;
+  width: min(860px, 100%);
+  overflow: hidden;
+  border: 1px solid var(--team-primary);
+  border-radius: 14px 0 14px 0;
+  background: #f7f9fc;
+  box-shadow: 0 28px 80px rgba(2, 8, 23, 0.32);
+}
+
+.laliga-team-modal::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 8px;
+  background: var(--team-primary);
+}
+
+.laliga-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  min-height: 34px;
+  border: 1px solid color-mix(in srgb, var(--team-primary) 48%, rgba(7, 27, 51, 0.12));
+  border-radius: 6px 0 6px 0;
+  background: #ffffff;
+  color: var(--team-primary);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.laliga-modal-hero {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  padding: 42px 32px 28px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--team-primary) 12%, transparent), transparent 42%),
+    #ffffff;
+}
+
+.laliga-modal-crest {
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+}
+
+.laliga-modal-crest img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+}
+
+.laliga-modal-crest .laliga-crest-fallback {
+  width: 112px;
+  height: 112px;
+  color: var(--team-primary);
+  font-size: 2.4rem;
+}
+
+.laliga-modal-hero h2 {
+  margin: 0;
+  color: #071b33;
+  font-family: "Coluna", "Montserrat", sans-serif;
+  font-size: clamp(2.8rem, 8vw, 5.4rem);
+  font-weight: 950;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.laliga-modal-hero p {
+  max-width: 500px;
+  margin: 12px 0 0;
+  color: #52657b;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.laliga-modal-facts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: rgba(7, 27, 51, 0.1);
+}
+
+.laliga-modal-facts div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 16px;
+  background: #f7f9fc;
+}
+
+.laliga-modal-facts dt {
+  color: color-mix(in srgb, var(--team-primary) 76%, #071b33);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.laliga-modal-facts dd {
+  margin: 0;
+  color: #071b33;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.laliga-player-section {
+  display: grid;
+  gap: 16px;
+  padding: 24px 32px 28px;
+  background: #ffffff;
+}
+
+.laliga-player-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.laliga-player-section-head span,
+.laliga-player-empty {
+  color: #6a7a90;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.laliga-player-empty {
+  margin: 0;
+}
+
+.laliga-player-position-carousel {
+  min-height: 40px;
+  display: inline-grid;
+  grid-template-columns: 30px minmax(112px, 148px) 30px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #cfd9e7;
+  border-radius: 8px 0 8px 0;
+  background: #ffffff;
+}
+
+.laliga-player-position-arrow {
+  width: 30px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--team-primary);
+  padding: 0;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.laliga-player-position-arrow:hover,
+.laliga-player-position-arrow:focus-visible {
+  background: color-mix(in srgb, var(--team-primary) 10%, #ffffff);
+  color: color-mix(in srgb, var(--team-primary) 78%, #071b33);
+}
+
+.laliga-player-position-current {
+  min-width: 0;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-right: 1px solid #edf1f6;
+  border-left: 1px solid #edf1f6;
+  padding: 0 10px;
+  color: #172334;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.laliga-player-position-current > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.laliga-player-position-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 7px 0 7px 0;
+  color: #ffffff;
+  font-size: 0.72rem;
+}
+
+.laliga-player-position-icon svg {
+  color: #ffffff;
+  fill: currentColor;
+}
+
+.laliga-player-carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-block: 2px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+}
+
+.laliga-player-card-track {
+  width: max-content;
+  display: flex;
+  gap: 14px;
+  animation: laligaPlayerScroll 34s linear infinite;
+}
+
+.laliga-player-carousel:hover .laliga-player-card-track {
+  animation-play-state: paused;
+}
+
+.laliga-player-card-track.is-static {
+  animation: none;
+}
+
+@keyframes laligaPlayerScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 7px));
+  }
+}
+
+.laliga-player-card {
+  position: relative;
+  width: 140px;
+  height: 170px;
+  overflow: hidden;
+  border-radius: 18px 0 0 0;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--team-primary) 76%, #000000) 0%, #021426 100%),
+    var(--team-primary);
+  box-shadow: inset 0 0 0 1px rgba(7, 27, 51, 0.1);
+  clip-path: inset(0 round 18px 0 0 0);
+}
+
+.laliga-player-card-mark {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  z-index: 4;
+  width: 34px;
+  height: 66px;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 6px;
+  padding-top: 9px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(235, 241, 248, 0.24) 68%,
+    transparent 100%
+  );
+}
+
+.laliga-player-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 23px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 64%, rgba(2, 20, 38, 0.18) 76%, #021426 100%);
+}
+
+.laliga-player-card > img:not(.laliga-player-flag) {
+  position: absolute;
+  z-index: 1;
+  left: 65%;
+  bottom: -6px;
+  width: 156px;
+  height: 184px;
+  object-fit: cover;
+  object-position: center 16%;
+  transform: translateX(-50%);
+}
+
+.laliga-player-flag {
+  width: 22px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.laliga-player-team-badge {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(2, 8, 23, 0.24));
+}
+
+.laliga-player-card-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 23px;
+  min-height: 23px;
+  padding: 1px 8px 2px;
+  border-top-left-radius: 18px;
+  background: color-mix(in srgb, var(--team-primary) 78%, #000000);
+  color: #ffffff;
+  text-align: center;
+}
+
+.laliga-player-card-footer strong {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.96rem;
+  font-weight: 750;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.laliga-player-card-footer span {
+  display: none;
+  margin-top: 0;
+  font-size: 0.58rem;
+  font-weight: 950;
+  line-height: 1;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.laliga-player-admin {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  gap: 12px;
+  padding: 18px 32px 28px;
+  border-top: 1px solid rgba(7, 27, 51, 0.1);
+  background: #f7f9fc;
+}
+
+.laliga-player-admin-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.laliga-player-admin-head strong {
+  color: #071b33;
+  font-size: 0.92rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.laliga-player-admin-head span {
+  color: color-mix(in srgb, var(--team-primary) 74%, #071b33);
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.laliga-player-admin label {
+  display: grid;
+  gap: 6px;
+  color: #52657b;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.laliga-player-admin input,
+.laliga-player-admin select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(7, 27, 51, 0.14);
+  border-radius: 6px 0 6px 0;
+  background: #ffffff;
+  color: #071b33;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  padding: 0 10px;
+  outline: none;
+}
+
+.laliga-player-admin input[type="file"] {
+  padding: 8px 10px;
+}
+
+.laliga-player-admin input:focus,
+.laliga-player-admin select:focus {
+  border-color: var(--team-primary);
+}
+
+.laliga-player-admin button {
+  align-self: end;
+  min-height: 38px;
+  border: 0;
+  border-radius: 6px 0 6px 0;
+  background: var(--team-primary);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 950;
+  padding: 0 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.laliga-player-admin button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.laliga-player-admin-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #52657b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .laliga-guide-page {
+    padding: 96px 14px 46px;
+  }
+
+  .laliga-team-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .laliga-team-card {
+    min-height: 112px;
+  }
+
+  .laliga-crest-wrap {
+    width: 66px;
+    height: 66px;
+  }
+
+  .laliga-crest-wrap img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .laliga-team-overlay {
+    align-items: end;
+    padding: 14px;
+  }
+
+  .laliga-team-modal {
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+  }
+
+  .laliga-modal-hero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 54px 20px 24px;
+  }
+
+  .laliga-modal-facts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .laliga-player-section,
+  .laliga-player-admin {
+    padding-inline: 20px;
+  }
+
+  .laliga-player-section-head {
+    align-items: flex-start;
+    flex-direction: column-reverse;
+  }
+
+  .laliga-player-admin {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .laliga-team-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ChevronRight, Headphones, LayoutList, PanelTop } from "lucide-react";
-import podcastCover from "../../assets/Branding/PORTADA-PROGRAMAS.jpg";
+import { ChevronRight, LayoutList, PanelTop } from "lucide-react";
+import podcastCover from "../../assets/Presentacion_NuevoPodcast.jpg";
 import fallbackCover from "../../assets/mendizorroza.jpg";
 
 const IVOOX_URL = "https://www.ivoox.com/";
@@ -49,17 +49,10 @@ export default function VideoBanner() {
   const latestEpisode = podcastEpisodes[0];
 
   return (
-    <section className={`podcast-banner ${view === "cover" ? "is-cover" : "is-list"}`}>
+    <div className="podcast-module">
+      <h2 className="podcast-section-title">La voz de Alavesfera</h2>
+      <section className={`podcast-banner ${view === "cover" ? "is-cover" : "is-list"}`}>
       <div className="podcast-topbar">
-        <div className="podcast-brand">
-          <span className="podcast-brand-icon" aria-hidden="true">
-            <Headphones size={18} />
-          </span>
-          <div>
-            <h2>Alavesfera Podcast</h2>
-          </div>
-        </div>
-
         <div className="podcast-view-toggle" aria-label="Cambiar vista del podcast">
           <button
             type="button"
@@ -112,6 +105,7 @@ export default function VideoBanner() {
           <div className="podcast-cover-shade" />
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   );
 }

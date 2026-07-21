@@ -1,69 +1,39 @@
 import React from "react";
+import { Handshake, Trophy } from "lucide-react";
 
-const statLabels = {
-  goals: "Goles",
-  assists: "Asistencias",
-  matches: "Partidos"
-};
+const sections = [
+  { key: "goals", label: "Goleadores", icon: Trophy },
+  { key: "assists", label: "Asistentes", icon: Handshake },
+];
 
-export default function StatsBox({ topStats, activeStat, setActiveStat }) {
-  const metricKey = activeStat === "goals"
-    ? "goals"
-    : activeStat === "assists"
-      ? "assists"
-      : "matches_played";
-
-  const data = [...topStats]
+export default function StatsBox({ topStats = [] }) {
+  const getRanking = (metricKey) => [...topStats]
     .sort((a, b) => (b[metricKey] || 0) - (a[metricKey] || 0))
-    .slice(0, 5);
-
-  const leaderValue = data[0]?.[metricKey] || 1;
+    .slice(0, 6);
 
   return (
-    <section className="stats-box">
-      <div className="stats-box-header">
-        <div>
-          <span className="stats-kicker">Primer equipo</span>
-          <h2>Estadísticas destacadas</h2>
-        </div>
+    <section className="stats-box simple-stats-box">
+      <div className="simple-stats-list">
+        {sections.map(({ key, label, icon: Icon }) => (
+          <section key={key} className="simple-stats-section">
+            <header className="simple-stats-title">
+              <Icon size={18} aria-hidden="true" />
+              <h3>{label}</h3>
+            </header>
 
-        <div className="stats-toggle" aria-label="Seleccionar estadística">
-          {Object.entries(statLabels).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setActiveStat(key)}
-              className={activeStat === key ? "active" : ""}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+            <div className="simple-stats-ranking">
+              {getRanking(key).map((player, index) => (
+                <article key={`${key}-${player.id}`} className="simple-stat-row">
+                  <span className="simple-stat-rank">{index + 1}</span>
+                  <strong>{player.name}</strong>
+                  <span>{player[key] || 0}</span>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
 
-      <div className="stats-block">
-        {data.map((player, index) => {
-          const value = player[metricKey] || 0;
-          const width = `${Math.max((value / leaderValue) * 100, 6)}%`;
-
-          return (
-            <article key={player.id} className="stat-row">
-              <span className="rank">{index + 1}</span>
-              <img src={player.photo_url} alt={player.name} loading="lazy" />
-
-              <div className="stat-player-info">
-                <div className="stat-player-line">
-                  <span className="name">{player.name}</span>
-                  <span className="value">{value}</span>
-                </div>
-                <div className="bar" aria-hidden="true">
-                  <div className="fill" style={{ width }} />
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
     </section>
   );
 }

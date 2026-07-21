@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
-import { Download, Pencil, RotateCcw, Search, X } from "lucide-react";
+import { Download, Pencil, RotateCcw, Search, Trash2, UploadCloud, Users, X } from "lucide-react";
 import "./Lineup.css";
 import Loader from "../components/Loader.jsx"; // ajusta ruta
 import { supabase } from "../services/supabaseClient.js";
 import pizarrita from "../assets/Branding/pizarrita.jpg";
+import logo2 from "../assets/Branding/Logo2.png";
 
 
 const formaciones = {
@@ -56,15 +57,26 @@ const Lineup = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [busqueda, setBusqueda] = useState("");
+  const [titularTemp, setTitularTemp] = useState(null);
   const [suplenteTemp, setSuplenteTemp] = useState("");
   const [jugadoresDisponibles, setJugadoresDisponibles] = useState([]);
   const [marketData, setMarketData] = useState([]);
   const [editingPlayerId, setEditingPlayerId] = useState(null);
   const [editingMarketValue, setEditingMarketValue] = useState("");
+  const [marketCanScrollMore, setMarketCanScrollMore] = useState(false);
   const [draggedPlayerIndex, setDraggedPlayerIndex] = useState(null);
+  const [panelView, setPanelView] = useState("planner");
+  const [communityLineups, setCommunityLineups] = useState([]);
+  const [communityLoading, setCommunityLoading] = useState(false);
+  const [publishingLineup, setPublishingLineup] = useState(false);
+  const [communityMessage, setCommunityMessage] = useState("");
+  const [currentUserId, setCurrentUserId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [marketDropdownOpen, setMarketDropdownOpen] = useState(true);
+  const [marketSearch, setMarketSearch] = useState("");
   const fieldRef = useRef(null);
+  const marketTableBodyRef = useRef(null);
 
   // Stats dinámicos, inicializados en 0
   const ingresos = salidas
@@ -75,6 +87,13 @@ const Lineup = () => {
   const traspasados = salidas.filter(j => j.tipoSalida === "Venta");
   const cedidos = salidas.filter(j => j.tipoSalida === "Cesion");
 
+  const updateMarketScrollState = () => {
+    const body = marketTableBodyRef.current;
+    if (!body) return;
+
+    setMarketCanScrollMore(body.scrollTop + body.clientHeight < body.scrollHeight - 2);
+  };
+
   const handleFormacionChange = (e) => {
     const f = e.target.value;
     setFormacion(f);
@@ -83,19 +102,37 @@ const Lineup = () => {
 
   const handleAddPlayer = (index) => {
     setSelectedIndex(index);
-    setSuplenteTemp("");
+    setTitularTemp(players[index]);
+    setBusqueda(players[index]?.nombre || "");
+    setSuplenteTemp(suplentes[index] || "");
     setShowModal(true);
   };
 
   const handleSelectPlayer = (jugador) => {
+    setTitularTemp(jugador);
+    setBusqueda(jugador.nombre);
+  };
+
+  const handleConfirmPlayerSelection = () => {
+    if (selectedIndex === null || !titularTemp) return;
+
     const updatedPlayers = [...players];
     const updatedSuplentes = [...suplentes];
-    updatedPlayers[selectedIndex] = jugador;
+    updatedPlayers[selectedIndex] = titularTemp;
     updatedSuplentes[selectedIndex] = suplenteTemp;
     setPlayers(updatedPlayers);
     setSuplentes(updatedSuplentes);
     setShowModal(false);
     setBusqueda("");
+    setTitularTemp(null);
+    setSuplenteTemp("");
+  };
+
+  const handleCancelPlayerSelection = () => {
+    setShowModal(false);
+    setBusqueda("");
+    setTitularTemp(null);
+    setSuplenteTemp("");
   };
 
   const handleRemovePlayer = (index) => {
@@ -175,6 +212,107 @@ const Lineup = () => {
     link.download = `${nombrePlantilla || "alineacion"}.jpeg`;
     link.href = canvas.toDataURL("image/jpeg", 0.95);
     link.click();
+  };
+
+  const fetchCommunityLineups = async () => {
+    setCommunityLoading(true);
+
+    const { data, error } = await supabase
+      .from("lineup_community")
+      .select("id, user_id, title, formation, image_path, image_url, author_name, created_at")
+      .order("created_at", { ascending: false });
+
+    if (!error) setCommunityLineups(data || []);
+    setCommunityLoading(false);
+  };
+
+  const handlePublishLineup = async () => {
+    setCommunityMessage("");
+    setPublishingLineup(true);
+
+    const { data: authData } = await supabase.auth.getUser();
+    const user = authData?.user;
+
+    if (!user) {
+      setCommunityMessage("Inicia sesion para publicar tu plantilla.");
+      setPublishingLineup(false);
+      return;
+    }
+
+    const canvas = await html2canvas(fieldRef.current, { backgroundColor: null, useCORS: true });
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+
+    if (!blob) {
+      setCommunityMessage("No se pudo preparar la imagen.");
+      setPublishingLineup(false);
+      return;
+    }
+
+    const filePath = `${user.id}/${crypto.randomUUID()}.jpg`;
+    const { error: uploadError } = await supabase.storage
+      .from("lineup-community")
+      .upload(filePath, blob, { contentType: "image/jpeg", upsert: false });
+
+    if (uploadError) {
+      setCommunityMessage("No se pudo subir la plantilla.");
+      setPublishingLineup(false);
+      return;
+    }
+
+    const { data: publicData } = supabase.storage
+      .from("lineup-community")
+      .getPublicUrl(filePath);
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const { error: insertError } = await supabase
+      .from("lineup_community")
+      .insert({
+        user_id: user.id,
+        title: nombrePlantilla.trim() || "Zure hamaikakoa",
+        formation: formacion,
+        image_path: filePath,
+        image_url: publicData.publicUrl,
+        author_name: profile?.username || "Aficionado",
+      });
+
+    if (insertError) {
+      await supabase.storage.from("lineup-community").remove([filePath]);
+      setCommunityMessage("No se pudo publicar la plantilla.");
+      setPublishingLineup(false);
+      return;
+    }
+
+    setCommunityMessage("Plantilla publicada.");
+    setPublishingLineup(false);
+    await fetchCommunityLineups();
+  };
+
+  const handleDeleteCommunityLineup = async (lineup) => {
+    if (!currentUserId || lineup.user_id !== currentUserId) return;
+    if (!window.confirm(`¿Eliminar la plantilla “${lineup.title}”?`)) return;
+
+    const { error } = await supabase
+      .from("lineup_community")
+      .delete()
+      .eq("id", lineup.id)
+      .eq("user_id", currentUserId);
+
+    if (error) {
+      setCommunityMessage("No se pudo eliminar la plantilla.");
+      return;
+    }
+
+    if (lineup.image_path) {
+      await supabase.storage.from("lineup-community").remove([lineup.image_path]);
+    }
+
+    setCommunityLineups((current) => current.filter((item) => item.id !== lineup.id));
+    setCommunityMessage("Plantilla eliminada.");
   };
 
   const handleAddFichaje = () => {
@@ -292,18 +430,30 @@ const Lineup = () => {
     fetchJugadores();
   }, []);
 
+  useEffect(() => {
+    window.setTimeout(updateMarketScrollState, 0);
+  }, [marketData.length]);
+
+  useEffect(() => {
+    if (panelView === "community") fetchCommunityLineups();
+  }, [panelView]);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setCurrentUserId(data?.user?.id || null));
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCurrentUserId(session?.user?.id || null);
+    });
+
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+
   if (loading) {
     return <Loader />;
   }
 
   return (
     <>
-      <div className="page-header">
-        <h1 className="titulo-coluna">Mi planificación</h1>
-        <h2 className="subtitulo-montserrat">
-          Crea tus plantillas y compártelas en redes sociales mencionando a <strong>Alavesfera Team</strong>
-        </h2>
-      </div>
 
       <div className="alineacion-wrapper">
         <div className="alineacion-contenedor">
@@ -315,9 +465,10 @@ const Lineup = () => {
               style={{ "--bg-image": `url(${pizarrita})` }}
             >
               <div className="overlay-text-container left-aligned">
-                <h2 className="overlay-nombre">{nombrePlantilla || "El once del Glorioso"}</h2>
+                <h2 className="overlay-nombre">{nombrePlantilla || "Zure hamaikakoa"}</h2>
                 <div className="overlay-formacion-box">{formacion}</div>
               </div>
+              <img className="overlay-board-logo" src={logo2} alt="" />
               {positions.map((pos, index) => renderPosition(index, pos.top, pos.left))}
             </div>
 
@@ -336,82 +487,116 @@ const Lineup = () => {
           <div className="panel-y-botones">
             <div className="panel-derecho">
               <div className="inputs-row">
-                <div className="campo-control">
+                <div className="campo-control campo-formacion">
                   <label>Formación</label>
                   <select value={formacion} onChange={handleFormacionChange}>
                     {Object.keys(formaciones).map(f => <option key={f}>{f}</option>)}
                   </select>
                 </div>
 
-                <div className="campo-control">
+                <div className="campo-control campo-nombre">
                   <label>Nombre</label>
                   <input type="text" value={nombrePlantilla} onChange={e => setNombrePlantilla(e.target.value)} />
                 </div>
+
+                <button
+                  className={`community-tab-button ${panelView === "community" ? "active" : ""}`}
+                  type="button"
+                  onClick={() => setPanelView((view) => view === "community" ? "planner" : "community")}
+                  aria-pressed={panelView === "community"}
+                >
+                  <Users size={18} aria-hidden="true" />
+                  <span>Comunidad</span>
+                </button>
               </div>
 
+              {panelView === "planner" ? (
+                <div className="lineup-planner-content">
               <div className="mercado-box">
-                <h3 className="mercado-title">Mercado de jugadores</h3>
                 <div className="tables-wrapper">
 
-                  {/* TABLA 1 */}
-                  <div className="table-lineup">
-                    <table className="plantilla-table2 market-table">
-                      <thead>
-                        <tr>
-                          <th>Jugador</th>
-                          <th>Valor</th>
-                          <th>Acción</th>
-                        </tr>
-                      </thead>
-                      <tbody>
+                  <section
+                    className="market-dropdown"
+                    style={{ flex: "0 0 390px", width: "390px", maxWidth: "390px", marginRight: "18px" }}
+                    aria-label="Mercado de jugadores"
+                  >
+                    <button
+                      className={`market-dropdown-trigger ${marketDropdownOpen ? "open" : ""}`}
+                      type="button"
+                      onClick={() => setMarketDropdownOpen((open) => !open)}
+                      aria-expanded={marketDropdownOpen}
+                    >
+                      <span>
+                        <strong>Mercado de jugadores</strong>
+                        <small>{marketData.filter(j => j.estado === "propiedad").length} disponibles</small>
+                      </span>
+                      <i aria-hidden="true" />
+                    </button>
+
+                    {marketDropdownOpen && (
+                      <div
+                        className={`market-player-list ${marketCanScrollMore ? "has-scroll-more" : ""}`}
+                        ref={marketTableBodyRef}
+                        onScroll={updateMarketScrollState}
+                      >
+                        <label className="market-search">
+                          <Search size={14} aria-hidden="true" />
+                          <input
+                            type="search"
+                            value={marketSearch}
+                            onChange={(e) => setMarketSearch(e.target.value)}
+                            placeholder="Buscar jugador"
+                          />
+                        </label>
+                        {marketSearch.trim() && (
+                          <div className="market-search-results">
                         {marketData
                           .filter(j => j.estado === "propiedad")
-                          .map((j, i) => (
-                            <tr key={i} className="player-row">
-                              <td>{j.nombre}</td>
-                              <td>
-                                <div className="market-value-cell">
-                                  {editingPlayerId === j.id ? (
-                                    <input
-                                      className="market-value-input"
-                                      type="text"
-                                      inputMode="decimal"
-                                      value={editingMarketValue}
-                                      onChange={(e) => setEditingMarketValue(e.target.value)}
-                                      onBlur={() => handleSaveMarketValue(j.id)}
-                                      onKeyDown={(e) => handleMarketValueKeyDown(e, j.id)}
-                                      autoFocus
-                                    />
-                                  ) : (
-                                    <span>{formatMarketAmount(j.marketValue)} M€</span>
-                                  )}
-                                  <button
-                                    className="btn-edit-value"
-                                    type="button"
-                                    onClick={() => handleStartEditValue(j)}
-                                    aria-label={`Editar valor de ${j.nombre}`}
-                                  >
-                                    <Pencil size={14} />
-                                  </button>
-                                </div>
-                              </td>
-                              <td>
-                                <select
-                                  className="salida-select"
-                                  value=""
-                                  onChange={(e) => handleSalida(j.id, e.target.value)}
-                                  aria-label={`Opciones de salida para ${j.nombre}`}
+                          .filter(j => j.nombre.toLowerCase().includes(marketSearch.trim().toLowerCase()))
+                          .slice(0, 4)
+                          .map((j) => (
+                            <article key={j.id} className="market-player-row">
+                              <div className="market-player-main">
+                                {j.icono && <img src={j.icono} alt="" loading="lazy" />}
+                                <strong>{j.nombre}</strong>
+                              </div>
+
+                              <div className="market-value-cell">
+                                {editingPlayerId === j.id ? (
+                                  <input
+                                    className="market-value-input"
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={editingMarketValue}
+                                    onChange={(e) => setEditingMarketValue(e.target.value)}
+                                    onBlur={() => handleSaveMarketValue(j.id)}
+                                    onKeyDown={(e) => handleMarketValueKeyDown(e, j.id)}
+                                    autoFocus
+                                  />
+                                ) : (
+                                  <span>{formatMarketAmount(j.marketValue)} M€</span>
+                                )}
+                                <button
+                                  className="btn-edit-value"
+                                  type="button"
+                                  onClick={() => handleStartEditValue(j)}
+                                  aria-label={`Editar valor de ${j.nombre}`}
                                 >
-                                  <option value="" disabled>Elige</option>
-                                  <option value="Venta">Vender</option>
-                                  <option value="Cesion">Ceder</option>
-                                </select>
-                              </td>
-                            </tr>
+                                  <Pencil size={14} />
+                                </button>
+                              </div>
+
+                              <div className="market-action-buttons" aria-label={`Opciones de salida para ${j.nombre}`}>
+                                <button type="button" className="market-action-btn sale" onClick={() => handleSalida(j.id, "Venta")} title="Venta" aria-label={`Vender a ${j.nombre}`}>V</button>
+                                <button type="button" className="market-action-btn loan" onClick={() => handleSalida(j.id, "Cesion")} title="Cesion" aria-label={`Ceder a ${j.nombre}`}>C</button>
+                              </div>
+                            </article>
                           ))}
-                      </tbody>
-                    </table>
-                  </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </section>
                   {/* TABLA 2 (FICHAJES) */}
                   <div className="table-lineup">
                     <table className="plantilla-table2 fichajes-table">
@@ -456,42 +641,43 @@ const Lineup = () => {
                 </div>
                 <div className="market-stats">
                   <div>
+                    <span className="stat-label">Ingresos:</span>
                     <span className="stat-value">{formatMarketAmount(ingresos)}M€</span>
-                    <span className="stat-label">Ingresos</span>
                   </div>
                   <div>
+                    <span className="stat-label">Gastos:</span>
                     <span className="stat-value">{formatMarketAmount(gastos)}M€</span>
-                    <span className="stat-label">Gastos</span>
                   </div>
                   <div>
+                    <span className="stat-label">Balance:</span>
                     <span className={`stat-value ${balance >= 0 ? "positivo" : "negativo"}`}>
                       {formatMarketAmount(balance)} M€
                     </span>
-                    <span className="stat-label">Balance</span>
                   </div>
                 </div>
               </div>
               <div className="salidas-box">
                 <div className="salidas-header">
                   <h3 className="mercado-title">Lista de salidas</h3>
-                  <span>{salidas.length}</span>
                 </div>
                 <div className="salidas-lanes">
                   <div className="salida-lane">
                     <div className="salida-lane-title">
                       <span>Traspasados</span>
-                      <strong>{traspasados.length}</strong>
                     </div>
                     <div className="salidas-list">
                       {traspasados.length > 0 ? (
                         traspasados.map((j, i) => (
-                          <div key={j.id || i} className="salida-card">
+                          <button
+                            key={j.id || i}
+                            className="salida-card"
+                            type="button"
+                            onClick={() => handleRecuperar(j)}
+                            aria-label={`Quitar salida ${j.nombre}`}
+                          >
                             <img src={j.carta} alt={j.nombre} />
                             <span>{formatMarketAmount(j.marketValue)} M€</span>
-                            <button type="button" onClick={() => handleRecuperar(j)} aria-label={`Quitar salida ${j.nombre}`}>
-                              <X size={15} />
-                            </button>
-                          </div>
+                          </button>
                         ))
                       ) : (
                         <div className="salidas-empty">Sin traspasos</div>
@@ -502,17 +688,19 @@ const Lineup = () => {
                   <div className="salida-lane">
                     <div className="salida-lane-title">
                       <span>Cedidos</span>
-                      <strong>{cedidos.length}</strong>
                     </div>
                     <div className="salidas-list">
                       {cedidos.length > 0 ? (
                         cedidos.map((j, i) => (
-                          <div key={j.id || i} className="salida-card">
+                          <button
+                            key={j.id || i}
+                            className="salida-card"
+                            type="button"
+                            onClick={() => handleRecuperar(j)}
+                            aria-label={`Quitar salida ${j.nombre}`}
+                          >
                             <img src={j.carta} alt={j.nombre} />
-                            <button type="button" onClick={() => handleRecuperar(j)} aria-label={`Quitar salida ${j.nombre}`}>
-                              <X size={15} />
-                            </button>
-                          </div>
+                          </button>
                         ))
                       ) : (
                         <div className="salidas-empty">Sin cesiones</div>
@@ -520,7 +708,70 @@ const Lineup = () => {
                     </div>
                   </div>
                 </div>
+
+                <div className="salidas-legend" aria-label="Leyenda de acciones">
+                  <div>
+                    <span className="legend-color sale"></span>
+                    <strong>Venta</strong>
+                  </div>
+                  <div>
+                    <span className="legend-color loan"></span>
+                    <strong>Cesion</strong>
+                  </div>
+                </div>
               </div>
+                </div>
+              ) : (
+                <section className="lineup-community" aria-label="Plantillas de la comunidad">
+                  <div className="lineup-community-header">
+                    <div>
+                      <span>Alavesfera Team</span>
+                      <h2>Plantillas de la comunidad</h2>
+                    </div>
+                    <button type="button" onClick={handlePublishLineup} disabled={publishingLineup}>
+                      <UploadCloud size={17} aria-hidden="true" />
+                      {publishingLineup ? "Publicando" : "Publicar la mia"}
+                    </button>
+                  </div>
+
+                  {communityMessage && <p className="lineup-community-message" role="status">{communityMessage}</p>}
+
+                  {communityLoading ? (
+                    <div className="lineup-community-empty">Cargando plantillas...</div>
+                  ) : communityLineups.length === 0 ? (
+                    <div className="lineup-community-empty">
+                      <Users size={28} aria-hidden="true" />
+                      <strong>Aun no hay plantillas publicadas</strong>
+                      <span>La primera puede ser la tuya.</span>
+                    </div>
+                  ) : (
+                    <div className="lineup-community-grid">
+                      {communityLineups.map((lineup) => (
+                        <article className="lineup-community-card" key={lineup.id}>
+                          {lineup.user_id === currentUserId && (
+                            <button
+                              className="lineup-community-delete"
+                              type="button"
+                              onClick={() => handleDeleteCommunityLineup(lineup)}
+                              aria-label={`Eliminar ${lineup.title}`}
+                              title="Eliminar plantilla"
+                            >
+                              <Trash2 size={15} aria-hidden="true" />
+                            </button>
+                          )}
+                          <a href={lineup.image_url} target="_blank" rel="noreferrer" aria-label={`Ver ${lineup.title}`}>
+                            <img src={lineup.image_url} alt={lineup.title} loading="lazy" />
+                          </a>
+                          <div>
+                            <strong>{lineup.title}</strong>
+                            <span>{lineup.author_name} · {lineup.formation}</span>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              )}
             </div>
 
           </div>
@@ -532,19 +783,25 @@ const Lineup = () => {
           <div className="modal-lineup player-picker-modal">
             <div className="player-picker-header">
               <div>
-                <span className="player-picker-kicker">Posicion {selectedIndex !== null ? selectedIndex + 1 : ""}</span>
                 <h3>Elegir jugador</h3>
               </div>
-              <button className="player-picker-close" type="button" onClick={() => setShowModal(false)} aria-label="Cerrar">
+              <button className="player-picker-close" type="button" onClick={handleCancelPlayerSelection} aria-label="Cerrar">
                 <X size={20} />
               </button>
             </div>
 
             <div className="player-picker-field">
-              <label>Jugador titular</label>
+              <label>Titular:</label>
               <div className="player-picker-input">
                 <Search size={17} />
-                <input placeholder="Buscar en plantilla" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+                <input
+                  placeholder="Buscar en plantilla"
+                  value={busqueda}
+                  onChange={(e) => {
+                    setBusqueda(e.target.value);
+                    setTitularTemp(null);
+                  }}
+                />
               </div>
               <div className="jugadores-lista-lineup starter-list">
                 {busqueda ? (
@@ -556,14 +813,12 @@ const Lineup = () => {
                         <span>{jugador.nombre}</span>
                       </button>
                     ))
-                ) : (
-                  <div className="player-picker-empty">Busca y selecciona el titular</div>
-                )}
+                ) : null}
               </div>
             </div>
 
             <div className="player-picker-field">
-              <label>Suplente asociado</label>
+              <label>Suplente:</label>
               <div className="player-picker-input">
                 <Search size={17} />
                 <input placeholder="Opcional" value={suplenteTemp} onChange={(e) => setSuplenteTemp(e.target.value)} />
@@ -573,10 +828,13 @@ const Lineup = () => {
                   jugadoresDisponibles.filter(j => j.nombre.toLowerCase().includes(suplenteTemp.toLowerCase())).map((j, i) => (
                     <button key={j.id || i} className="suplente-opcion" type="button" onClick={() => setSuplenteTemp(j.nombre)}>{j.nombre}</button>
                   ))
-                ) : (
-                  <div className="player-picker-empty compact">Sin suplente seleccionado</div>
-                )}
+                ) : null}
               </div>
+            </div>
+
+            <div className="player-picker-actions">
+              <button type="button" onClick={handleCancelPlayerSelection}>Cancelar</button>
+              <button type="button" onClick={handleConfirmPlayerSelection} disabled={!titularTemp}>Confirmar</button>
             </div>
           </div>
         </div>

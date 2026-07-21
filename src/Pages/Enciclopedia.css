@@ -1,0 +1,148 @@
+.encyclopedia-page {
+  min-height: 100vh;
+  padding: 118px clamp(18px, 4vw, 52px) 70px;
+  background: #f4f7fb;
+  color: #06172e;
+  font-family: "Montserrat", system-ui, sans-serif;
+}
+
+.encyclopedia-header,
+.player-card-grid,
+.encyclopedia-state {
+  width: min(1420px, 100%);
+  margin-inline: auto;
+}
+
+.encyclopedia-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.encyclopedia-header span,
+.season-filter span {
+  color: #1769b0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.encyclopedia-header h1 {
+  margin: 5px 0 0;
+  color: #072949;
+  font-family: "Coluna", "Montserrat", sans-serif;
+  font-size: clamp(2.2rem, 5vw, 5.2rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.season-filter {
+  display: grid;
+  gap: 7px;
+  min-width: 210px;
+}
+
+.season-filter select {
+  min-height: 42px;
+  border: 1px solid rgba(7, 41, 73, 0.18);
+  border-radius: 6px;
+  padding: 0 38px 0 12px;
+  background: #ffffff;
+  color: #072949;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.season-filter select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.player-card-grid {
+  --card-slot-width: 124px;
+  --card-image-width: 184px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0 2px;
+}
+
+.player-card-tile {
+  flex: 0 0 var(--card-slot-width);
+  width: var(--card-slot-width);
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+
+.player-card-tile img {
+  width: var(--card-image-width);
+  max-width: none;
+  margin-inline: calc((var(--card-slot-width) - var(--card-image-width)) / 2);
+  margin-block: -8px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.player-card-placeholder {
+  width: 100%;
+  aspect-ratio: 3 / 4.1;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(7, 41, 73, 0.12);
+  border-radius: 8px;
+  background: #eaf2fa;
+  color: #8ca0b6;
+}
+
+.player-card-placeholder svg {
+  width: 42%;
+  height: 42%;
+}
+
+.encyclopedia-state {
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+  border: 1px solid rgba(7, 41, 73, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 850;
+}
+
+@media (max-width: 760px) {
+  .encyclopedia-page {
+    padding: 96px 14px 44px;
+  }
+
+  .encyclopedia-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .season-filter {
+    min-width: 0;
+  }
+
+  .player-card-grid {
+    --card-slot-width: 108px;
+    --card-image-width: 160px;
+    gap: 0 4px;
+  }
+}
+
+@media (max-width: 420px) {
+  .player-card-grid {
+    --card-slot-width: calc((100vw - 36px) / 2);
+    --card-image-width: min(158px, calc(50vw - 10px));
+  }
+}

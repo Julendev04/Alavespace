@@ -1,0 +1,611 @@
+.tierlist-page {
+  --tier-card-width: 154px;
+  --tier-card-height: 124px;
+  --tier-card-step: 86px;
+  --tier-placed-card-step: 86px;
+  --tier-row-height: 96px;
+  width: min(1520px, calc(100% - 48px));
+  margin: 96px auto 72px;
+  color: #101928;
+  font-family: "Montserrat", sans-serif;
+}
+
+.tierlist-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr);
+  gap: clamp(22px, 3vw, 42px);
+  align-items: start;
+}
+
+.tierlist-layout::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(60% + clamp(22px, 3vw, 42px) / 2 + 18px);
+  width: 1px;
+  background: rgba(15, 92, 163, 0.22);
+}
+
+.tierlist-workspace {
+  min-width: 0;
+}
+
+.tierlist-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.tierlist-header h1 {
+  margin: 0;
+  color: #0f5ca3;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.tierlist-header-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.tierlist-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  border: 1px solid rgba(15, 92, 163, 0.28);
+  border-radius: 16px 0 16px 0;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.84);
+  color: #0f5ca3;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.tierlist-action:hover {
+  border-color: #0f5ca3;
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.tierlist-download {
+  border-color: rgba(216, 6, 22, 0.3);
+  color: #d80616;
+}
+
+.tierlist-download:hover {
+  border-color: #d80616;
+}
+
+.tierlist-board {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 7px;
+}
+
+.tierlist-row {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  grid-column: 1 / -1;
+  height: auto;
+  min-height: var(--tier-row-height);
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+}
+
+.tierlist-label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.tierlist-remove-row {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: #ff0a1b;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tierlist-remove-row:hover,
+.tierlist-remove-row:focus-visible {
+  color: #ffffff;
+  outline: 0;
+}
+
+.tierlist-label-text {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  padding: 0 4px;
+  box-sizing: border-box;
+  background: transparent;
+  color: #ffffff;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  font-weight: 950;
+  line-height: 1.1;
+  text-align: center;
+  outline: 0;
+  resize: none;
+  display: block;
+  align-content: center;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+}
+
+.tierlist-label-text::selection {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.tierlist-dropzone {
+  position: relative;
+  top: -11px;
+  min-width: 0;
+  height: auto;
+  min-height: var(--tier-row-height);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 98px);
+  gap: 4px 0;
+  align-content: start;
+  align-items: start;
+  justify-content: center;
+  justify-items: center;
+  padding: 0 28px 2px 10px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.tierlist-row:has(.tier-player-card) {
+  min-height: 116px;
+}
+
+.tierlist-dropzone .tier-player-card + .tier-player-card {
+  margin-left: 0;
+}
+
+.tierlist-dropzone .tier-player-card {
+  --tier-card-width: 170px;
+  --tier-card-height: 138px;
+  margin-bottom: -20px;
+  animation: tierPlacedCardIn 240ms ease-out both;
+}
+
+.tierlist-add-row {
+  width: 100%;
+  grid-column: 1 / -1;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px dashed rgba(15, 92, 163, 0.38);
+  border-radius: 0;
+  padding: 0 18px;
+  background: rgba(255, 255, 255, 0.56);
+  color: #0f5ca3;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.tierlist-add-row:hover,
+.tierlist-add-row:focus-visible {
+  border-color: #0f5ca3;
+  background: rgba(15, 92, 163, 0.08);
+  color: #0a4c8b;
+  outline: 0;
+}
+
+.tierlist-player-pool {
+  min-width: 0;
+  margin-top: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.tierlist-pool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--tier-card-step), 1fr));
+  gap: 10px 0;
+  justify-content: start;
+  justify-items: center;
+  align-items: start;
+  align-content: start;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 76px 0 28px;
+  margin-left: 0;
+  scrollbar-color: #0f5ca3 #e3edf7;
+  scrollbar-width: thin;
+}
+
+.tierlist-pool-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tierlist-pool-grid::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: #e3edf7;
+}
+
+.tierlist-pool-grid::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #0f5ca3;
+}
+
+.tierlist-player-carousel {
+  min-height: min(680px, calc(100vh - 140px));
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 18px;
+  padding: 54px 0 28px;
+}
+
+.tierlist-player-picker-title {
+  margin: 0 0 6px;
+  color: #0f5ca3;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1rem, 1.4vw, 1.28rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tierlist-carousel-stage {
+  width: max-content;
+  max-width: 100%;
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+.tierlist-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  width: 28px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #0f5ca3;
+  cursor: pointer;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.tierlist-carousel-arrow:first-child {
+  left: -34px;
+  transform: translateY(-50%);
+}
+
+.tierlist-carousel-arrow:last-child {
+  right: -34px;
+  transform: translateY(-50%);
+}
+
+.tierlist-carousel-arrow:hover,
+.tierlist-carousel-arrow:focus-visible {
+  color: #0a4c8b;
+  background: transparent;
+  outline: 0;
+}
+
+.tierlist-carousel-arrow:first-child:hover,
+.tierlist-carousel-arrow:first-child:focus-visible {
+  transform: translateY(-50%) scale(1.08);
+}
+
+.tierlist-carousel-arrow:last-child:hover,
+.tierlist-carousel-arrow:last-child:focus-visible {
+  transform: translateY(-50%) scale(1.08);
+}
+
+.tierlist-featured-card {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.tierlist-featured-card .tier-player-card {
+  --tier-card-width: clamp(210px, 24vw, 300px);
+  --tier-card-height: clamp(180px, 22vw, 260px);
+}
+
+.tierlist-featured-card strong {
+  max-width: min(320px, 100%);
+  color: #001b3d;
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.tierlist-category-picker {
+  width: min(380px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0;
+}
+
+.tierlist-category-picker select,
+.tierlist-category-picker button {
+  min-height: 44px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.tierlist-category-picker select {
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(15, 92, 163, 0.26);
+  border-radius: 18px 0 0 0;
+  padding: 0 46px 0 16px;
+  background-color: rgba(255, 255, 255, 0.86);
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230f5ca3' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 24px center;
+  color: #0f315a;
+  outline: 0;
+}
+
+.tierlist-category-picker select:focus {
+  border-color: #0f5ca3;
+}
+
+.tierlist-category-picker button {
+  border: 1px solid #0f5ca3;
+  border-radius: 0 0 18px 0;
+  margin-left: -1px;
+  padding: 0 18px;
+  background: #0f5ca3;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.tierlist-category-picker button:hover,
+.tierlist-category-picker button:focus-visible {
+  background: #0b4c8b;
+  outline: 0;
+}
+
+.tier-player-card {
+  width: var(--tier-card-width);
+  height: var(--tier-card-height);
+  flex: 0 0 var(--tier-card-width);
+  position: relative;
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  cursor: grab;
+  box-shadow: none;
+  line-height: 0;
+  outline: 0;
+  user-select: none;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.tier-player-card:focus,
+.tier-player-card:focus-visible {
+  outline: 0;
+}
+
+.tier-player-card:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.tier-player-card:hover {
+  transform: translateY(-2px);
+  filter: none;
+}
+
+.tier-player-card[draggable="false"] {
+  cursor: default;
+}
+
+.tier-player-card[draggable="false"]:active {
+  cursor: default;
+  transform: none;
+}
+
+.tier-player-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: top center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.tier-player-card > span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #0f5ca3, #073560);
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 950;
+}
+
+.tierlist-empty {
+  width: 100%;
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #627086;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@keyframes tierPlacedCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .tierlist-page {
+    --tier-card-width: 112px;
+    --tier-card-height: 98px;
+    --tier-card-step: 62px;
+    --tier-placed-card-step: 62px;
+    --tier-row-height: 78px;
+    width: min(100% - 24px, 1520px);
+    margin-top: 88px;
+  }
+
+  .tierlist-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tierlist-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tierlist-layout::before {
+    display: none;
+  }
+
+  .tierlist-row {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+
+  .tierlist-board {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+
+  .tierlist-label-text {
+    font-size: 0.82rem;
+  }
+
+  .tier-player-card {
+    width: var(--tier-card-width);
+    height: var(--tier-card-height);
+    flex-basis: var(--tier-card-width);
+  }
+
+  .tierlist-pool-grid {
+    grid-template-columns: repeat(auto-fill, var(--tier-card-step));
+    margin-left: -28px;
+    max-height: none;
+    overflow: visible;
+    justify-content: start;
+    justify-items: start;
+    padding: 0;
+  }
+
+  .tierlist-player-carousel {
+    min-height: 0;
+    padding: 8px 0 18px;
+  }
+
+  .tierlist-carousel-stage {
+    width: max-content;
+  }
+
+  .tierlist-carousel-arrow {
+    width: 28px;
+    height: 36px;
+  }
+
+  .tierlist-carousel-arrow:first-child {
+    left: -28px;
+  }
+
+  .tierlist-carousel-arrow:last-child {
+    right: -28px;
+  }
+
+  .tierlist-featured-card .tier-player-card {
+    --tier-card-width: min(230px, 58vw);
+    --tier-card-height: min(210px, 52vw);
+  }
+
+  .tierlist-category-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .tierlist-dropzone {
+    top: -5px;
+    grid-template-columns: repeat(auto-fill, 74px);
+    gap: 4px 0;
+    padding-top: 0;
+    padding-right: 24px;
+    padding-bottom: 2px;
+  }
+
+  .tierlist-dropzone .tier-player-card {
+    --tier-card-width: 126px;
+    --tier-card-height: 109px;
+    margin-bottom: -14px;
+  }
+
+  .tierlist-row:has(.tier-player-card) {
+    min-height: 98px;
+  }
+}

@@ -1,16 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Nosotros.css";
-import { FaTwitter, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaFacebook, FaInstagram, FaTiktok, FaTwitch, FaTwitter, FaYoutube } from "react-icons/fa";
 import julenLogo from "../assets/Branding/julen_logo.jpg";
+import valorSlide1 from "../assets/SLIDE1.jpg";
+import valorSlide2 from "../assets/SLIDE2.jpg";
+import valorSlide3 from "../assets/SLIDE3.jpg";
 
 const SobreNosotros = () => {
 
-  const redes = [
-    { nombre: "Twitter", icon: <FaTwitter />, seguidores: 12000, descripcion: "Tweets diarios sobre noticias y estadísticas." },
-    { nombre: "Instagram", icon: <FaInstagram />, seguidores: 8500, descripcion: "Historias y publicaciones visuales de nuestros eventos." },
-    { nombre: "Facebook", icon: <FaFacebook />, seguidores: 7000, descripcion: "Contenido general y enlaces a nuestras noticias." },
-    { nombre: "YouTube", icon: <FaYoutube />, seguidores: 4500, descripcion: "Videos de análisis y highlights de partidos." },
+  const [valorActivo, setValorActivo] = useState(0);
+
+  const proyectosValor = [
+    {
+      titulo: "Temporada 25/26",
+      descripcion: "Nuevos formatos, mas analisis y una experiencia pensada para seguir al Glorioso de cerca.",
+      imagen: valorSlide1,
+    },
+    {
+      titulo: "Comunidad Alavesfera",
+      descripcion: "Espacios para que la aficion participe, vote, compita y forme parte del proyecto.",
+      imagen: valorSlide2,
+    },
+    {
+      titulo: "Contenido multimedia",
+      descripcion: "Piezas visuales, datos y narrativas propias para explicar mejor cada partido.",
+      imagen: valorSlide3,
+    },
   ];
+
+  const socialStats = [
+    { valor: "33K", etiqueta: "YouTube", icon: <FaYoutube /> },
+    { valor: "9K", etiqueta: "Twitch", icon: <FaTwitch /> },
+    { valor: "37K", etiqueta: "Twitter / X", icon: <FaTwitter /> },
+    { valor: "32K", etiqueta: "Instagram", icon: <FaInstagram /> },
+    { valor: "16K", etiqueta: "TikTok", icon: <FaTiktok /> },
+    { valor: "5+", etiqueta: "Anos activos", icon: <FaFacebook /> },
+  ];
+
+  const cambiarValor = (direccion) => {
+    setValorActivo((actual) => (actual + direccion + proyectosValor.length) % proyectosValor.length);
+  };
+
+  const proyectoActivo = proyectosValor[valorActivo];
 
   return (
     <div className="sobre-nosotros">
@@ -23,13 +54,18 @@ const SobreNosotros = () => {
 
       {/* SECCIÓN SOBRE EL PROYECTO */}
       <section className="main-section">
-        <h2>Alavesfera es Analisis, opinión e informaón</h2>
-        <p>
-          Alavesfera es un proyecto digital innovador que integra noticias actualizadas, datos en tiempo real, estadísticas detalladas de jugadores y contenido
-          multimedia de alta calidad, ofreciendo a nuestra audiencia una experiencia informativa, dinámica y completamente accesible. Nuestro objetivo es
-          proporcionar un espacio digital donde la información deportiva se presenta de manera clara, confiable y visualmente atractiva, fomentando la interacción
-          y el conocimiento profundo de cada evento y desempeño dentro del mundo del fútbol.
-        </p>
+        <div className="main-intro-grid">
+          <div className="main-intro-copy">
+            <h2>Alavesfera es Analisis, opinión e informaón</h2>
+            <p>
+              Alavesfera es un proyecto digital innovador que integra noticias actualizadas, datos en tiempo real, estadísticas detalladas de jugadores y contenido
+              multimedia de alta calidad, ofreciendo a nuestra audiencia una experiencia informativa, dinámica y completamente accesible. Nuestro objetivo es
+              proporcionar un espacio digital donde la información deportiva se presenta de manera clara, confiable y visualmente atractiva, fomentando la interacción
+              y el conocimiento profundo de cada evento y desempeño dentro del mundo del fútbol.
+            </p>
+          </div>
+
+        </div>
       </section>
 
       {/* SECCIÓN EL EQUIPO */}
@@ -55,28 +91,41 @@ const SobreNosotros = () => {
         </div>
       </section>
 
-      {/* SECCIÓN NUESTRO CONTENIDO */}
-      <section className="section social-section">
-        <h2>Nuestro contenido</h2>
-        <p>Mantenemos nuestras redes sociales activas y en constante crecimiento:</p>
-
-        <div className="social-rows">
-          {redes.map((red) => (
-            <div key={red.nombre} className="social-card horizontal">
-              <div className="social-icon">{red.icon}</div>
-              <h3 className="social-name">{red.nombre}</h3>
-              <p className="social-description">{red.descripcion}</p>
-              <div className="progress-container">
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${Math.min(red.seguidores / 15000 * 100, 100)}%` }}
-                  ></div>
-                </div>
-                <span className="progress-text">{red.seguidores.toLocaleString()} seguidores</span>
-              </div>
+      {/* SECCIÓN CONTADORES */}
+      <section className="stats-band" aria-label="Contadores de redes sociales">
+        <div className="stats-band-inner">
+          {socialStats.map((stat) => (
+            <div className="stat-item" key={stat.etiqueta}>
+              <div className="stat-icon">{stat.icon}</div>
+              <strong>{stat.valor}</strong>
+              <span>{stat.etiqueta}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="section value-section">
+        <div className="section-heading-row">
+          <h2>Nuestro valor</h2>
+          <span>{valorActivo + 1}/{proyectosValor.length}</span>
+        </div>
+
+        <div className="value-carousel">
+          <button className="value-arrow value-arrow-left" onClick={() => cambiarValor(-1)} aria-label="Proyecto anterior">
+            <FaChevronLeft />
+          </button>
+
+          <div className="value-slide">
+            <img src={proyectoActivo.imagen} alt={proyectoActivo.titulo} />
+            <div className="value-slide-copy">
+              <h3>{proyectoActivo.titulo}</h3>
+              <p>{proyectoActivo.descripcion}</p>
+            </div>
+          </div>
+
+          <button className="value-arrow value-arrow-right" onClick={() => cambiarValor(1)} aria-label="Proyecto siguiente">
+            <FaChevronRight />
+          </button>
         </div>
       </section>
 

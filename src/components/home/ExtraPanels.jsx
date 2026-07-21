@@ -1,30 +1,41 @@
 import React from "react";
+import { Shuffle } from "lucide-react";
 
-export default function ExtraPanels({ setShowSimulator, setShowTransfers }) {
+const panels = [
+  {
+    className: "extra-panel-transfers",
+    title: "Mercado",
+    icon: Shuffle,
+    action: "transfers"
+  }
+];
+
+export default function ExtraPanels({ setShowTransfers }) {
+  function handlePanelClick(action) {
+    if (action === "transfers") setShowTransfers(true);
+  }
+
   return (
     <section className="extra-info-section">
       <div className="extra-panels">
-        <div
-          className="extra-panel extra-panel-simulator"
-          onClick={() => setShowSimulator(true)}
-        >
-          <h3>Simula la temporada</h3>
-        </div>
-
-        <div className="extra-panel extra-panel-form">
-          <h3>Estado de forma</h3>
-        </div>
-
-        <div className="extra-panel extra-panel-injuries">
-          <h3>Lesiones</h3>
-        </div>
-
-        <div
-          className="extra-panel extra-panel-transfers"
-          onClick={() => setShowTransfers(true)}
-        >
-          <h3>Mercado</h3>
-        </div>
+        {panels.map((panel) => {
+          const Icon = panel.icon;
+          return (
+            <button
+              key={panel.title}
+              type="button"
+              className={`extra-panel ${panel.className}`}
+              onClick={() => handlePanelClick(panel.action)}
+            >
+              <span className="panel-icon">
+                <Icon size={18} />
+              </span>
+              <span className="panel-copy">
+                <h3>{panel.title}</h3>
+              </span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

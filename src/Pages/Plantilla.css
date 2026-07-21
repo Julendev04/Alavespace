@@ -1,304 +1,1476 @@
-.plantilla-wrapper {
-  font-family: 'Montserrat', sans-serif;
-  padding: 50px 20px;
-  background: #f9fafc;
+.squad-select-page {
+  --squad-accent: #1769b0;
+  --squad-deep: #072949;
+  --squad-soft: #eaf4ff;
+  width: min(1440px, calc(100% - 48px));
   min-height: 100vh;
+  margin: 0 auto;
+  padding: 118px 0 72px;
+  color: #071c32;
+  font-family: "Montserrat", sans-serif;
 }
 
-.plantilla-title {
-  font-family: 'Coluna', sans-serif;
-  text-align: left;
-   max-width: 1100px;
-  margin: 0 auto 10px auto;
-  padding: 0 10px;
-  font-size: 80px;
-  font-weight: 700;
-  margin-top: 90px;
-  color: #1a1a1a;
+.squad-theme-b_team {
+  --squad-accent: #0aaec7;
+  --squad-deep: #06485a;
+  --squad-soft: #e5f9fc;
 }
 
-/* FILTRO */
-.team-filter {
+.squad-theme-women_team {
+  --squad-accent: #7a3cac;
+  --squad-deep: #3f185e;
+  --squad-soft: #f3eafb;
+}
+
+.squad-select-header {
   display: flex;
-  justify-content: left;
-  max-width: 1100px;
-  margin: 0 auto 10px auto;
-  padding: 0 10px;
-  gap: 12px;
-  margin-bottom: 40px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 28px;
 }
 
-.filter-btn {
-  padding: 8px 18px;
-  border-radius: 20px;
-  border: 1px solid #dcdcdc;
-  background: white;
+.squad-select-header > div > span,
+.squad-roster-heading span,
+.player-tech-name > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--squad-accent);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.squad-select-header h1 {
+  margin: 0;
+  color: var(--squad-deep);
+  font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+  font-size: clamp(2.1rem, 4vw, 4.4rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.squad-team-tabs {
+  display: inline-flex;
+  gap: 5px;
+  border-bottom: 1px solid #cfd9e5;
+  padding: 0 4px;
+}
+
+.squad-team-tabs button {
+  position: relative;
+  border: 0;
+  padding: 10px 15px 12px;
+  background: transparent;
+  color: #5d6d7e;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 850;
   cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
 }
 
-.filter-btn:hover {
-  background: #f0f0f0;
+.squad-team-tabs button::after {
+  content: "";
+  position: absolute;
+  right: 50%;
+  bottom: -1px;
+  left: 50%;
+  height: 3px;
+  background: var(--squad-accent);
+  transition: right 180ms ease, left 180ms ease;
 }
 
-.filter-btn.active {
-  background: #0a2540;
-  color: white;
-  border-color: #0a2540;
+.squad-team-tabs button:hover,
+.squad-team-tabs button.active {
+  color: var(--squad-deep);
 }
 
-/* BLOQUES POR POSICIÓN */
-.position-block {
-  max-width: 1100px;
-  margin: 0 auto 50px auto;
+.squad-team-tabs button.active::after {
+  right: 8px;
+  left: 8px;
 }
 
-.position-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  color: #0a2540;
-  border-left: 4px solid #0a2540;
-  padding-left: 10px;
-}
-
-/* GRID */
-.players-grid {
+.squad-select-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: minmax(0, 1.42fr) minmax(360px, 0.78fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.squad-roster-panel {
+  min-width: 0;
+}
+
+.squad-roster-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.squad-roster-heading h2 {
+  margin: 0;
+  color: #071c32;
+  font-size: 1.15rem;
+  font-weight: 950;
+}
+
+.squad-roster-heading > strong {
+  color: var(--squad-accent);
+  font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+  font-size: 2rem;
+  line-height: 0.9;
+}
+
+.squad-position-filters {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  margin-bottom: 14px;
+  padding-bottom: 3px;
+  scrollbar-width: none;
+}
+
+.squad-position-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.squad-position-filters button {
+  flex: 0 0 auto;
+  border: 1px solid #d3dce7;
+  border-radius: 4px;
+  padding: 7px 10px;
+  background: #ffffff;
+  color: #536476;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.squad-position-filters button:hover,
+.squad-position-filters button.active {
+  border-color: var(--squad-deep);
+  background: var(--squad-deep);
+  color: #ffffff;
+}
+
+.fighter-grid {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid rgba(15, 92, 163, 0.62);
+  border-left: 1px solid rgba(15, 92, 163, 0.62);
+}
+
+.fighter-tile {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 0;
+  border-right: 1px solid rgba(15, 92, 163, 0.62);
+  border-bottom: 1px solid rgba(15, 92, 163, 0.62);
+  border-radius: 0;
+  padding: 0;
+  background: linear-gradient(145deg, #eef3f8 0%, #dce6f0 100%);
+  color: #071c32;
+  text-align: left;
+  cursor: pointer;
+  isolation: isolate;
+  transition: background 190ms ease, box-shadow 180ms ease;
+}
+
+.fighter-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #062b4f;
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.fighter-hover-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-sizing: border-box;
+  border: 1px solid #168cff;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 12px rgba(22, 140, 255, 0.48),
+    0 0 14px rgba(22, 140, 255, 0.52);
+  opacity: 0;
+  will-change: transform, width, height, opacity;
+  transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 150ms ease;
+}
+
+.fighter-hover-frame.visible {
+  opacity: 1;
+}
+
+.fighter-tile:hover {
+  z-index: 2;
+}
+
+.fighter-tile:hover::before {
+  opacity: 1;
+}
+
+.fighter-tile.selected {
+  z-index: 1;
+}
+
+.fighter-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.fighter-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.92);
+  transition: filter 280ms ease, transform 280ms ease;
+}
+
+.fighter-tile:hover .fighter-image img {
+  filter: saturate(1.08) contrast(1.02);
+  transform: scale(1.015);
+}
+
+.fighter-tile:focus-visible {
+  z-index: 9;
+  outline: 2px solid #168cff;
+  outline-offset: -2px;
+}
+
+.fighter-image svg {
+  width: 42%;
+  height: 42%;
+  color: #90a2b5;
+}
+
+.squad-select-status {
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d9e1ea;
+  color: #6a7888;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.player-tech-panel {
+  position: sticky;
+  top: 96px;
+  min-height: 0;
+  align-self: stretch;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.player-tech-visual {
+  position: relative;
+  height: 228px;
+  overflow: hidden;
+  background: linear-gradient(145deg, var(--squad-deep), var(--squad-accent));
+}
+
+.player-tech-visual::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -105px;
+  width: 330px;
+  height: 220px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+}
+
+.player-tech-visual > img {
+  position: absolute;
+  z-index: 2;
+  right: 4%;
+  bottom: 0;
+  width: 78%;
+  height: 94%;
+  object-fit: contain;
+  object-position: right bottom;
+  filter: drop-shadow(-14px 8px 14px rgba(0, 0, 0, 0.2));
+}
+
+.player-tech-placeholder {
+  position: absolute;
+  right: 16%;
+  bottom: 15%;
+  width: 48%;
+  height: 48%;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.player-tech-code {
+  position: absolute;
+  top: 17px;
+  left: 20px;
+  z-index: 3;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.64rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.player-tech-number {
+  position: absolute;
+  top: 30px;
+  left: 12px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.12);
+  font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+  font-size: 9.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.player-tech-position {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 4px;
+  padding: 7px 10px;
+  background: rgba(3, 22, 40, 0.58);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  backdrop-filter: blur(6px);
+}
+
+.player-tech-content {
+  padding: 16px 20px;
+}
+
+.player-tech-name {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #dbe3ec;
+}
+
+.player-tech-name h2 {
+  margin: 0;
+  color: var(--squad-deep);
+  font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.player-tech-name p {
+  margin: 6px 0 0;
+  color: #69798a;
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+
+.player-tech-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid #dbe3ec;
+}
+
+.player-tech-stats > div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 7px;
+  padding: 11px 8px;
+  border-left: 1px solid #e3e9f0;
+}
+
+.player-tech-stats > div:first-child {
+  border-left: 0;
+}
+
+.player-tech-stats svg {
+  grid-row: span 2;
+  width: 17px;
+  color: var(--squad-accent);
+}
+
+.player-tech-stats strong {
+  color: #071c32;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.player-tech-stats span {
+  overflow: hidden;
+  color: #738192;
+  font-size: 0.55rem;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.player-tech-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  margin: 13px 0 0;
+}
+
+.player-tech-data > div {
+  min-width: 0;
+}
+
+.player-tech-data dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  color: #788696;
+  font-size: 0.58rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.player-tech-data dt svg {
+  color: var(--squad-accent);
+}
+
+.player-tech-data dd {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+  margin: 0;
+  color: #071c32;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-tech-data dd img {
+  width: 19px;
+  height: 13px;
+  object-fit: cover;
+}
+
+.player-tech-empty {
+  min-height: 610px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  color: #748394;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.player-tech-empty svg {
+  width: 46px;
+  height: 46px;
+  color: var(--squad-accent);
+}
+
+@media (max-width: 1180px) {
+  .fighter-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .squad-select-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .player-tech-panel {
+    position: relative;
+    top: auto;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) 1.2fr;
+    min-height: 0;
+  }
+
+  .player-tech-visual {
+    height: 100%;
+    min-height: 390px;
+  }
+}
+
+@media (max-width: 720px) {
+  .squad-select-page {
+    width: min(100% - 24px, 1440px);
+    padding-top: 92px;
+  }
+
+  .squad-select-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .squad-team-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .squad-team-tabs button {
+    flex: 1 0 auto;
+  }
+
+  .fighter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .player-tech-panel {
+    display: block;
+  }
+
+  .player-tech-visual {
+    height: 330px;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .fighter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .player-tech-data {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Search-first squad view */
+.squad-select-layout {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
   gap: 18px;
 }
 
-/* TARJETA */
-.player-card {
-  background: white;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  border: 1px solid #e6e6e6;
-  transition: 0.25s;
+.squad-roster-panel {
+  position: relative;
+  z-index: 8;
+  width: min(100%, 880px);
 }
 
-.player-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-/* FOTO */
-.player-card img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
+.squad-roster-heading {
   margin-bottom: 12px;
-  border: 2px solid #f0f0f0;
 }
 
-
-.player-info h3 {
-  font-size: 16px;
-  margin: 6px 0;
-  font-weight: 600;
+.squad-position-filters {
+  margin-bottom: 12px;
 }
 
-.player-meta {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 6px;
+.squad-player-search {
+  position: relative;
+  min-width: 0;
 }
 
-.player-contract {
-  font-size: 12px;
-  color: #0a2540;
-  font-weight: 600;
-}
-
-/* LISTA */
-.players-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* FILA */
-.player-row-card {
-  display: flex;
+.squad-player-search-field {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  background: white;
-  border-radius: 12px;
-  padding: 14px 18px;
-  border: 1px solid #e6e6e6;
-  transition: 0.25s;
+  gap: 12px;
+  border: 1px solid #cbd8e6;
+  border-radius: 8px;
+  padding: 0 16px;
+  background: #ffffff;
+  color: var(--squad-accent);
+  box-shadow: 0 12px 34px rgba(7, 28, 50, 0.06);
 }
 
-.player-row-card:hover {
-  background: #f7f9fc;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+.squad-player-search-toggle {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  padding: 0;
+  background: transparent;
+  color: var(--squad-accent);
+  cursor: pointer;
 }
 
-/* IZQUIERDA */
-.player-left {
-  display: flex;
+.squad-player-search-toggle:hover,
+.squad-player-search-toggle:focus-visible {
+  background: var(--squad-soft);
+  outline: 0;
+}
+
+.squad-player-search-toggle svg {
+  transition: transform 160ms ease;
+}
+
+.squad-player-search-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+.squad-player-search-field:focus-within {
+  border-color: var(--squad-accent);
+  box-shadow: 0 14px 40px rgba(23, 105, 176, 0.14);
+}
+
+.squad-player-search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #071c32;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.98rem;
+  font-weight: 850;
+  outline: 0;
+}
+
+.squad-player-search-field input::placeholder {
+  color: #718295;
+  font-weight: 750;
+}
+
+.squad-player-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: min(430px, 52vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #cbd8e6;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(7, 28, 50, 0.18);
+}
+
+.squad-player-option {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 44px;
   align-items: center;
   gap: 14px;
-  min-width: 220px;
+  border: 0;
+  border-bottom: 1px solid #e5ecf4;
+  padding: 8px 14px;
+  background: #ffffff;
+  color: #071c32;
+  font-family: "Montserrat", sans-serif;
+  text-align: left;
+  cursor: pointer;
 }
 
-.player-left img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.squad-player-option:last-child {
+  border-bottom: 0;
+}
+
+.squad-player-option:hover,
+.squad-player-option:focus-visible,
+.squad-player-option.selected {
+  background: var(--squad-soft);
+  outline: 0;
+}
+
+.squad-player-option-photo {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #d5e0eb;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #eef3f8 0%, #dce6f0 100%);
+}
+
+.squad-player-option-photo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 
-.player-left h3 {
-  font-size: 15px;
-  margin: 0;
-  font-weight: 600;
+.squad-player-option-photo svg {
+  width: 28px;
+  height: 28px;
+  color: #90a2b5;
 }
 
-.player-name {
-  display: flex;
+.squad-player-option-main {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.squad-player-option-main strong {
+  overflow: hidden;
+  color: var(--squad-deep);
+  font-size: 0.95rem;
+  font-weight: 950;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.squad-player-option-main span,
+.squad-player-no-results {
+  color: #657486;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.squad-player-option-number {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--squad-accent);
+  font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+  text-align: right;
+  text-overflow: clip;
+}
+
+.squad-player-no-results {
+  padding: 22px 16px;
+}
+
+.player-tech-panel {
+  position: relative;
+  top: auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 0.85fr) minmax(0, 1.15fr);
+  align-self: auto;
+  border: 1px solid #dce6f0;
+  border-radius: 8px;
+  box-shadow: 0 18px 55px rgba(7, 28, 50, 0.08);
+}
+
+.player-tech-visual {
+  height: 470px;
+}
+
+.player-tech-visual > img {
+  right: 5%;
+  width: 72%;
+  height: 96%;
+}
+
+.player-tech-content {
+  display: grid;
+  align-content: center;
+  padding: clamp(24px, 4vw, 52px);
+}
+
+.player-tech-name h2 {
+  font-size: clamp(2rem, 4vw, 4.6rem);
+}
+
+.player-tech-stats > div {
+  padding: 18px 12px;
+}
+
+.player-tech-data {
+  gap: 20px 28px;
+  margin-top: 24px;
+}
+
+.player-tech-empty {
+  grid-column: 1 / -1;
+  min-height: 360px;
+}
+
+@media (max-width: 980px) {
+  .squad-roster-panel {
+    width: 100%;
+  }
+
+  .player-tech-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .player-tech-visual {
+    height: 390px;
+  }
+}
+
+@media (max-width: 640px) {
+  .squad-player-search-field {
+    min-height: 52px;
+    padding: 0 12px;
+  }
+
+  .squad-player-option {
+    grid-template-columns: 48px minmax(0, 1fr) 38px;
+    gap: 10px;
+    padding: 8px 10px;
+  }
+
+  .squad-player-option-photo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .player-tech-content {
+    padding: 22px 16px;
+  }
+
+  .player-tech-name h2 {
+    font-size: clamp(1.55rem, 10vw, 2.4rem);
+  }
+
+  .player-tech-stats,
+  .player-tech-data {
+    grid-template-columns: 1fr;
+  }
+
+  .player-tech-stats > div {
+    border-left: 0;
+    border-top: 1px solid #e3e9f0;
+  }
+
+  .player-tech-stats > div:first-child {
+    border-top: 0;
+  }
+}
+
+.squad-select-header {
+  justify-content: flex-end;
+}
+
+.squad-position-filters {
+  display: none;
+}
+
+/* Minimal roster table */
+.squad-select-layout {
+  grid-template-columns: minmax(0, 1.42fr) minmax(320px, 0.58fr);
+  gap: 22px;
+}
+
+.squad-roster-panel {
+  width: 100%;
+  max-width: none;
+}
+
+.squad-roster-heading {
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  margin: 0;
-  font-weight: 600;
+  margin-bottom: 14px;
 }
 
-.player-number {
-  font-size: 13px;
-  color: #999;
-  font-weight: 500;
+.squad-roster-heading h2 {
+  font-size: 1.18rem;
 }
 
-/* CENTRO */
-.player-center {
-  display: flex;
-  gap: 30px;
-  font-size: 14px;
-  color: #555;
-  flex: 1;
-  justify-content: center;
-}
-
-/* DERECHA */
-.player-right {
-  font-weight: 600;
-  color: #0a2540;
-  min-width: 120px;
+.squad-roster-heading > strong {
+  min-width: 42px;
+  color: var(--squad-accent);
+  font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+  font-size: 1.45rem;
   text-align: right;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .player-row-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .player-center {
-    justify-content: flex-start;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-
-  .player-right {
-    text-align: left;
-  }
+.squad-roster-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
-.players-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 18px;
-  font-size: 12px;
+.squad-roster-table {
+  width: 950px;
+  min-width: 850px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: #071c32;
+  font-size: 0.82rem;
+}
+
+.squad-col-photo {
+  width: 38px;
+}
+
+.squad-col-number {
+  width: 36px;
+}
+
+.squad-col-player {
+  width: 92px;
+}
+
+.squad-col-position {
+  width: 72px;
+}
+
+.squad-col-foot {
+  width: 40px;
+}
+
+.squad-col-height {
+  width: 42px;
+}
+
+.squad-col-nationality {
+  width: 72px;
+}
+
+.squad-col-age {
+  width: 34px;
+}
+
+.squad-col-contract {
+  width: 68px;
+}
+
+.squad-col-value {
+  width: 76px;
+}
+
+.squad-col-status {
+  width: 54px;
+}
+
+.squad-roster-table th {
+  padding: 12px 4px;
+  background: #f7f9fc;
+  color: #66778a;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-align: left;
   text-transform: uppercase;
-  color: #999;
-  margin-bottom: 6px;
 }
 
-.players-header span:nth-child(2) {
-  margin-left: -60px; /* ajusta alineación con el centro */
+.squad-roster-table th:nth-child(1),
+.squad-roster-table td:nth-child(1) {
+  width: 18px;
 }
 
-.table-wrapper{
-  overflow-x:auto;
+.squad-roster-table th:nth-child(2),
+.squad-roster-table td:nth-child(2) {
+  width: 28px;
+  text-align: center;
 }
 
-.squad-table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-  border-radius:10px;
-  overflow:hidden;
-  font-size:14px;
+.squad-roster-table th:nth-child(3),
+.squad-roster-table td:nth-child(3) {
+  width: 92px;
+  max-width: 92px;
 }
 
-.squad-table thead{
-  background:#0a2540;
-  color:white;
+.squad-roster-table th:nth-child(4),
+.squad-roster-table td:nth-child(4) {
+  width: 72px;
 }
 
-.squad-table th{
-  padding:14px;
-  text-align:left;
-  font-weight:600;
+.squad-roster-table th:nth-child(5),
+.squad-roster-table td:nth-child(5) {
+  width: 40px;
 }
 
-.squad-table td{
-  padding:12px 14px;
-  border-bottom:1px solid #eee;
+.squad-roster-table th:nth-child(6),
+.squad-roster-table td:nth-child(6) {
+  width: 42px;
+  text-align: center;
 }
 
-.squad-table tbody tr:hover{
-  background:#f6f8fb;
+.squad-roster-table th:nth-child(7),
+.squad-roster-table td:nth-child(7) {
+  width: 72px;
+  max-width: 72px;
 }
 
-.player-cell{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:600;
+.squad-roster-table th:nth-child(8),
+.squad-roster-table td:nth-child(8) {
+  width: 34px;
+  text-align: center;
 }
 
-.player-cell img{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  object-fit:cover;
+.squad-roster-table th:nth-child(9),
+.squad-roster-table td:nth-child(9) {
+  width: 68px;
 }
 
-.nationality-cell{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.squad-roster-table th:nth-child(10),
+.squad-roster-table td:nth-child(10) {
+  width: 76px;
 }
 
-.flag{
-  width:18px;
-  height:12px;
-  object-fit:cover;
-  border-radius:2px;
+.squad-roster-table th:nth-child(11),
+.squad-roster-table td:nth-child(11) {
+  width: 54px;
+  text-align: center;
 }
 
-.number{
-  font-weight:700;
-  color:#555;
+.squad-roster-table td {
+  padding: 9px 2px;
+  border-top: 1px solid rgba(213, 224, 235, 0.72);
+  vertical-align: middle;
 }
 
-.contract{
-  font-weight:600;
-  color:#0a2540;
+.squad-roster-table tbody tr {
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
 }
 
-.squad-table th{
-  cursor:pointer;
-  user-select:none;
+.squad-roster-table tbody tr:hover,
+.squad-roster-table tbody tr:focus-visible,
+.squad-roster-table tbody tr.selected {
+  background: var(--squad-soft);
+  outline: 0;
+}
+
+.squad-table-number {
+  color: var(--squad-accent);
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+}
+
+.squad-table-market-value {
+  color: var(--squad-accent);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.squad-table-status {
+  color: var(--squad-accent);
+  font-size: 0.72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.squad-table-status svg {
+  width: 15px;
+  height: 15px;
+  color: #66778a;
+  vertical-align: middle;
+}
+
+.squad-table-nationality {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.squad-table-player-name strong {
+  display: block;
+  overflow: hidden;
+  color: var(--squad-deep);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.squad-table-photo {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 1px solid #d5e0eb;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #eef3f8 0%, #dce6f0 100%);
+  transform: translateX(8px);
+}
+
+.squad-table-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.squad-table-photo svg {
+  width: 19px;
+  height: 19px;
+  color: #90a2b5;
+}
+
+.squad-table-nationality img {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.squad-next-matches {
+  align-self: start;
+  margin-top: 54px;
+  background: transparent;
+}
+
+.squad-sidebar-title,
+.squad-performance-card h3 {
+  margin: 0 0 12px;
+  color: var(--squad-accent);
+  font-size: 1.02rem;
+  font-weight: 850;
+}
+
+.squad-next-matches-head {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #dce6f0;
+  background: #f7f9fc;
+}
+
+.squad-next-matches-head svg {
+  width: 20px;
+  height: 20px;
+  color: var(--squad-accent);
+}
+
+.squad-next-matches-head span {
+  display: block;
+  color: #66778a;
+  font-size: 0.62rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.squad-next-matches-head h3 {
+  margin: 2px 0 0;
+  color: var(--squad-deep);
+  font-size: 0.94rem;
+  font-weight: 850;
+}
+
+.squad-next-matches-list {
+  display: grid;
+  gap: 9px;
+}
+
+.squad-next-match {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  border: 1px solid transparent;
+  border-radius: 12px 0 12px 0;
+  padding: 10px 12px;
+  background: #1769b0;
+  color: #ffffff;
+}
+
+.squad-next-match:first-child {
+  border-top: 1px solid transparent;
+}
+
+.squad-next-match-laliga {
+  background: #d71920;
+}
+
+.squad-next-match-friendly {
+  background: #7f8791;
+}
+
+.squad-next-match-copa {
+  background: #050505;
+}
+
+.squad-next-match-date {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.squad-next-match-date strong {
+  color: var(--squad-accent);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.squad-next-match-date span {
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.squad-next-match-date svg {
+  width: 17px;
+  height: 17px;
+  color: #ffffff;
+  flex: 0 0 auto;
+}
+
+.squad-next-match-rival {
+  min-width: 0;
+}
+
+.squad-next-match-rival span {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.squad-next-match-rival img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.squad-next-match-competition {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.squad-next-match-competition img {
+  width: 34px;
+  height: 34px;
+  filter: grayscale(1) brightness(0) invert(1);
+  object-fit: contain;
+}
+
+.squad-next-match-competition span,
+.squad-next-match-competition small {
+  display: none;
+}
+
+.squad-next-matches-empty {
+  padding: 18px 16px;
+  color: #66778a;
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.squad-performance-card {
+  margin-top: 28px;
+  background: transparent;
+}
+
+.squad-performance-table {
+  width: 100%;
+  border: 1px solid #cfd9e5;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  color: #071c32;
+  font-size: 0.72rem;
+  overflow: hidden;
+  table-layout: fixed;
+}
+
+.squad-performance-table th {
+  border-bottom: 2px solid #d71920;
+  padding: 13px 7px 11px;
+  background: rgba(255, 255, 255, 0.62);
+  color: #071c32;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.squad-performance-table th:first-child,
+.squad-performance-table td:first-child {
+  width: 42%;
+  text-align: left;
+}
+
+.squad-performance-head-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: #071c32;
+  cursor: help;
+}
+
+.squad-performance-head-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.squad-performance-table td {
+  padding: 16px 8px;
+  border-top: 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.squad-performance-table td:first-child {
+  overflow: hidden;
+  color: #071c32;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.squad-performance-table tbody tr {
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.squad-performance-table tbody tr:hover {
+  background: var(--squad-accent);
+  color: #ffffff;
+}
+
+.squad-performance-table tbody tr:hover td,
+.squad-performance-table tbody tr:hover td:first-child {
+  color: #ffffff;
+}
+
+.squad-performance-pagination {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px 12px;
+  border: 1px solid #cfd9e5;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.62);
+  color: #071c32;
+  font-size: 0.64rem;
+}
+
+.squad-performance-pagination label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.squad-performance-pagination label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.squad-performance-pagination select {
+  width: 54px;
+  border: 1px solid #b9c5d2;
+  border-radius: 4px;
+  padding: 6px 6px;
+  background: #f7f9fc;
+  color: #071c32;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.68rem;
+}
+
+.squad-performance-range {
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.squad-performance-pager-buttons {
+  grid-column: 1 / -1;
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.squad-performance-pager-buttons button {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #071c32;
+  cursor: pointer;
+}
+
+.squad-performance-pager-buttons button:hover:not(:disabled) {
+  background: var(--squad-soft);
+  color: var(--squad-accent);
+}
+
+.squad-performance-pager-buttons button:disabled {
+  color: #9aa7b5;
+  cursor: default;
+}
+
+.squad-performance-pager-buttons svg {
+  width: 17px;
+  height: 17px;
+}
+
+.player-tech-panel {
+  position: sticky;
+  top: 92px;
+  grid-template-columns: 1fr;
+  align-self: start;
+}
+
+.player-tech-visual {
+  height: 300px;
+}
+
+.player-tech-content {
+  display: block;
+  padding: 22px;
+}
+
+.player-tech-name h2 {
+  font-size: clamp(1.6rem, 2.4vw, 2.65rem);
+}
+
+@media (max-width: 980px) {
+  .squad-select-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .squad-next-matches {
+    margin-top: 0;
+  }
+
+  .player-tech-panel {
+    position: relative;
+    top: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .squad-roster-table-wrap {
+    border-radius: 6px;
+  }
 }

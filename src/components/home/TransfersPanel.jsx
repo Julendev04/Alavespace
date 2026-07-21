@@ -1,205 +1,287 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { CircleDollarSign, Radio } from "lucide-react";
 import { supabase } from "../../services/supabaseClient";
 import TransfersAdminPanel from "./TransfersAdminPanel";
 
-export default function TransfersPanel({ showTransfers, setShowTransfers, isAdmin }) {
+export default function TransfersPanel({ showTransfers = false, setShowTransfers, isAdmin, inline = false }) {
+  const [transfers, setTransfers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [probFilter, setProbFilter] = useState("all");
 
-    // 🔥 FILTROS
-    const [teamFilter, setTeamFilter] = useState("all");
-    const [positionFilter, setPositionFilter] = useState("all");
-    const [probFilter, setProbFilter] = useState("all");
+  const fetchTransfers = async () => {
+    setLoading(true);
 
-    // 🔥 DATA
-    const [transfers, setTransfers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const { data, error } = await supabase
+      .from("transfers")
+      .select("*")
+      .order("updated_at", { ascending: false });
 
-    const [showAdmin, setShowAdmin] = useState(false);
-
-    // ⏱ tiempo relativo
-    function getTimeAgo(timestamp) {
-        const diff = Math.floor((Date.now() - timestamp) / 1000);
-
-        const mins = Math.floor(diff / 60);
-        const hours = Math.floor(diff / 3600);
-
-        if (mins < 60) return `${mins} min ago`;
-        return `${hours} h ago`;
+    if (error) {
+      console.error("Error fetching transfers:", error);
+    } else {
+      setTransfers(data || []);
     }
 
-    // 🔄 FETCH DATA
-    const fetchTransfers = async () => {
-        setLoading(true);
+    setLoading(false);
+  };
 
-        const { data, error } = await supabase
-            .from("transfers")
-            .select("*")
-            .order("updated_at", { ascending: false });
+  useEffect(() => {
+    if (showTransfers || inline) {
+      fetchTransfers();
+    }
+  }, [showTransfers, inline]);
 
-        if (error) {
-            console.error("Error fetching transfers:", error);
-        } else {
-            setTransfers(data || []);
+  useEffect(() => {
+    const channel = supabase
+      .channel("transfers-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "transfers" },
+        () => {
+          if (showTransfers || inline) fetchTransfers();
         }
+      )
+      .subscribe();
 
-        setLoading(false);
+    return () => {
+      supabase.removeChannel(channel);
     };
+  }, [showTransfers, inline]);
 
-    // 🚀 CARGA INICIAL
-    useEffect(() => {
-        if (showTransfers) {
-            fetchTransfers();
-        }
-    }, [showTransfers]);
+  const statusOptions = useMemo(
+    () => mergeFilterOptions(["Rumour", "Negotiating", "Done"], transfers.map((transfer) => transfer.status)),
+    [transfers]
+  );
 
-    // ⚡ REALTIME
-    useEffect(() => {
-        const channel = supabase
-            .channel("transfers-changes")
-            .on(
-                "postgres_changes",
-                { event: "*", schema: "public", table: "transfers" },
-                () => {
-                    fetchTransfers(); // 🔥 refresca en tiempo real
-                }
-            )
-            .subscribe();
+  const probabilityOptions = useMemo(
+    () => mergeFilterOptions(["Low", "Medium", "High"], transfers.map((transfer) => transfer.probability)),
+    [transfers]
+  );
 
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, []);
+  const visibleTransfers = useMemo(
+    () =>
+      transfers.filter((transfer) => {
+        const matchesStatus = statusFilter === "all" || transfer.status === statusFilter;
+        const matchesProbability = probFilter === "all" || transfer.probability === probFilter;
 
-    // 🔍 FILTRADO
-    const filteredTransfers = useMemo(() => {
-        return transfers.filter(t => {
-            return (
-                (teamFilter === "all" || t.team === teamFilter) &&
-                (positionFilter === "all" || t.position === positionFilter) &&
-                (probFilter === "all" || t.probability === probFilter)
-            );
-        });
-    }, [teamFilter, positionFilter, probFilter, transfers]);
+        return matchesStatus && matchesProbability;
+      }),
+    [transfers, statusFilter, probFilter]
+  );
 
-    // 🎯 FILTROS DINÁMICOS
-    const teams = [...new Set(transfers.map(t => t.team))];
-    const positions = [...new Set(transfers.map(t => t.position))];
-    const probabilities = [...new Set(transfers.map(t => t.probability))];
+  if (!showTransfers && !inline) return null;
 
-    if (!showTransfers) return null;
+  const content = (
+    <>
+      <div className="transfers-panel-head">
+        <h2>Nuestro mercado de Transferencias</h2>
 
-    return (
-        <div className="simulator-overlay">
-            <div className="simulator-modal">
-
-                {/* ❌ CERRAR */}
+        <div className="transfers-panel-actions">
+          <div className="transfer-chip-filters" aria-label="Filtros del mercado">
+            <div className="transfer-chip-group" aria-label="Filtrar por estado">
+              <span className="transfer-filter-label">Estado</span>
+              {statusOptions.map((status) => (
                 <button
-                    className="close-btn"
-                    onClick={() => setShowTransfers(false)}
+                  className={`transfer-filter-chip status ${getBadgeClass(status)} ${statusFilter === status ? "active" : ""}`}
+                  type="button"
+                  key={status}
+                  onClick={() => setStatusFilter(statusFilter === status ? "all" : status)}
                 >
-                    ✕
+                  {status}
                 </button>
-
-                <h2 style={{ marginTop: "-5px", marginBottom: "10px" }}>
-                    Nuestro mercado de Transferencias
-                </h2>
-
-                {showAdmin && (
-                    <div className="admin-panel-wrapper">
-                        <TransfersAdminPanel />
-                    </div>
-                )}
-
-
-                {/* 🔍 FILTROS */}
-                <div className="transfers-filters">
-
-                    <select onChange={(e) => setTeamFilter(e.target.value)}>
-                        <option value="all">All Teams</option>
-                        {teams.map(team => (
-                            <option key={team} value={team}>{team}</option>
-                        ))}
-                    </select>
-
-                    <select onChange={(e) => setPositionFilter(e.target.value)}>
-                        <option value="all">All Positions</option>
-                        {positions.map(pos => (
-                            <option key={pos} value={pos}>{pos}</option>
-                        ))}
-                    </select>
-
-                    <select onChange={(e) => setProbFilter(e.target.value)}>
-                        <option value="all">All Probabilities</option>
-                        {probabilities.map(prob => (
-                            <option key={prob} value={prob}>{prob}</option>
-                        ))}
-                    </select>
-                    {isAdmin && (
-                        <button
-                            className="admin-btn"
-                            onClick={() => setShowAdmin(true)}
-                        >
-                            ⚙️ Admin
-                        </button>
-                    )}
-
-                </div>
-
-                <div className="transfers-table-wrapper">
-
-                    {loading ? (
-                        <p style={{ textAlign: "center" }}>
-                            Loading transfers...
-                        </p>
-                    ) : (
-                        <table className="transfers-table">
-
-                            <thead>
-                                <tr>
-                                    <th>Player</th>
-                                    <th>Team</th>
-                                    <th>Pos</th>
-                                    <th>Value</th>
-                                    <th>Source</th>
-                                    <th>Updated</th>
-                                    <th>Prob</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {filteredTransfers.map((t) => (
-                                    <tr key={t.id}>
-                                        <td>{t.name}</td>
-                                        <td>{t.team}</td>
-                                        <td>{t.position}</td>
-                                        <td>{t.value}</td>
-                                        <td>{t.source}</td>
-
-                                        <td className="updated">
-                                            {getTimeAgo(new Date(t.updated_at).getTime())}
-                                        </td>
-
-                                        <td>
-                                            <span className={`prob ${t.probability.toLowerCase()}`}>
-                                                {t.probability}
-                                            </span>
-                                        </td>
-
-                                        <td>
-                                            <span className={`status ${t.status.toLowerCase()}`}>
-                                                {t.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-
-                        </table>
-                    )}
-
-                </div>
-
+              ))}
             </div>
+
+            <div className="transfer-chip-group" aria-label="Filtrar por probabilidad">
+              <span className="transfer-filter-label">Probabilidad:</span>
+              {probabilityOptions.map((probability) => (
+                <button
+                  className={`transfer-filter-chip prob ${getBadgeClass(probability)} ${probFilter === probability ? "active" : ""}`}
+                  type="button"
+                  key={probability}
+                  onClick={() => setProbFilter(probFilter === probability ? "all" : probability)}
+                >
+                  {probability}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {isAdmin && (
+            <button
+              className="admin-btn"
+              type="button"
+              onClick={() => setShowAdmin(true)}
+            >
+              Admin
+            </button>
+          )}
         </div>
+      </div>
+
+      {showAdmin && (
+        <div className="admin-panel-wrapper">
+          <button
+            className="transfer-admin-close"
+            type="button"
+            aria-label="Cerrar panel de admin"
+            title="Cerrar"
+            onClick={() => setShowAdmin(false)}
+          >
+            x
+          </button>
+          <TransfersAdminPanel />
+        </div>
+      )}
+
+      <div className="transfers-market-board">
+        {loading ? (
+          <p className="transfers-empty">Cargando mercado...</p>
+        ) : visibleTransfers.length ? (
+          <div className="transfers-ticker" aria-label="Movimientos de mercado">
+            <div className={`transfers-ticker-track ${visibleTransfers.length > 3 ? "is-animated" : ""}`}>
+              {[...visibleTransfers, ...visibleTransfers].map((transfer, index) => (
+                <TransferCard
+                  key={`${transfer.id}-${index}`}
+                  transfer={transfer}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="transfers-empty">No hay movimientos con estos filtros.</p>
+        )}
+      </div>
+      <div className="transfers-legend" aria-label="Leyenda del mercado">
+        <span><i className="legend-dot entrada" /> Entrada</span>
+        <span><i className="legend-dot salida" /> Salida</span>
+      </div>
+    </>
+  );
+
+  if (inline) {
+    return (
+      <section className="home-transfers-section">
+        {content}
+      </section>
     );
+  }
+
+  return (
+    <div className="simulator-overlay">
+      <div className="simulator-modal">
+        <button
+          className="close-btn"
+          type="button"
+          onClick={() => setShowTransfers?.(false)}
+        >
+          x
+        </button>
+
+        {content}
+      </div>
+    </div>
+  );
+}
+
+function getBadgeClass(value = "") {
+  return String(value).toLowerCase().replace(/\s+/g, "-");
+}
+
+function mergeFilterOptions(baseOptions, values) {
+  const options = new Set(baseOptions);
+  values.filter(Boolean).forEach((value) => options.add(value));
+
+  return Array.from(options);
+}
+
+function TransferCard({ transfer }) {
+  const sourceUrl = normalizeUrl(transfer.source_url);
+  const CardTag = sourceUrl ? "a" : "article";
+  const cardProps = sourceUrl
+    ? {
+        href: sourceUrl,
+        target: "_blank",
+        rel: "noreferrer",
+        title: `Ir a la fuente: ${transfer.source || "fuente"}`
+      }
+    : {};
+
+  return (
+    <CardTag
+      className={`transfer-card transfer-card-${getTransferType(transfer.transfer_type)}`}
+      {...cardProps}
+    >
+      <div className="transfer-card-top">
+        <h3>{transfer.name}</h3>
+        {transfer.position && (
+          <span className="transfer-card-position">{transfer.position}</span>
+        )}
+      </div>
+
+      <div className="transfer-card-team">
+        {transfer.team_logo_url && (
+          <img src={transfer.team_logo_url} alt="" loading="lazy" />
+        )}
+        <strong>{transfer.team}</strong>
+      </div>
+
+      <dl className="transfer-card-facts">
+        <div>
+          <dt aria-label="Valor" title="Valor">
+            <CircleDollarSign size={14} />
+          </dt>
+          <dd>{transfer.value || "-"}</dd>
+        </div>
+        <div>
+          <dt aria-label="Fuente" title="Fuente">
+            <Radio size={14} />
+          </dt>
+          <dd>{transfer.source || "-"}</dd>
+        </div>
+      </dl>
+
+      <div className="transfer-card-footer">
+        <span className={`status ${getBadgeClass(transfer.status)}`}>
+          {transfer.status}
+        </span>
+        <span className={`prob ${getBadgeClass(transfer.probability)}`}>
+          {transfer.probability}
+        </span>
+      </div>
+      <time className="transfer-card-date" dateTime={transfer.created_at || transfer.updated_at}>
+        {formatTransferDate(transfer.created_at || transfer.updated_at)}
+      </time>
+      {transfer.player_image_url && (
+        <img
+          className="transfer-card-player"
+          src={transfer.player_image_url}
+          alt=""
+          loading="lazy"
+        />
+      )}
+    </CardTag>
+  );
+}
+
+function getTransferType(value = "") {
+  return String(value).toLowerCase() === "salida" ? "salida" : "entrada";
+}
+
+function normalizeUrl(url = "") {
+  const trimmed = String(url).trim();
+  if (!trimmed) return "";
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
+function formatTransferDate(date) {
+  if (!date) return "";
+
+  return new Date(date).toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
 }

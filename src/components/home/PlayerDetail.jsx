@@ -1,9 +1,5 @@
 import React from "react";
-import { ArrowLeft, Cake, Flag, Shield, Sparkles, Trophy } from "lucide-react";
-
-function clampPercent(value) {
-  return `${Math.max(6, Math.min(100, value || 0))}%`;
-}
+import { ArrowLeft, Cake, Shield, TrendingUp } from "lucide-react";
 
 export default function PlayerDetail({ selectedPlayer, setSelectedPlayer }) {
   if (!selectedPlayer) return null;
@@ -15,9 +11,12 @@ export default function PlayerDetail({ selectedPlayer, setSelectedPlayer }) {
   const redCards = Number(selectedPlayer.red_cards) || 0;
   const goalRatio = matches ? goals / matches : 0;
   const assistRatio = matches ? assists / matches : 0;
-  const disciplineScore = Math.max(0, 100 - yellowCards * 8 - redCards * 22);
   const displayPosition = selectedPlayer.pos || selectedPlayer.position || "Jugador";
-  const portrait = selectedPlayer.card_url || selectedPlayer.photo_url;
+  const portrait = selectedPlayer.photo_url || selectedPlayer.card_url;
+  const marketValue = selectedPlayer.market_value;
+  const formattedMarketValue = marketValue == null || marketValue === ""
+    ? "Sin valorar"
+    : `${Number(marketValue).toLocaleString("es-ES", { maximumFractionDigits: 1 })} M€`;
 
   return (
     <article className="player-detail player-detail-dashboard">
@@ -42,7 +41,6 @@ export default function PlayerDetail({ selectedPlayer, setSelectedPlayer }) {
         </div>
 
         <div className="player-dashboard-main">
-          <span className="player-dashboard-label">Ficha de plantilla</span>
           <h3>{selectedPlayer.name}</h3>
 
           <div className="player-dashboard-chips">
@@ -56,77 +54,21 @@ export default function PlayerDetail({ selectedPlayer, setSelectedPlayer }) {
             {selectedPlayer.age && <span><Cake size={14} />{selectedPlayer.age}</span>}
           </div>
         </div>
-      </section>
 
-      <section className="player-kpis">
-        <div className="kpi">
-          <span className="kpi-value">{matches}</span>
-          <span className="kpi-label">Partidos</span>
-        </div>
-        <div className="kpi highlight">
-          <span className="kpi-value">{goals}</span>
-          <span className="kpi-label">Goles</span>
-        </div>
-        <div className="kpi">
-          <span className="kpi-value">{assists}</span>
-          <span className="kpi-label">Asistencias</span>
+        <div className="player-value-strip">
+          <span>Valor de mercado</span>
+          <strong><TrendingUp size={20} />{formattedMarketValue}</strong>
         </div>
       </section>
 
-      <section className="player-performance-panel">
-        <div className="performance-header">
-          <div>
-            <span>Dashboard</span>
-            <h4>Rendimiento</h4>
-          </div>
-          <Sparkles size={18} />
-        </div>
-
-        <div className="performance-row">
-          <div>
-            <span>Gol por partido</span>
-            <strong>{goalRatio.toFixed(2)}</strong>
-          </div>
-          <div className="performance-track">
-            <div style={{ width: clampPercent(goalRatio * 100) }} />
-          </div>
-        </div>
-
-        <div className="performance-row">
-          <div>
-            <span>Asistencia por partido</span>
-            <strong>{assistRatio.toFixed(2)}</strong>
-          </div>
-          <div className="performance-track">
-            <div style={{ width: clampPercent(assistRatio * 100) }} />
-          </div>
-        </div>
-
-        <div className="performance-row">
-          <div>
-            <span>Control disciplinario</span>
-            <strong>{disciplineScore}%</strong>
-          </div>
-          <div className="performance-track">
-            <div style={{ width: clampPercent(disciplineScore) }} />
-          </div>
-        </div>
-      </section>
-
-      <section className="player-stats-grid">
-        <div className="stat-box">
-          <Flag size={17} />
-          <h4>Disciplina</h4>
-          <div>Amarillas: {yellowCards}</div>
-          <div>Rojas: {redCards}</div>
-        </div>
-
-        <div className="stat-box stat-box-accent">
-          <Trophy size={17} />
-          <h4>Impacto</h4>
-          <div>{goals + assists} acciones de gol</div>
-          <div>{matches ? `${Math.round(((goals + assists) / matches) * 100)}% por partido` : "Sin minutos"}</div>
-        </div>
+      <section className="player-summary-line" aria-label="Resumen de rendimiento">
+        <span><strong>{matches}</strong>Partidos</span>
+        <span><strong>{goals}</strong>Goles</span>
+        <span><strong>{assists}</strong>Asistencias</span>
+        <span><strong>{goalRatio.toFixed(2)}</strong>Gol / partido</span>
+        <span><strong>{assistRatio.toFixed(2)}</strong>Asist. / partido</span>
+        <span><strong>{yellowCards}</strong>Amarillas</span>
+        <span><strong>{redCards}</strong>Rojas</span>
       </section>
     </article>
   );

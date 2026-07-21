@@ -21,9 +21,20 @@ import Privacidad from "./Pages/PrivacyPolicy";
 import Coockies from "./Pages/CoockiePolicy";
 import Trayectoria from "./Pages/Trayectoria";
 import MatchPreview from "./Pages/MatchPreview";
+import Enciclopedia from "./Pages/Enciclopedia";
+import TierList from "./Pages/TierList";
+import Articles from "./Pages/Articles";
+import LaLigaGuide from "./Pages/LaLigaGuide";
+import LaunchGate from "./components/LaunchGate";
+
+const LAUNCH_GATE_ENABLED = false;
 
 function Layout() {
   const location = useLocation();
+
+  if (LAUNCH_GATE_ENABLED) {
+    return <LaunchGate />;
+  }
   const hideLayout = location.pathname === "/auth" || location.pathname === "/landing"; // 👈 Ocultar Navbar/Footer aquí
    const isAuth = location.pathname === "/auth"; // 👈 ESTA ES LA NUEVA
    const isLanding = location.pathname === "/landing";
@@ -54,6 +65,11 @@ function Layout() {
           <Route path="/coockies" element={<Coockies />} />
           <Route path="/trayectoria" element={<Trayectoria />} />
           <Route path="/partido/:id" element={<MatchPreview />} />
+          <Route path="/enciclopedia" element={<Enciclopedia />} />
+          <Route path="/tierlist" element={<TierList />} />
+          <Route path="/articulos" element={<Articles />} />
+          <Route path="/articulos/:id" element={<Articles />} />
+          <Route path="/laliga-guia" element={<LaLigaGuide />} />
         </Routes>
       </main>
     </div>

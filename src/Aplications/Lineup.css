@@ -9,31 +9,65 @@
   /* === TITULOS === */
   .page-header {
     width: min(1450px, calc(100% - 96px));
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    margin-bottom: -20px;
+    margin: 130px auto 34px;
+    text-align: center;
   }
 
   .titulo-coluna {
-    font-family: "Coluna", serif;
-    font-size: 80px;
-    color: #002f87;
+    flex: 0 0 auto;
+    margin: 0;
+    color: #0d61af;
+    font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0;
+    text-align: center;
     text-transform: uppercase;
-    margin-top: 130px;
-    margin-bottom: 0;
   }
 
-  .subtitulo-montserrat {
-    font-family: "Montserrat", sans-serif;
-    font-size: 1rem;
-    color: #444;
-    font-weight: 500;
-    margin-top: -18px;
+  .lineup-page-title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
   }
 
-  .subtitulo-montserrat strong {
-    color: #002f87;
+  .lineup-title-streak {
+    flex: 1 1 120px;
+    max-width: 145px;
+    height: 1px;
+  }
+
+  .lineup-title-streak-left {
+    background: linear-gradient(90deg, transparent 0%, rgba(13, 97, 175, 0.1) 28%, rgba(13, 97, 175, 0.72) 100%);
+  }
+
+  .lineup-title-streak-right {
+    background: linear-gradient(90deg, rgba(13, 97, 175, 0.72) 0%, rgba(13, 97, 175, 0.1) 72%, transparent 100%);
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      width: min(100% - 28px, 1450px);
+      margin-top: 92px;
+      margin-bottom: 26px;
+    }
+
+    .lineup-page-title {
+      gap: 10px;
+    }
+
+    .titulo-coluna {
+      max-width: 70%;
+      font-size: 1.25rem;
+      line-height: 1.15;
+    }
+
+    .lineup-title-streak {
+      flex-basis: 42px;
+    }
   }
 
   /* ============================= */
@@ -87,31 +121,47 @@
   /* TEXTO PIZARRA */
   .overlay-text-container.left-aligned {
     position: absolute;
-    top: 5%;
+    top: 4.4%;
     left: 6%;
     text-align: left;
     z-index: 10;
-    max-width: 80%;
+    max-width: 70%;
   }
 
   .overlay-nombre {
-    font-size: 35px;
-    font-weight: 900;
-    font-family: 'Montserrat', sans-serif;
+    font-size: 58px;
+    font-weight: 800;
+    font-family: "Coluna", "NeverMind ExtraExtended", "Montserrat", sans-serif;
     margin: 0;
     color: black;
+    line-height: 0.82;
     text-transform: uppercase;
   }
 
   .overlay-formacion-box {
+    position: relative;
+    top: 1px;
     display: inline-block;
-    padding: 4px 10px;
+    min-width: 74px;
+    padding: 2px 9px;
     background-color: rgba(0, 47, 135, 0.85);
-    border-radius: 6px;
-    font-size: 1rem;
-    margin-top: 6px;
-    font-weight: 600;
+    border-radius: 7px 0 7px 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.78rem;
+    margin-top: 0;
+    font-weight: 850;
     color: white;
+    text-align: center;
+  }
+
+  .overlay-board-logo {
+    position: absolute;
+    top: 2%;
+    right: 3.8%;
+    z-index: 10;
+    width: 76px;
+    height: auto;
+    object-fit: contain;
   }
 
   /* ============================= */
@@ -131,7 +181,7 @@
   .position {
     width: 44px;
     height: 44px;
-    background-color: rgba(0, 47, 135, 0.92);
+    background-color: rgba(0, 0, 0, 0.92);
     border: none;
     border-radius: 50%;
     display: flex;
@@ -142,13 +192,11 @@
     font-weight: 900;
     line-height: 1;
     cursor: pointer;
-    box-shadow: 0 8px 18px rgba(0, 47, 135, 0.22);
     transition: 0.2s;
   }
 
   .position:hover {
     background-color: #0040c1;
-    transform: scale(1.08);
   }
 
   .position-wrapper.drop-ready {
@@ -205,23 +253,27 @@
 
   /* === AUTOCOMPLETE SUPLENTE === */
   .suplente-opcion {
-    background: #f4f7fb;
+    background: #ffffff;
     color: #1f2937;
     padding: 8px 10px;
     margin-bottom: 0;
     text-align: left;
     cursor: pointer;
-    border: 1px solid #dfe5ee;
-    border-radius: 8px;
+    border: 0;
+    border-bottom: 1px solid #e2e7ef;
+    border-radius: 0;
     font-size: 0.85rem;
     font-weight: 700;
     width: 100%;
   }
 
   .suplente-opcion:hover {
-    border-color: #002f87;
     color: #002f87;
-    background: #fff;
+    background: #f4f8ff;
+  }
+
+  .suplente-opcion:last-child {
+    border-bottom: 0;
   }
 
   /* ============================= */
@@ -367,7 +419,6 @@
     position: fixed;
     inset: 0;
     background: rgba(8, 18, 38, 0.58);
-    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -387,7 +438,7 @@
   }
 
   .player-picker-modal {
-    width: min(460px, calc(100vw - 32px));
+    width: min(540px, calc(100vw - 32px));
     max-height: min(82vh, 720px);
     padding: 0;
     gap: 0;
@@ -406,7 +457,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 18px;
-    padding: 18px 20px;
+    padding: 14px 20px 18px;
     background: #f5f7fb;
     border-bottom: 1px solid #dfe5ee;
   }
@@ -422,10 +473,11 @@
   }
 
   .player-picker-header h3 {
-    margin: 2px 0 0;
+    margin: -1px 0 0;
     color: #111827;
     font-family: "Montserrat", sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.35rem;
+    line-height: 1.08;
   }
 
   .player-picker-close {
@@ -452,6 +504,30 @@
     border-bottom: none;
   }
 
+  .player-picker-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 28px;
+    padding: 12px 20px 18px;
+    background: #ffffff;
+  }
+
+  .player-picker-actions button {
+    border: 0;
+    background: transparent;
+    color: #0057c2;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 0;
+  }
+
+  .player-picker-actions button:disabled {
+    color: #9aa6b6;
+    cursor: not-allowed;
+  }
+
   .player-picker-field label {
     display: block;
     margin-bottom: 8px;
@@ -473,9 +549,19 @@
     min-width: 0;
   }
 
+  .player-picker-field:has(.jugadores-lista-lineup:not(:empty)) .player-picker-input {
+    border-color: #002f87;
+    border-bottom-color: #e2e8f0;
+    border-radius: 10px 10px 0 0;
+  }
+
   .player-picker-input:focus-within {
     border-color: #002f87;
-    box-shadow: 0 0 0 3px rgba(0, 47, 135, 0.12);
+    box-shadow: none;
+  }
+
+  .player-picker-field:has(.jugadores-lista-lineup:not(:empty)) .player-picker-input:focus-within {
+    box-shadow: none;
   }
 
   .player-picker-input input {
@@ -517,15 +603,19 @@
   .jugadores-lista-lineup {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0;
     max-height: 270px;
     overflow-y: auto;
     overflow-x: hidden;
+    border: 1px solid #002f87;
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+    background: #ffffff;
   }
 
   .starter-list,
   .bench-list {
-    margin-top: 10px;
+    margin-top: 0;
   }
 
   .starter-list {
@@ -552,13 +642,18 @@
     width: 100%;
     max-width: 100%;
     padding: 0.55rem;
-    border: 1px solid #e2e7ef;
-    border-radius: 10px;
+    border: 0;
+    border-bottom: 1px solid #e2e7ef;
+    border-radius: 0;
     background: #fff;
     color: #1f2937;
     cursor: pointer;
     text-align: left;
     transition: 0.2s;
+  }
+
+  .jugador-opcion-lineup:last-child {
+    border-bottom: 0;
   }
 
   .jugador-opcion-lineup img {
@@ -575,8 +670,8 @@
   }
 
   .jugador-opcion-lineup:hover {
-    border-color: #002f87;
-    box-shadow: 0 6px 14px rgba(0, 47, 135, 0.08);
+    background: #f4f8ff;
+    box-shadow: none;
   }
 
   .btn-cerrar {
@@ -957,57 +1052,6 @@
     white-space: nowrap;
   }
 
-  .market-table th:nth-child(1),
-  .market-table td:nth-child(1) {
-    width: 88px;
-    text-align: left;
-  }
-
-  .market-table th:nth-child(2),
-  .market-table td:nth-child(2) {
-    width: 65px;
-  }
-
-  .market-table th:nth-child(3),
-  .market-table td:nth-child(3) {
-    width: 70px;
-    padding-left: 0;
-  }
-
-  .fichajes-table th:nth-child(1),
-  .fichajes-table td:nth-child(1) {
-    width: 70px;
-  }
-
-  .fichajes-table th:nth-child(2),
-  .fichajes-table td:nth-child(2) {
-    width: 68px;
-  }
-
-  .fichajes-table th:nth-child(3),
-  .fichajes-table td:nth-child(3) {
-    width: 52px;
-  }
-
-  .fichajes-table th:nth-child(4),
-  .fichajes-table td:nth-child(4) {
-    width: 24px;
-    padding-left: 0;
-    text-align: right;
-  }
-
-  .market-value-cell {
-    gap: 0;
-  }
-
-  .market-value-cell span {
-    flex: 0 0 auto;
-  }
-
-  .btn-edit-value {
-    margin-left: 1px;
-  }
-
   .salida-select {
     width: 64px;
     max-width: 100%;
@@ -1034,16 +1078,23 @@
   }
 
   .fichajes-table .add-fichaje-row {
-    display: block;
+    display: table;
     width: 100%;
+    table-layout: fixed;
   }
 
   .fichajes-table .add-fichaje-row td {
-    display: flex;
+    display: table-cell;
     width: 100%;
-    justify-content: center;
+    height: 44px;
+    text-align: center;
+    vertical-align: middle;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .fichajes-table .add-fichaje-row .add-fichaje-btn {
+    margin: 0 auto;
   }
 
   .salidas-box {
@@ -1082,8 +1133,8 @@
   }
 
   .salidas-lanes {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
     min-width: 0;
   }
@@ -1112,48 +1163,60 @@
 
   .salidas-list {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px 2px;
     min-height: 96px;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    overflow: visible;
     padding-right: 2px;
   }
 
   .salida-card {
+    margin-left: 0;
+    margin-top: -10px;
     position: relative;
-    flex: 0 0 76px;
-    min-width: 0;
+    flex: 0 0 82px;
+    width: 82px;
+    min-width: 82px;
     display: flex;
     justify-content: center;
+    border: 0;
     background: transparent;
-    padding: 0;
+    padding: 0;   
+    cursor: pointer;
+  }
+
+  .salida-card:hover img {
+    filter: brightness(1.04);
+    transform: translateY(-1px);
   }
 
   .salida-card img {
-    width: 74px;
-    height: 94px;
+    width: 110px;
+    height: 120px;
     object-fit: contain;
   }
 
   .salida-card > span {
     position: absolute;
     left: 50%;
-    bottom: 2px;
+    bottom: 0px;
     transform: translateX(-50%);
-    border-radius: 999px;
+    border-radius: 9px 0px 9px 0px;
     background: rgba(0, 47, 135, 0.9);
     color: #fff;
-    padding: 2px 6px;
-    font-size: 0.68rem;
+    min-width: 42px;
+    padding: 2px 8px;
+    font-size: 0.64rem;
     font-weight: 700;
     white-space: nowrap;
+    text-align: center;
   }
 
   .salida-card button {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 18px;
+    left: 73px;
     border: none;
     background: transparent;
     color: #c0392b;
@@ -1263,5 +1326,800 @@
 
     .stat-value {
       font-size: 36px;
+    }
+  }
+
+  /* Final market table alignment override */
+  .panel-derecho .market-table {
+    table-layout: auto;
+  }
+
+  .panel-derecho .market-table *,
+  .panel-derecho .market-table *::before,
+  .panel-derecho .market-table *::after {
+    box-sizing: border-box;
+  }
+
+  .panel-derecho .market-table thead {
+    padding-right: 12px;
+  }
+
+  .panel-derecho .market-table thead tr,
+  .panel-derecho .market-table tbody tr {
+    display: grid;
+    grid-template-columns: 166px 82px 76px;
+    align-items: center;
+    column-gap: 0;
+    justify-content: start;
+  }
+
+  .panel-derecho .market-table th,
+  .panel-derecho .market-table td {
+    width: auto !important;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    padding: 6px 4px;
+  }
+
+  .panel-derecho .market-table th:nth-child(1),
+  .panel-derecho .market-table td:nth-child(1) {
+    justify-content: flex-start;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+
+  .panel-derecho .market-table th:nth-child(2),
+  .panel-derecho .market-table td:nth-child(2),
+  .panel-derecho .market-table th:nth-child(3),
+  .panel-derecho .market-table td:nth-child(3) {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .panel-derecho .market-table .market-value-cell {
+    width: 100%;
+    justify-content: center;
+    gap: 1px;
+  }
+
+  .panel-derecho .market-table .market-value-cell span {
+    flex: 0 0 auto;
+  }
+
+  .panel-derecho .market-table .btn-edit-value {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    margin-left: 1px;
+  }
+
+  .panel-derecho .market-table .salida-select {
+    width: auto;
+    min-width: 62px;
+    margin: 0 auto;
+    text-align: center;
+    text-align-last: center;
+  }
+
+  .panel-derecho .fichajes-table .add-fichaje-row {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .panel-derecho .fichajes-table .add-fichaje-row td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .panel-derecho .fichajes-table .add-fichaje-row .add-fichaje-btn {
+    margin: 0 auto;
+  }
+
+  .panel-derecho .fichajes-table thead tr,
+  .panel-derecho .fichajes-table tbody tr:not(.add-fichaje-row) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 100px 82px 42px;
+    align-items: center;
+    width: 100%;
+    justify-content: start;
+  }
+
+  .panel-derecho .fichajes-table th,
+  .panel-derecho .fichajes-table td {
+    width: auto !important;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    padding: 6px 4px;
+  }
+
+  .panel-derecho .fichajes-table th:nth-child(1),
+  .panel-derecho .fichajes-table td:nth-child(1) {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .panel-derecho .fichajes-table th:nth-child(2),
+  .panel-derecho .fichajes-table td:nth-child(2),
+  .panel-derecho .fichajes-table th:nth-child(3),
+  .panel-derecho .fichajes-table td:nth-child(3) {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .panel-derecho .fichajes-table th:nth-child(3),
+  .panel-derecho .fichajes-table td:nth-child(3) {
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .panel-derecho .market-stats {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(22px, 4vw, 46px);
+    margin: 16px auto 0;
+    text-align: left;
+  }
+
+  .panel-derecho .market-stats > div {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .panel-derecho .stat-label {
+    color: #000000;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 650;
+    line-height: 1;
+    transform: translateY(-2px);
+  }
+
+  .panel-derecho .stat-value {
+    display: inline;
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.45rem;
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  @media (max-width: 560px) {
+    .panel-derecho .market-table thead tr,
+    .panel-derecho .market-table tbody tr {
+      grid-template-columns: minmax(128px, 1fr) 76px 70px;
+    }
+
+    .panel-derecho .market-stats {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .panel-derecho .stat-value {
+      font-size: 32px;
+    }
+  }
+
+  /* Acciones de mercado, fade inferior y leyenda */
+  .panel-derecho .market-table thead tr,
+  .panel-derecho .market-table tbody tr {
+    grid-template-columns: 156px 82px 88px;
+  }
+
+  .market-table-scroll {
+    position: relative;
+  }
+
+  .market-table-scroll.has-scroll-more::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    right: 18px;
+    bottom: 0;
+    height: 30px;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(245, 245, 245, 0), rgba(245, 245, 245, 0.92));
+  }
+
+  .market-action-buttons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .market-action-btn {
+    width: 25px;
+    height: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 7px 0px 7px 0px;
+    padding: 0;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 950;
+    line-height: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.16s ease, filter 0.16s ease;
+  }
+
+  .market-action-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .market-action-btn.sale,
+  .legend-color.sale {
+    background: #d23b3b;
+  }
+
+  .market-action-btn.loan,
+  .legend-color.loan {
+    background: #f08a24;
+  }
+
+  .salidas-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    min-height: 34px;
+    margin-top: 4px;
+    padding-right: 4px;
+  }
+
+  .salidas-legend > div {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #4d5868;
+    font-size: 0.78rem;
+    font-weight: 850;
+  }
+
+  .legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+  }
+
+  @media (max-width: 560px) {
+    .panel-derecho .market-table thead tr,
+    .panel-derecho .market-table tbody tr {
+      grid-template-columns: minmax(118px, 1fr) 76px 82px;
+    }
+
+    .salidas-legend {
+      justify-content: center;
+    }
+  }
+
+  /* Planner toolbar and community view */
+  .panel-derecho .inputs-row {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr) 126px;
+    align-items: end;
+    gap: 12px;
+  }
+
+  .panel-derecho .campo-control {
+    min-width: 0;
+    flex: none;
+  }
+
+  .panel-derecho .campo-control select,
+  .panel-derecho .campo-control input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .community-tab-button {
+    min-height: 39px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid #b8c9dc;
+    border-radius: 7px;
+    padding: 0 12px;
+    background: #ffffff;
+    color: #0d61af;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.74rem;
+    font-weight: 850;
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+
+  .community-tab-button:hover,
+  .community-tab-button.active {
+    border-color: #0d61af;
+    background: #0d61af;
+    color: #ffffff;
+  }
+
+  .lineup-planner-content {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lineup-community {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+    border-top: 1px solid #d7dee8;
+    padding-top: 16px;
+  }
+
+  .lineup-community-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .lineup-community-header > div {
+    min-width: 0;
+    display: grid;
+    gap: 3px;
+  }
+
+  .lineup-community-header span {
+    color: #6e7d90;
+    font-size: 0.64rem;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+
+  .lineup-community-header h2 {
+    margin: 0;
+    color: #0d61af;
+    font-family: "NeverMind ExtraExtended", "Montserrat", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .lineup-community-header button {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 6px;
+    padding: 0 13px;
+    background: #0d61af;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
+  .lineup-community-header button:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+
+  .lineup-community-message {
+    margin: 0;
+    color: #526579;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .lineup-community-grid {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 220px));
+    align-content: start;
+    justify-content: start;
+    gap: 12px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: none;
+  }
+
+  .lineup-community-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lineup-community-card {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #d7dee8;
+    border-radius: 6px;
+    background: #ffffff;
+  }
+
+  .lineup-community-delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(190, 35, 48, 0.3);
+    border-radius: 50%;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.94);
+    color: #be2330;
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+
+  .lineup-community-delete:hover {
+    background: #be2330;
+    color: #ffffff;
+  }
+
+  .lineup-community-card > a {
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #e8edf3;
+  }
+
+  .lineup-community-card img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    transition: transform 220ms ease;
+  }
+
+  .lineup-community-card:hover img {
+    transform: scale(1.025);
+  }
+
+  .lineup-community-card > div {
+    display: grid;
+    gap: 3px;
+    padding: 10px 11px;
+  }
+
+  .lineup-community-card strong {
+    overflow: hidden;
+    color: #132942;
+    font-size: 0.78rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lineup-community-card span {
+    overflow: hidden;
+    color: #718095;
+    font-size: 0.66rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lineup-community-empty {
+    min-height: 240px;
+    flex: 1;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 8px;
+    border: 1px dashed #c7d3e1;
+    color: #718095;
+    text-align: center;
+  }
+
+  .lineup-community-empty svg {
+    color: #0d61af;
+  }
+
+  .lineup-community-empty strong {
+    color: #20364e;
+    font-size: 0.85rem;
+  }
+
+  .lineup-community-empty span {
+    font-size: 0.72rem;
+  }
+
+  @media (max-width: 700px) {
+    .panel-derecho .inputs-row {
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    }
+
+    .community-tab-button {
+      grid-column: 1 / -1;
+    }
+
+    .lineup-community-header {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .lineup-community-grid {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+  }
+
+  /* Market dropdown redesign */
+  .alineacion-wrapper {
+    padding-top: 110px;
+  }
+
+  .market-dropdown {
+    box-sizing: border-box;
+    flex: 0 0 315px !important;
+    min-width: 0;
+    width: 315px !important;
+    max-width: 315px !important;
+    height: 245px;
+    margin-right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .panel-derecho .tables-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .panel-derecho .tables-wrapper > .market-dropdown {
+    flex: 0 0 360px !important;
+    width: 360px !important;
+    min-width: 360px !important;
+    max-width: 360px !important;
+  }
+
+  .panel-derecho .tables-wrapper > .table-lineup {
+    flex: 0 1 430px;
+    max-width: 430px;
+  }
+
+  .market-dropdown-trigger {
+    box-sizing: border-box;
+    min-height: 48px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border: 1px solid #cfd8e6;
+    border-radius: 12px 0 0 0;
+    padding: 0 14px;
+    background: #ffffff;
+    color: #002f87;
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  }
+
+  .market-dropdown-trigger:hover,
+  .market-dropdown-trigger.open {
+    border-color: #0d61af;
+    background: #f7fbff;
+    border-bottom-color: transparent;
+    box-shadow: none;
+  }
+
+  .market-dropdown-trigger span {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .market-dropdown-trigger strong {
+    color: #002f87;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.86rem;
+    font-weight: 950;
+  }
+
+  .market-dropdown-trigger small {
+    color: #6d7788;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.68rem;
+    font-weight: 850;
+  }
+
+  .market-dropdown-trigger i {
+    width: 9px;
+    height: 9px;
+    flex: 0 0 auto;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 160ms ease;
+  }
+
+  .market-dropdown-trigger.open i {
+    transform: rotate(225deg) translateY(-2px);
+  }
+
+  .market-player-list {
+    min-height: 212px;
+    flex: 0 0 212px;
+    overflow: visible;
+    border: 1px solid #d9e1ed;
+    border-top: 0;
+    border-color: #0d61af;
+    border-radius: 0 0 12px 0;
+    padding: 8px;
+    background: #f8fafc;
+    position: relative;
+  }
+
+  .market-player-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .market-player-list::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(0, 47, 135, 0.32);
+  }
+
+  .market-search-results {
+    max-height: 170px;
+    overflow: visible;
+  }
+
+  .market-search-results::-webkit-scrollbar {
+    display: none;
+  }
+
+  .market-player-list,
+  .market-search-results {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .market-player-list::-webkit-scrollbar,
+  .market-search-results::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .jugadores-lista-lineup:empty {
+    display: none;
+  }
+
+  .market-search {
+    position: sticky;
+    top: -8px;
+    z-index: 2;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: -8px -8px 6px;
+    border-bottom: 1px solid #dbe4ef;
+    padding: 7px 10px;
+    background: #ffffff;
+    color: #0d61af;
+  }
+
+  .market-search input {
+    min-width: 0;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #0d2139;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.76rem;
+    font-weight: 800;
+    outline: 0;
+  }
+
+  .market-search input::placeholder {
+    color: #7a8798;
+  }
+
+  .market-player-list.has-scroll-more::after {
+    content: "";
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: -8px;
+    display: block;
+    height: 26px;
+    margin: -26px -8px 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(248, 250, 252, 0), #f8fafc);
+  }
+
+  .market-player-row {
+    min-height: 44px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 88px 68px;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #e7edf5;
+    padding: 6px 4px;
+  }
+
+  .market-player-row:last-child {
+    border-bottom: 0;
+  }
+
+  .market-player-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .market-player-main img {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e6edf6;
+  }
+
+  .market-player-main strong {
+    min-width: 0;
+    overflow: hidden;
+    color: #0d2139;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .market-dropdown .market-value-cell {
+    width: fit-content;
+    justify-self: center;
+    justify-content: flex-start;
+    gap: 3px;
+  }
+
+  .market-dropdown .btn-edit-value {
+    margin-left: 0;
+  }
+
+  .market-dropdown .market-action-buttons {
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 700px) {
+    .salidas-lanes {
+      grid-template-columns: 1fr;
     }
   }
